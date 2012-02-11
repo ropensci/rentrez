@@ -1,0 +1,15 @@
+Package: rentrez
+Version: 0.1
+Date: 2011-11-22
+Title: Entrez in R
+Author: David Winter
+Maintainer: David Winter <david.winter@gmail.com>
+Depends:
+    R (>= 2.6.0),
+    RCurl,
+    XML
+Suggests:
+ZipData: no
+Description: Talk with Entrez using R
+License: MIT
+
