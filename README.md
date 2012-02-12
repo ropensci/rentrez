@@ -7,7 +7,7 @@ The package is _not_ ready for prime time yet, but a few functions are
 implemented. An example usage might go like this
 
         >library(rentrez)
-        >entrez.email <- david.winter@gmail.com 
+        >entrez.email <- "david.winter@gmail.com"
         #Find 5 datasets from the Popset database that include snails
         >search <- entrez_search("popset", "Gastropoda[Organism]", retmax=5)
         #download all datasets as one big Genbank file
