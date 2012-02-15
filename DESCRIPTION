@@ -15,3 +15,4 @@ Collate:
     'entrez_link.r'
     'entrez_search.r'
     'set_globals.r'
+    'parse_pubmed_xml.r'
