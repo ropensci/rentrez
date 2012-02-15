@@ -1,0 +1,4 @@
+export(entrez_email)
+export(entrez_fetch)
+export(entrez_link)
+export(entrez_search)

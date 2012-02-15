@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<eLinkResult>
+  <LinkSet>
+    <LinkSetDb>
+      <DbTo>pubmed</DbTo>
+      <LinkName>pubmed_pubmed_reviews_five</LinkName>
+      <Link>
+        <Id>20971197</Id>
+      </Link>
+    </LinkSetDb>
+    <LinkSetDb>
+      <DbTo>taxonomy</DbTo>
+      <LinkName>pubmed_taxonomy_entrez</LinkName>
+      <Link>
+        <Id>911564</Id>
+      </Link>
+      <Link>
+        <Id>911563</Id>
+      </Link>
+      <Link>
+        <Id>339606</Id>
+      </Link>
+    </LinkSetDb>
+  </LinkSet>
+</eLinkResult>
