@@ -1,6 +1,8 @@
 export(entrez_email)
 export(entrez_fetch)
+export(entrez_global_query)
 export(entrez_link)
 export(entrez_search)
+export(entrez_summary)
 export(parse_pubmed_xml)
 S3method(print,pubmed_record)
