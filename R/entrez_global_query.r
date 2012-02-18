@@ -10,12 +10,10 @@
 #'@return a named vector with counts for each a datbase
 #' @examples
 #' 
-#' pubmed_search <- entrez_global_query(term="Dwarf Elephant")
+#' mini_elephants <- entrez_global_query(term="Dwarf Elephant")
 
-
-
-entrez_global_query <- function(term, ...){
-    args <- c(term=term,email=entrez_email, tool=entrez_tool, ...)
+entrez_global_query <- function(term){
+    args <- c(term=term,email=entrez_email, tool=entrez_tool)
     url_args <- paste(paste(names(args), args, sep="="), collapse="&")
     base_url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/egquery.fcgi?retmode=xml"
     url_string <- paste(base_url, url_args, sep="&")

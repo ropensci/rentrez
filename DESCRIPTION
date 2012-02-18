@@ -18,3 +18,4 @@ Collate:
     'parse_pubmed_xml.r'
     'entrez_global_query.r'
     'entrez_summary.r'
+    'help.r'

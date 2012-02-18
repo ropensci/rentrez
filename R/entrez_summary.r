@@ -10,13 +10,11 @@
 #'@param \dots character Additional terms to add to the request 
 #
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
-#'\code{\link{XML::xmlTreeParse}}
+#'\code{\link{xmlTreeParse}}
 #' @examples
 #' 
 #' pubmed_search <- entrez_search(db="pubmed", term="Dwarf Elephant", retmax=1)
 #' pubmed_summ <- entrez_summary(db="pubmed", ids=pubmed_search$ids)
-
-
 
 entrez_summary <- function(db, ids, ...){
     args <- c(db=db, id=paste(ids, collapse=","), 
