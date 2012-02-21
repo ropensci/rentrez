@@ -23,5 +23,7 @@ entrez_global_query <- function(term){
         path <-  paste("//ResultItem/DbName[text()='", dbname, "']/../Count", sep="")
         return(xpathSApply(record, path, xmlValue))
     }
+    #NCBI limits requests to three per second
+    Sys.sleep(0.33)
     return(sapply(db_names, get_Ids))
 }

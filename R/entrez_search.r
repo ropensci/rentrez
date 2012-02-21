@@ -30,6 +30,8 @@ entrez_search <- function(db, term, ... ){
     ids <- xpathSApply(xml_result, "//IdList/Id", xmlValue)
     count <- xpathSApply(xml_result, "/eSearchResult/Count", fun=xmlValue)
     retmax <- xpathSApply(xml_result, "/eSearchResult/RetMax", fun=xmlValue)
+    #NCBI limits requests to three per second
+    Sys.sleep(0.33)
     return(list(file=xml_result, ids=as.integer(ids), 
                 count=as.integer(count), 
                 retmax=as.integer(retmax)

@@ -3,6 +3,6 @@
 #' 
 #'@export
 
-entrez_email <- NULL
-entrez_tool <- "ROpenSci"
+entrez_email <- "david.winter@gmail.com"
+entrez_tool <- "rentrez"
 

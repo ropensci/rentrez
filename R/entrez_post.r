@@ -1,26 +1,3 @@
-#' Get links to datasets related to an unique ID from an NCBI database
-#'
-#' Contstructs a url  with the given arguments, and downloads xml record
-#' returned by that url. See the package-level documentation for general advice
-#' on using the EUtils functions. 
-#'
-#'@export
-#'@param db character Name of the database to search for
-#'@param ids integer Id(s) for which data is being collected
-#'@param \dots character Additional terms to add to the request 
-#
-#'@return A list containing vectords of unique IDs from different databases. 
-#' the lists are name [db_from]_[db_to]
-#'@return file XMLInternalDocument xml file resulting from search, parsed with
-#'\code{\link{XML::xmlTreeParse}}
-#' @examples
-#' 
-#' pubmed_search <- entrez_search(db="pubmed", term="Dwarf Elephant", retmax=1)
-#' other_data <- entrez_link(db="all", ids=pubmed_search$ids, dbfrom="pubmed")
-#  other_data$pubmed_pubmed_reviews
-
-
-
 entrez_link <- function(db, ids, ...){
     args <- c(db=db, id=paste(ids, collapse=","), 
               email=entrez_email, tool=entrez_tool, ...)

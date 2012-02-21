@@ -22,5 +22,7 @@ entrez_fetch <- function(db, ids, file_format, ...){
     base_url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?retmode=text"
     url_string <- paste(base_url, url_args, sep="&")
     records <- getURL(url_string)
+    #NCBI limits requests to three per second
+    Sys.sleep(0.33)
     return(records)
 }
