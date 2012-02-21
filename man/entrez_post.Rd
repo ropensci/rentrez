@@ -1,0 +1,35 @@
+\name{entrez_post}
+\alias{entrez_post}
+\title{Post IDs to Eutils for later use}
+\usage{
+  entrez_post(db, ids, ...)
+}
+\arguments{
+  \item{db}{character Name of the database to search for}
+
+  \item{ids}{integer Id(s) for which data is being
+  collected}
+
+  \item{\dots}{character Additional terms to add to the
+  request}
+}
+\value{
+  QueryKey integer identifier for specific query in
+  webhistory
+
+  WebEnv character identifier for session key to use with
+  history
+}
+\description{
+  Post IDs to Eutils for later use
+}
+\examples{
+\dontrun{
+so_many_snails <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200)
+upload <- entrez_post(db="nuccore", ids=so_many_snails$ids)
+cookie <- upload$WebEnv
+first <- entrez_fetch(db="nuccore", ids="", file_format="fasta", WebEnv=cookie, query_key=upload$QueryKey, retend=100)
+second <- entrez_fetch(db="nuccore", ids="", file_format="fasta", WebEnv=cookie, query_key=upload$QueryKey, retstart=100)
+}
+}
+

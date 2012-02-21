@@ -18,7 +18,7 @@
   databases. the lists are name [db_from]_[db_to]
 
   file XMLInternalDocument xml file resulting from search,
-  parsed with \code{\link{XML::xmlTreeParse}}
+  parsed with \code{\link{xmlTreeParse}}
 }
 \description{
   Contstructs a url with the given arguments, and downloads

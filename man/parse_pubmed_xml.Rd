@@ -6,7 +6,7 @@
 }
 \arguments{
   \item{paper}{character the record to be parsed (as a
-  character, expected to comed from
+  character, expected to come from
   \code{\link{entrez_fetch}})}
 }
 \description{

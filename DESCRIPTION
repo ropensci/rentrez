@@ -19,3 +19,4 @@ Collate:
     'entrez_global_query.r'
     'entrez_summary.r'
     'help.r'
+    'entrez_post.r'

@@ -20,8 +20,14 @@
   retmax integer Maximum number of hits returned by the
   search
 
+  QueryKey integer identifier for specific query in
+  webhistory
+
+  WebEnv character identifier for session key to use with
+  history
+
   file XMLInternalDocument xml file resulting from search,
-  parsed with \code{\link{XML::xmlTreeParse}}
+  parsed with \code{\link{xmlTreeParse}}
 }
 \description{
   Contstructs a url with the given arguments, are downloads
@@ -32,5 +38,9 @@
 \examples{
 pubmed_search <- entrez_search(db="pubmed", term="Dwarf Elephant", retmax=1)
 other_data <- entrez_link(db="all", ids=pubmed_search$ids, dbfrom="pubmed")
+\dontrun{
+ratites <- entrez_search(db="popset", term="ratite", usehistory=TRUE)
+entrez_fetch(db="popset", ids="", file_format="fasta", WebEnv=ratites$WebEnv, query_key=ratites$QueryKey)
+}
 }
 

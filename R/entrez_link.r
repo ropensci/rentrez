@@ -12,7 +12,7 @@
 #'@return A list containing vectords of unique IDs from different databases. 
 #' the lists are name [db_from]_[db_to]
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
-#'\code{\link{XML::xmlTreeParse}}
+#'\code{\link{xmlTreeParse}}
 #' @examples
 #' 
 #' pubmed_search <- entrez_search(db="pubmed", term="Dwarf Elephant", retmax=1)
