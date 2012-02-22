@@ -30,7 +30,7 @@ papers, but we can use `entrez_search` to find the paper using the doi field:
 
   
         > hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
-        > (hox_pmid <- Anolis_paper$ids)
+        > (hox_pmid <- hox_paper$ids)
         # [1] 20203609
 
 Now, what sorts of data are avaliable from other NCBI database for this paper?
