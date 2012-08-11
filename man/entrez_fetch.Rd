@@ -2,12 +2,13 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-  entrez_fetch(db, ids, file_format, ...)
+  entrez_fetch(db, ids = "", file_format, ...)
 }
 \arguments{
   \item{db}{character Name of the database to use}
 
-  \item{ids}{integer Unique ID(s) to get data from}
+  \item{ids}{integer Unique ID(s) to get data from
+  (optional)}
 
   \item{file_format}{character Format in which to get data
   (eg, fasta, xml...)}

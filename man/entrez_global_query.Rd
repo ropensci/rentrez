@@ -1,6 +1,6 @@
 \name{entrez_global_query}
 \alias{entrez_global_query}
-\title{See how many hits there are a given term across all NCBI Entrez databses}
+\title{See how many hits there are for a given term across all NCBI Entrez databses}
 \usage{
   entrez_global_query(term)
 }

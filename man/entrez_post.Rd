@@ -5,9 +5,10 @@
   entrez_post(db, ids, ...)
 }
 \arguments{
-  \item{db}{character Name of the database to search for}
+  \item{db}{character Name of the database from which the
+  IDs were taken}
 
-  \item{ids}{integer Id(s) for which data is being
+  \item{ids}{integer ID(s) for which data is being
   collected}
 
   \item{\dots}{character Additional terms to add to the
