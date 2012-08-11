@@ -3,8 +3,8 @@
 #'
 #'
 #'@export
-#'@param db character Name of the database to search for
-#'@param ids integer Id(s) for which data is being collected
+#'@param db character Name of the database from which the IDs were taken
+#'@param ids integer ID(s) for which data is being collected
 #'@param \dots character Additional terms to add to the request 
 #
 #'@return QueryKey integer identifier for specific query in webhistory

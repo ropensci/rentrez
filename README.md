@@ -15,6 +15,17 @@ or use Hadley Wickham's [devtools](https://github.com/hadley/devtools):
          > library(devtools)
          > install_github("rentrez", "dwinter")
 
+##The Eutils API
+
+`rentrez` presumes you already know your way around the Eutils' API, [which is well 
+documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Make sure you read the
+documentation, and in particular, be aware of the NCBI's usage policies and try to
+limit very large requests to off peak (USA) times. 
+
+The functions in `rentrez` are designed to create URLs in the form required by 
+the api, fetch the file and parse information from it. Specific examples below illustrate
+how the functions work.
+
 ##Examples
 
 To see how the package works, let's look at a couple of possible uses of the 
@@ -50,10 +61,14 @@ Now, what sorts of data are avaliable from other NCBI database for this paper?
         # $ pubmed_taxonomy_entrez    : chr [1:14] "742354"  ...
         # $ file                      :Classes 'XMLInternalDocument'...'
 
-Now we can use `entrez_fetch` for the protein sequences as genbank files:
+Each of the character vectors in this object contain unique IDS for records in
+the named databases. These functions try to make the most useful bits of the 
+returned files available to users, but they also return the original file in case 
+you want to dive into the XML yourself.
+
+In this case we'll get the protein sequences as genbank files, using ' `entrez_fetch`:
  
         > hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, file_format="gb")
-
 
 
 ###Retreiving datasets associated a particular organism.
@@ -63,7 +78,8 @@ endemic "black widow" the katipo. Specifically, in the past the katipo has
 been split into two species, can we make a phylogeny to test this idea?
 
 The first step here is to use the function `entrez_search` to find datasets
-that include katipo sequences.
+that include katipo sequences. The `popset` database has sequences arising from
+phylogenetic or population-level studies, so let's start there.
 
         > library(rentrez)
         > katipo_search <- entrez_search(db="popset", term="Latrodectus katipo[Organism]")
@@ -105,4 +121,46 @@ a phylogeny so let's do that with ape:
         > coi <- read.dna("Test/COI.fasta", "fasta")
         > coi_aligned <- clustal(coi)
         > tree <- nj(dist.dna(coi_aligned))
+        
+###Trendy topics in genetics
+
+This is one is a little more trivial, but you can also use entrez to search pubmed and
+the EUtils API allows you to limit searches by the year in which the paper was published.
+That gives is a chance to find the trendiest -omics going around (this has quite a lot
+of repeated searching, so it you want to run your own version be sure to do it
+in off peak times). 
+
+Let's start by making a function that finds the number of records matching a given
+search term for each of several years (using the `mindate` and `maxdate` terms from
+the Eutils API):
+
+        > library(rentrez)
+        > papers_by_year <- function(years, search_term){
+            return(sapply(years, function(y) entrez_search(db="pubmed",term=search_term, mindate=y, maxdate=y, retmax=0)$count))
+        }
+
+With that we can fetch the data for earch term and, by searching with no term, 
+find the total number of papers published in each year:
+
+        > years <- 1990:2011
+        > total_papers <- papers_by_year(years, "")
+        > omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
+        > trend_data <- sapply(omics, function(t) papers_by_year(years, t))
+        > trend_props <- trend_data/total_papers
+        
+That's the data, let's plot it:
+
+        > library(reshape)
+        > library(ggplot2)
+        > trend_df <- melt(as.data.frame(trend_props), id.vars="years")
+        > p <- ggplot(trend_df, aes(years, value, colour=variable))
+        > png("trendy.png", width=500, height=250)
+        > p + geom_line(size=1) + scale_y_log10("number of papers")
+        > dev.off()
+
+Giving us... well this:
+
+![](http://i.imgur.com/LDpP1.png)
+
+
 

@@ -1,4 +1,4 @@
-#' See how many hits there are a given term across all NCBI Entrez databses
+#' See how many hits there are for a given term across all NCBI Entrez databses
 #'
 #' Contstructs a url  with the given arguments, and downloads xml record
 #' returned by that url. See the package-level documentation for general advice

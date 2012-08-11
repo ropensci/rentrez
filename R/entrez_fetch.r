@@ -4,7 +4,7 @@
 #'
 #'@export
 #'@param db character Name of the database to use
-#'@param ids integer Unique ID(s) to get data from
+#'@param ids integer Unique ID(s) to get data from (optional)
 #'@param file_format character Format in which to get data (eg, fasta, xml...)
 #'@param \dots character Additional terms to add to the request
 #'@return chracter string containing the file created
@@ -15,7 +15,7 @@
 
 
 
-entrez_fetch <- function(db, ids, file_format, ...){
+entrez_fetch <- function(db, ids="", file_format, ...){
     args <- c(db=db, id=paste(ids, collapse=","), rettype=file_format, 
               email=entrez_email, tool=entrez_tool, ...)
     url_args <- paste(paste(names(args), args, sep="="), collapse="&")

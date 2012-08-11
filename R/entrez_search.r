@@ -18,8 +18,6 @@
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #' @examples
-#' pubmed_search <- entrez_search(db="pubmed", term="Dwarf Elephant", retmax=1)
-#' other_data <- entrez_link(db="all", ids=pubmed_search$ids, dbfrom="pubmed")
 #' \dontrun{
 #'  ratites <- entrez_search(db="popset", term="ratite", usehistory=TRUE)
 #'   entrez_fetch(db="popset", ids="", file_format="fasta", WebEnv=ratites$WebEnv, query_key=ratites$QueryKey)
