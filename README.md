@@ -13,7 +13,7 @@ For now, either download the archive above and install using `$R CMD INSTALL`
 or use Hadley Wickham's [devtools](https://github.com/hadley/devtools):
      
          > library(devtools)
-         > install_github("rentrez", "dwinter")
+         > install_github("rentrez", "ropensci")
 
 ##The Eutils API
 
