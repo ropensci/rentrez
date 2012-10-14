@@ -152,7 +152,7 @@ Because we set usehistory to "y" the `snail_search` object contains a unique ID 
 ```r
 cookie <- snail_search$WebEnv
 qk <- snail_search$QueryKey
-snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, file_format="fasta")
+snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, file_format="fasta", retmax=10)
 ```
 
 ###Trendy topics in genetics
