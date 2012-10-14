@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>pairwise_Gst_Nei. mmod 1.01</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mmod 1.01</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Calculates pairwise values of Nei's Gst</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='pairwise_Gst_Nei.html'>pairwise_Gst_Nei</a></span><span class="keyword">(</span><span class="symbol">x</span><span class="keyword">,</span> <span class="argument">linearized</span> <span class="argument">=</span> <span class="number">FALSE</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>x</dt>
+      <dd>genind object (from package adegenet)</dd>
+      <dt>linearized</dt>
+      <dd>logical, if TRUE will turned linearized
+  Gst (1/(1-Gst))</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>dist A distance matrix with between-population values of
+  Gst</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>This function calculates Nei's Gst, a measure of genetic
+  differentiation, between all combinations of populaitons
+  in a genind object.</p>
+  
+    </div>
+
+    <div class="References">
+      <h2>References</h2>
+      
+      <p>Nei M. (1973) Analysis of gene diversity in subdivided
+  populations. PNAS: 3321-3323.</p>
+  
+      <p>Nei M, Chesser RK. (1983). Estimation of fixation indices
+  and gene diversities. Annals of Human Genetics. 47:
+  253-259.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="functioncall"><a href='http://www.inside-r.org/r-doc/utils/data'>data</a></span><span class="keyword">(</span><span class="symbol">nancycats</span><span class="keyword">)</span>
+<span class="functioncall"><a href='pairwise_Gst_Nei.html'>pairwise_Gst_Nei</a></span><span class="keyword">(</span><span class="symbol">nancycats</span><span class="keyword">[</span><span class="number">1</span><span class="keyword">:</span><span class="number">26</span><span class="keyword">,</span><span class="keyword">]</span><span class="keyword">)</span></div>
+<div class='output'>           1
+2 0.08531758
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>pairwise_Gst_Nei</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+  Other Nei: <code><a href='Gst_Nei.html'>Gst_Nei</a></code>
+
+  Other pairwise: <code><a href='pairwise_D.html'>pairwise_D</a></code>,
+  <code><a href='pairwise_Gst_Hedrick.html'>pairwise_Gst_Hedrick</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

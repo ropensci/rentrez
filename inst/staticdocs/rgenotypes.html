@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>rgenotypes. mmod 1.01</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mmod 1.01</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Randomly create genotypes</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='rgenotypes.html'>rgenotypes</a></span><span class="keyword">(</span><span class="symbol">n</span><span class="keyword">,</span> <span class="symbol">ploidy</span><span class="keyword">,</span> <span class="symbol">probs</span><span class="keyword">,</span> <span class="argument">genind</span> <span class="argument">=</span> <span class="number">FALSE</span><span class="keyword">,</span> <span class="argument">pop_name</span> <span class="argument">=</span> <span class="string">"A"</span><span class="keyword">,</span> <span class="argument">loc_name</span> <span class="argument">=</span> <span class="string">"L1"</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>n</dt>
+      <dd>integer number of indviduals.</dd>
+      <dt>ploidy</dt>
+      <dd>integer number of alleles to asign to each
+  individual.</dd>
+      <dt>probs</dt>
+      <dd>vector of probabilies corresponding to
+  allele frequences.</dd>
+      <dt>genind</dt>
+      <dd>boolean if TRUE return a genind object</dd>
+      <dt>pop_name</dt>
+      <dd>charcter Name for population defined in
+  genind object (not required if genind is not TRUE)</dd>
+      <dt>loc_name</dt>
+      <dd>character name to five locus in genind
+  object</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>Either a matrix with individuals in columns, alleles in
+  rows or, if genind is TRUE a genind object for one
+  population and locus.</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Use the multinomial distribution to randomly create
+  genotpes for individuals for given allele frequences. By
+  default this function returns a matrix of with alleles in
+  rows and individuals in columns. There is an option to
+  return a genind object representing the same data (see
+  examples).</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>Used in <code><a href='chao_bootstrap.html'>chao_bootstrap</a></code>, also exported as it
+  may come in handy for other simulations.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="functioncall"><a href='http://www.inside-r.org/r-doc/utils/data'>data</a></span><span class="keyword">(</span><span class="symbol">nancycats</span><span class="keyword">)</span>
+<span class="symbol">obs_allele_freqs</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='http://www.inside-r.org/r-doc/base/apply'>apply</a></span><span class="keyword">(</span><span class="symbol">nancycats</span><span class="keyword">$</span><span class="symbol">tab</span><span class="keyword">[</span><span class="keyword">,</span><span class="number">1</span><span class="keyword">:</span><span class="number">16</span><span class="keyword">]</span><span class="keyword">,</span> <span class="number">2</span><span class="keyword">,</span><span class="symbol">mean</span><span class="keyword">)</span>
+<span class="functioncall"><a href='rgenotypes.html'>rgenotypes</a></span><span class="keyword">(</span><span class="number">10</span><span class="keyword">,</span> <span class="number">2</span><span class="keyword">,</span> <span class="symbol">obs_allele_freqs</span><span class="keyword">)</span></div>
+<div class='output'>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+ [1,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [2,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [3,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [4,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [5,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [6,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [7,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [8,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+ [9,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+[10,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+[11,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+[12,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+[13,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+[14,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+[15,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+[16,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA
+</div>
+<div class='input'><span class="symbol">obs_allele_freqs_noNA</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='http://www.inside-r.org/r-doc/base/apply'>apply</a></span><span class="keyword">(</span><span class="symbol">nancycats</span><span class="keyword">$</span><span class="symbol">tab</span><span class="keyword">[</span><span class="keyword">,</span><span class="number">1</span><span class="keyword">:</span><span class="number">16</span><span class="keyword">]</span><span class="keyword">,</span> <span class="number">2</span><span class="keyword">,</span><span class="symbol">mean</span><span class="keyword">,</span> <span class="argument">na.rm</span><span class="argument">=</span><span class="number">TRUE</span><span class="keyword">)</span>
+<span class="functioncall"><a href='rgenotypes.html'>rgenotypes</a></span><span class="keyword">(</span><span class="number">10</span><span class="keyword">,</span> <span class="number">2</span><span class="keyword">,</span> <span class="symbol">obs_allele_freqs_noNA</span><span class="keyword">)</span></div>
+<div class='output'>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+L1.01    0    0    0    0    0    0    0    0    0     0
+L1.02    0    0    0    0    0    0    0    0    0     0
+L1.03    0    0    0    0    0    0    0    0    0     0
+L1.04    0    0    0    0    0    0    0    0    0     0
+L1.05    0    0    0    0    0    0    0    0    0     0
+L1.06    0    0    0    0    0    0    0    0    0     0
+L1.07    0    0    0    0    0    1    0    0    0     0
+L1.08    0    0    0    0    0    0    0    0    0     0
+L1.09    1    0    1    1    1    0    1    0    1     1
+L1.10    0    0    0    1    0    1    0    2    0     0
+L1.11    1    1    0    0    0    0    1    0    0     1
+L1.12    0    0    0    0    1    0    0    0    1     0
+L1.13    0    1    1    0    0    0    0    0    0     0
+L1.14    0    0    0    0    0    0    0    0    0     0
+L1.15    0    0    0    0    0    0    0    0    0     0
+L1.16    0    0    0    0    0    0    0    0    0     0
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>rgenotypes</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+  <code><a href='http://www.inside-r.org/r-doc/stats/Multinom'>rmultinom</a></code> which this function wraps.
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

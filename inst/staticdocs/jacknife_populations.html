@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>jacknife_populations. mmod 1.01</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mmod 1.01</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Create jacknife samples of a genind object by population</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='jacknife_populations.html'>jacknife_populations</a></span><span class="keyword">(</span><span class="symbol">x</span><span class="keyword">,</span> <span class="argument">sample_frac</span> <span class="argument">=</span> <span class="number">0.5</span><span class="keyword">,</span> <span class="argument">nreps</span> <span class="argument">=</span> <span class="number">1000</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>x</dt>
+      <dd>genind object (from package adegenet)</dd>
+      <dt>sample_frac</dt>
+      <dd>fraction of pops to sample in each
+  replication (default 0.5)</dd>
+      <dt>nreps</dt>
+      <dd>number of jacknife replicates to run
+  (default 1000)</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a list of genind objects to be further processed</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Makes a series of jacknife samples across populations
+  from a genind object. This function returns a list of
+  genind objects that can then be further processed (see
+  examples below).</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## <strong>Not run</strong>: # data(nancycats)# obs <- diff_stats(nancycats)# jn <- jacknife_populations(nancycats)# jn.D <- summarise_bootstrap(jn, D_Jost)# ## <strong>End(Not run)</strong></div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>jacknife_populations</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+  Other resample: <code><a href='chao_bootstrap.html'>chao_bootstrap</a></code>,
+  <code><a href='summarise_bootstrap.html'>summarise_bootstrap</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

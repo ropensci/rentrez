@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>pairwise_Gst_Hedrick. mmod 1.01</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mmod 1.01</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Calculates pairwise values of Hedrick's G'st</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='pairwise_Gst_Hedrick.html'>pairwise_Gst_Hedrick</a></span><span class="keyword">(</span><span class="symbol">x</span><span class="keyword">,</span> <span class="argument">linearized</span> <span class="argument">=</span> <span class="number">FALSE</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>x</dt>
+      <dd>genind object (from package adegenet)</dd>
+      <dt>linearized</dt>
+      <dd>logical, if TRUE will turned linearized
+  G'st (1/()1-G'st))</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>A distance matrix with between-population values of G''st</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>This function calculates Hedrick's G'st, a measure of
+  genetic differentiation, between all combinations of
+  populaitons in a genind object.</p>
+  
+    </div>
+
+    <div class="References">
+      <h2>References</h2>
+      
+      <p>Hedrick, PW. (2005), A Standardized Genetic
+  Differentiation Measure. Evolution 59: 1633-1638.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="functioncall"><a href='http://www.inside-r.org/r-doc/utils/data'>data</a></span><span class="keyword">(</span><span class="symbol">nancycats</span><span class="keyword">)</span>
+<span class="functioncall"><a href='pairwise_Gst_Hedrick.html'>pairwise_Gst_Hedrick</a></span><span class="keyword">(</span><span class="symbol">nancycats</span><span class="keyword">[</span><span class="number">1</span><span class="keyword">:</span><span class="number">26</span><span class="keyword">,</span><span class="keyword">]</span><span class="keyword">)</span></div>
+<div class='output'>         1
+2 0.476822
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>pairwise_Gst_Hedrick</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+  Other Hedrick: <code><a href='Gst_Hedrick.html'>Gst_Hedrick</a></code>
+
+  Other pairwise: <code><a href='pairwise_D.html'>pairwise_D</a></code>,
+  <code><a href='pairwise_Gst_Nei.html'>pairwise_Gst_Nei</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
