@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>entrez_fetch. rentrez 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">rentrez 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Download data from NCBI databases</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='entrez_fetch.html'>entrez_fetch</a></span><span class="keyword">(</span><span class="symbol">db</span><span class="keyword">,</span> <span class="argument">ids</span> <span class="argument">=</span> <span class="string">""</span><span class="keyword">,</span> <span class="symbol">file_format</span><span class="keyword">,</span> <span class="symbol">...</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>db</dt>
+      <dd>character Name of the database to use</dd>
+      <dt>ids</dt>
+      <dd>integer Unique ID(s) to get data from
+  (optional)</dd>
+      <dt>file_format</dt>
+      <dd>character Format in which to get data
+  (eg, fasta, xml...)</dd>
+      <dt>...</dt>
+      <dd>character Additional terms to add to the
+  request</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>chracter string containing the file created</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Download data from NCBI databases</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="symbol">snail_search</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='entrez_search.html'>entrez_search</a></span><span class="keyword">(</span><span class="string">"nuccore"</span><span class="keyword">,</span> <span class="string">"Gastropoda[Organism]"</span><span class="keyword">)</span>
+<span class="symbol">records</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='entrez_fetch.html'>entrez_fetch</a></span><span class="keyword">(</span><span class="string">"nuccore"</span><span class="keyword">,</span> <span class="symbol">snail_search</span><span class="keyword">$</span><span class="symbol">ids</span><span class="keyword">[</span><span class="number">1</span><span class="keyword">:</span><span class="number">2</span><span class="keyword">]</span><span class="keyword">,</span> <span class="string">"fasta"</span><span class="keyword">)</span></div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>entrez_fetch</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

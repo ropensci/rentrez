@@ -139,6 +139,22 @@ coi_aligned <- clustal(coi)
 tree <- nj(dist.dna(coi_aligned))
 ```
 
+### WebEnv and big queries
+
+The NCBI provides search history features, which can be useful for dealing with alrge lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
+```r	
+library(rentrez)
+snail_search <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200, usehistory="y")
+```
+       
+Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the 200 ids we turned up to make a new URL and fetch the sequences we can use the webhistory features. 
+
+```r
+cookie <- snail_search$WebEnv
+qk <- snail_search$QueryKey
+snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, file_format="fasta")
+```
+
 ###Trendy topics in genetics
 
 This is one is a little more trivial, but you can also use entrez to search pubmed and
