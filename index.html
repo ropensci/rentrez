@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>Index. rentrez 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="David Winter">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">rentrez 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <div class="row">
+  <div class="span8">
+    <h1>rentrez</h1>
+
+
+<p>rentrez provides functions that work with the <a href="http://www.ncbi.nlm.nih.gov/books/NBK25500/">NCBI eutils</a> 
+to search or download data from various NCBI databases. </p>
+
+<p>The package hasn&#39;t been thoroughly tested yet, but the functions for each of 
+the Eutils functions are implimented. If you try the package and find bugs
+please let me know.</p>
+
+<h2>Install</h2>
+
+<p>For now, either download the archive above and install using <code>$R CMD INSTALL</code>
+or use Hadley Wickham&#39;s <a href="https://github.com/hadley/devtools">devtools</a>:</p>
+
+<pre><code>     &gt; library(devtools)
+     &gt; install_github(&quot;rentrez&quot;, &quot;ropensci&quot;)
+</code></pre>
+
+<h2>The Eutils API</h2>
+
+<p><code>rentrez</code> presumes you already know your way around the Eutils&#39; API, <a href="http://www.ncbi.nlm.nih.gov/books/NBK25500/">which is well 
+documented</a>. Make sure you read the
+documentation, and in particular, be aware of the NCBI&#39;s usage policies and try to
+limit very large requests to off peak (USA) times. </p>
+
+<p>The functions in <code>rentrez</code> are designed to create URLs in the form required by 
+the api, fetch the file and parse information from it. Specific examples below illustrate
+how the functions work.</p>
+
+<h2>Examples</h2>
+
+<p>To see how the package works, let&#39;s look at a couple of possible uses of the 
+library</p>
+
+<h3>Getting data from that great paper you&#39;ve just read</h3>
+
+<p>Let&#39;s say I&#39;ve just read a paper on the evolution of Hox genes,
+[Di-Poi <em>et al</em>. (2010)](dx.doi.org/10.1038/nature08789), and I want to get the
+data required to replicate their results. First, I need the unique ID for this
+paper in pubmed (the PMID). Annoyingly, many journals don&#39;t give PMIDS for their
+papers, but we can use <code>entrez_search</code> to find the paper using the doi field:</p>
+
+<pre><code>    &gt; hox_paper &lt;- entrez_search(db=&quot;pubmed&quot;, term=&quot;10.1038/nature08789[doi]&quot;)
+    &gt; (hox_pmid &lt;- hox_paper$ids)
+    # [1] 20203609
+</code></pre>
+
+<p>Now, what sorts of data are avaliable from other NCBI database for this paper?</p>
+
+<pre><code>    &gt; hox_data &lt;- entrez_link(db=&quot;all&quot;, ids=hox_pmid, dbfrom=&quot;pubmed&quot;)
+    &gt; str(hox_data)
+    #List of 11
+    # $ pubmed_nuccore            : chr [1:32] &quot;290760437&quot;  ...
+    # $ pubmed_pmc_refs           : chr [1:11] &quot;3218823&quot; ...
+    # $ pubmed_protein            : chr [1:49] &quot;290760438&quot; ...
+    # $ pubmed_pubmed             : chr [1:128] &quot;20203609&quot; ...
+    # $ pubmed_pubmed_citedin     : chr [1:10] &quot;22016857&quot;  ...
+    # $ pubmed_pubmed_combined    : chr [1:6] &quot;20203609&quot; &quot; ...
+    # $ pubmed_pubmed_five        : chr [1:6] &quot;20203609&quot; ...
+    # $ pubmed_pubmed_reviews     : chr [1:31] &quot;20203609&quot;  ...
+    # $ pubmed_pubmed_reviews_five: chr [1:6] &quot;20203609&quot;  ...
+    # $ pubmed_taxonomy_entrez    : chr [1:14] &quot;742354&quot;  ...
+    # $ file                      :Classes &#39;XMLInternalDocument&#39;...&#39;
+</code></pre>
+
+<p>Each of the character vectors in this object contain unique IDS for records in
+the named databases. These functions try to make the most useful bits of the 
+returned files available to users, but they also return the original file in case 
+you want to dive into the XML yourself.</p>
+
+<p>In this case we&#39;ll get the protein sequences as genbank files, using &#39; <code>entrez_fetch</code>:</p>
+
+<pre><code>    &gt; hox_proteins &lt;- entrez_fetch(db=&quot;protein&quot;, ids=hox_data$pubmed_protein, file_format=&quot;gb&quot;)
+</code></pre>
+
+<h3>Retreiving datasets associated a particular organism.</h3>
+
+<p>I like spiders. So let&#39;s say I want to learn a little more about New Zealand&#39;s
+endemic &ldquo;black widow&rdquo; the katipo. Specifically, in the past the katipo has 
+been split into two species, can we make a phylogeny to test this idea?</p>
+
+<p>The first step here is to use the function <code>entrez_search</code> to find datasets
+that include katipo sequences. The <code>popset</code> database has sequences arising from
+phylogenetic or population-level studies, so let&#39;s start there.</p>
+
+<pre><code>    &gt; library(rentrez)
+    &gt; katipo_search &lt;- entrez_search(db=&quot;popset&quot;, term=&quot;Latrodectus katipo[Organism]&quot;)
+    &gt; katipo_search$count
+    # [1] 6
+</code></pre>
+
+<p>In this search <code>count</code> is the total number of hits returned for the search term.
+We can use <code>entrez_summary</code> to learn a little about these datasets. Because 
+different databases give differnt xml files, <code>entrez_summary</code> returns an xml 
+file for you to further process. In this case, a little xpath can tell us about
+each dataset.</p>
+
+<pre><code>    &gt; summaries &lt;- entrez_summary(db=&quot;popset&quot;, ids=katipo_search$ids)
+    &gt; xpathSApply(summaries, &quot;//Item[@Name=&#39;Title&#39;]&quot;, xmlValue)
+    #[1] &quot;Latrodectus katipo 18S ribosomal RNA gene ...&quot;
+    #[2] &quot;Latrodectus katipo cytochrome oxidase subunit 1 (COI)...&quot;
+    #[3] &quot;Latrodectus 18S ribosomal RNA gene...&quot;
+    #[4] &quot;Latrodectus cytochrome 1 oxidase subunit 1 (COI)...&quot;&quot;
+    #[5] &quot;Latrodectus tRNA-Leu (trnL) gene ... &quot;&quot;                                               
+    #[6] &quot;Theridiidae cytochrome oxidase subunit I (COI) gene ...&quot;
+</code></pre>
+
+<p>Let&#39;s just get the two mitochondrial loci (COI and trnL), using <code>entrez_fetch</code>:</p>
+
+<pre><code>    &gt; COI_ids &lt;- katipo_search$ids[c(2,6)]
+    &gt; trnL_ids &lt;- katipo_search$ids[5]
+    &gt; COI &lt;- entrez_fetch(db=&quot;popset&quot;, ids=COI_ids, file_format=&quot;fasta&quot;)
+    &gt; trnL &lt;- entrez_fetch(db=&quot;popset&quot;, ids=trnL_ids, file_format=&quot;fasta&quot;)
+</code></pre>
+
+<p>The &ldquo;fetched&rdquo; results are fasta formatted characters, which can be written
+to disk easily:</p>
+
+<pre><code>    &gt; write(COI, &quot;Test/COI.fasta&quot;)      
+    &gt; write(trnL, &quot;Test/trnL.fasta&quot;)
+</code></pre>
+
+<p>Once you&#39;ve got the sequences you can do what you want with them, but I wanted 
+a phylogeny so let&#39;s do that with ape:</p>
+
+<pre><code>    &gt; library(ape)
+    &gt; coi &lt;- read.dna(&quot;Test/COI.fasta&quot;, &quot;fasta&quot;)
+    &gt; coi_aligned &lt;- clustal(coi)
+    &gt; tree &lt;- nj(dist.dna(coi_aligned))
+</code></pre>
+
+<h3>Trendy topics in genetics</h3>
+
+<p>This is one is a little more trivial, but you can also use entrez to search pubmed and
+the EUtils API allows you to limit searches by the year in which the paper was published.
+That gives is a chance to find the trendiest -omics going around (this has quite a lot
+of repeated searching, so it you want to run your own version be sure to do it
+in off peak times). </p>
+
+<p>Let&#39;s start by making a function that finds the number of records matching a given
+search term for each of several years (using the <code>mindate</code> and <code>maxdate</code> terms from
+the Eutils API):</p>
+
+<pre><code>    &gt; library(rentrez)
+    &gt; papers_by_year &lt;- function(years, search_term){
+        return(sapply(years, function(y) entrez_search(db=&quot;pubmed&quot;,term=search_term, mindate=y, maxdate=y, retmax=0)$count))
+    }
+</code></pre>
+
+<p>With that we can fetch the data for earch term and, by searching with no term, 
+find the total number of papers published in each year:</p>
+
+<pre><code>    &gt; years &lt;- 1990:2011
+    &gt; total_papers &lt;- papers_by_year(years, &quot;&quot;)
+    &gt; omics &lt;- c(&quot;genomic&quot;, &quot;epigenomic&quot;, &quot;metagenomic&quot;, &quot;proteomic&quot;, &quot;transcriptomic&quot;, &quot;pharmacogenomic&quot;, &quot;connectomic&quot; )
+    &gt; trend_data &lt;- sapply(omics, function(t) papers_by_year(years, t))
+    &gt; trend_props &lt;- trend_data/total_papers
+</code></pre>
+
+<p>That&#39;s the data, let&#39;s plot it:</p>
+
+<pre><code>    &gt; library(reshape)
+    &gt; library(ggplot2)
+    &gt; trend_df &lt;- melt(as.data.frame(trend_props), id.vars=&quot;years&quot;)
+    &gt; p &lt;- ggplot(trend_df, aes(years, value, colour=variable))
+    &gt; png(&quot;trendy.png&quot;, width=500, height=250)
+    &gt; p + geom_line(size=1) + scale_y_log10(&quot;number of papers&quot;)
+    &gt; dev.off()
+</code></pre>
+
+<p>Giving us&hellip; well this:</p>
+
+<p><img src="http://i.imgur.com/LDpP1.png" alt=""/></p>
+
+
+    <h2>Help topics</h2>
+
+    <h3></h3>
+    
+    
+    <ul class="index">
+        
+      <li>
+        <code><a href="entrez_email.html">entrez_email</a></code><br />Set global variables</li>
+            
+      <li>
+        <code><a href="entrez_fetch.html">entrez_fetch</a></code><br />Download data from NCBI databases</li>
+            
+      <li>
+        <code><a href="entrez_global_query.html">entrez_global_query</a></code><br />See how many hits there are for a given term across all NCBI Entrez databses</li>
+            
+      <li>
+        <code><a href="entrez_link.html">entrez_link</a></code><br />Get links to datasets related to an unique ID from an NCBI database</li>
+            
+      <li>
+        <code><a href="entrez_post.html">entrez_post</a></code><br />Post IDs to Eutils for later use</li>
+            
+      <li>
+        <code><a href="entrez_search.html">entrez_search</a></code><br />Search the NCBI databases using EUtils</li>
+            
+      <li>
+        <code><a href="entrez_summary.html">entrez_summary</a></code><br />Get summaries of objects in NCBI datasets from a unique ID</li>
+            
+      <li>
+        <code><a href="parse_pubmed_xml.html">parse_pubmed_xml</a></code><br />Summarise an XML record from pubmed.</li>
+            
+      <li>
+        <code><a href="rentrez.html">rentrez</a></code>(rentrez-package)<br />rentrez</li>
+    
+    </ul>
+  </div>
+  
+  <div class="span3 offset1">
+        
+    <h2>Dependencies</h2>
+    <ul>
+      <li><strong>Depends</strong>: RCurl, XML</li>
+      <li><strong>Imports</strong>: </li>
+      <li><strong>Suggests</strong>: </li>
+      <li><strong>Extends</strong>: </li>
+    </ul>
+     
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>entrez_search. rentrez 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">rentrez 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Search the NCBI databases using EUtils</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='entrez_search.html'>entrez_search</a></span><span class="keyword">(</span><span class="symbol">db</span><span class="keyword">,</span> <span class="symbol">term</span><span class="keyword">,</span> <span class="symbol">...</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>db</dt>
+      <dd>character Name of the database to search for</dd>
+      <dt>term</dt>
+      <dd>character The search term</dd>
+      <dt>...</dt>
+      <dd>character Additional terms to add to the
+  request</dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>ids integer Unique IDS returned by the search</p>
+  
+      <p>count integer Total number of hits for the search</p>
+  
+      <p>retmax integer Maximum number of hits returned by the
+  search</p>
+  
+      <p>QueryKey integer identifier for specific query in
+  webhistory</p>
+  
+      <p>WebEnv character identifier for session key to use with
+  history</p>
+  
+      <p>file XMLInternalDocument xml file resulting from search,
+  parsed with <code><a href='http://www.inside-r.org/r-doc/XML/xmlTreeParse'>xmlTreeParse</a></code></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Contstructs a url with the given arguments, are downloads
+  xml record returned by that url. See the package-level
+  documentation for general advice on using the EUtils
+  functions.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## <strong>Not run</strong>: #  ratites <- entrez_search(db="popset", term="ratite", usehistory=TRUE)#   entrez_fetch(db="popset", ids="", file_format="fasta", WebEnv=ratites$WebEnv, query_key=ratites$QueryKey)# ## <strong>End(Not run)</strong></div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>entrez_search</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
