@@ -41,10 +41,19 @@ entrez_search <- function(db, term, ... ){
 
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
-    return(list(file=xml_result, ids=as.integer(ids), 
-                count=as.integer(count), 
-                retmax=as.integer(retmax),
-                QueryKey= as.integer(QueryKey),
-                WebEnv = WebEnv
+    res <- (list(file=xml_result, ids=as.integer(ids), 
+                 count=as.integer(count), 
+                 retmax=as.integer(retmax),
+                 QueryKey= as.integer(QueryKey),
+                 WebEnv = WebEnv
             ))
+    class(res) <- c("esearch", class(res))
+    return(res)
 }
+
+#' @S3method print esearch
+
+print.esearch <- function(x){
+    cat(paste("Entrez search result with", x$count, "IDs (max =", x$retmax, ")\n"))
+}
+

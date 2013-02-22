@@ -1,0 +1,61 @@
+LOCUS       JX988589                 548 bp    DNA     linear   INV 05-FEB-2013
+DEFINITION  Caprella dilatata voucher CDPOR cytochrome c oxidase subunit I
+            (COI) gene, partial cds; mitochondrial.
+ACCESSION   JX988589
+VERSION     JX988589.1  GI:442566116
+KEYWORDS    .
+SOURCE      mitochondrion Caprella dilatata
+  ORGANISM  Caprella dilatata
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Crustacea; Malacostraca;
+            Eumalacostraca; Peracarida; Amphipoda; Caprellidea; Caprellida;
+            Caprellidae; Caprella.
+REFERENCE   1  (bases 1 to 548)
+  AUTHORS   Cabezas,M.P., Navarro-Barranco,C., Ros,M. and Guerra-Garcia,J.M.
+  TITLE     Long-distance dispersal, low connectivity and molecular evidence of
+            a new cryptic species in the obligate rafter Caprella andreae
+            Mayer, 1890 (Crustacea: Amphipoda: Caprellidae)
+  JOURNAL   Helgol Mar Res (2013) In press
+REFERENCE   2  (bases 1 to 548)
+  AUTHORS   Cabezas,M.P.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (22-OCT-2012) Zoology, University of Seville, Avda. Reina
+            Mercedes 6, Seville, Seville 41012, Spain
+FEATURES             Location/Qualifiers
+     source          1..548
+                     /organism="Caprella dilatata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /specimen_voucher="CDPOR"
+                     /db_xref="taxon:1282971"
+                     /country="Spain"
+                     /lat_lon="37.21 N 7.07 W"
+                     /PCR_primers="fwd_name: cp_coif2, fwd_seq:
+                     ggagatgaycaaatttataatg, rev_name: cp_coir1, rev_seq:
+                     aatatayacttctggrtgacc"
+     gene            <1..>548
+                     /gene="COI"
+     CDS             <1..>548
+                     /gene="COI"
+                     /codon_start=3
+                     /transl_table=5
+                     /product="cytochrome c oxidase subunit I"
+                     /protein_id="AGC56331.1"
+                     /db_xref="GI:442566117"
+                     /translation="VVTAHAFIMIFFMVMPVMIGGFGNWLVPLMLGSPDMAFPRMNNM
+                     SFWLLPPSLTLLIVSGMVESGVGTGWTVYPPLSSSTGHPGGAVDLAIFSLHLAGASSI
+                     LGAINFISTIINMRAEAMYLDRMPLFVWSVFITAILLLLSLPVLAGAITMLLTDRNLN
+                     TSFFDPLGGGDPILYQHLFWFF"
+ORIGIN      
+        1 ttgtagtaac agcacatgct tttattataa ttttctttat agtaatacct gttataattg
+       61 gtggttttgg taactgatta gtccctttaa tattaggaag accagatatg gctttccctc
+      121 gtataaacaa tataagtttt tggttattac ctccctctct cactttatta attgtaagag
+      181 gaatagtgga aagaggagta ggtactggtt gaactgttta ccctcctcta agatccagga
+      241 cgggccaccc tggcggcgca gtagaccttg ctattttttc tcttcatcta gcaggggcta
+      301 gatcaatttt aggtgctatt aattttattt ctactattat taatatacgg gccgaagcta
+      361 tatatcttga ccgtatacct ttgtttgttt ggtctgtatt tatcacagca attcttttgc
+      421 tcttgtcttt acctgtttta gcaggggcaa ttactatatt gttaactgac cgtaacctaa
+      481 atacatcatt ttttgaccct ttaggcggtg gtgaccccat tttataccaa cacttatttt
+      541 ggtttttt
+//
+
+
