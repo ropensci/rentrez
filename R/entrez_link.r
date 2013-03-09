@@ -5,7 +5,7 @@
 #'
 #'@export
 #'@param db character Name of the database to search for links (or use "all" to earch all NCBI databases
-#'@param ids integer Id(s) for which data is being collected
+#'@param id integer Id(s) for which data is being collected
 #'@param dbfrom character Name of database from which the Id(s) orginate
 #'@param \dots character Additional terms to add to the request 
 #

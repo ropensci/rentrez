@@ -2,7 +2,7 @@
 \alias{entrez_post}
 \title{Post IDs to Eutils for later use}
 \usage{
-  entrez_post(db, ids, ...)
+  entrez_post(db, id, ...)
 }
 \arguments{
   \item{db}{character Name of the database from which the
@@ -26,11 +26,14 @@
 }
 \examples{
 \dontrun{
-so_many_snails <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200)
-upload <- entrez_post(db="nuccore", ids=so_many_snails$ids)
+so_many_snails <- entrez_search(db="nuccore",
+                      "Gastropoda[Organism] AND COI[Gene]", retmax=200)
+upload <- entrez_post(db="nuccore", id=so_many_snails$ids)
 cookie <- upload$WebEnv
-first <- entrez_fetch(db="nuccore", ids="", file_format="fasta", WebEnv=cookie, query_key=upload$QueryKey, retend=100)
-second <- entrez_fetch(db="nuccore", ids="", file_format="fasta", WebEnv=cookie, query_key=upload$QueryKey, retstart=100)
+first <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
+                      query_key=upload$QueryKey, retend=10)
+second <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
+                       query_key=upload$QueryKey, retstart=10)
 }
 }
 

@@ -2,7 +2,7 @@
 \alias{entrez_summary}
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
-  entrez_summary(db, ids, ...)
+  entrez_summary(db, ...)
 }
 \arguments{
   \item{db}{character Name of the database to search for}
@@ -28,7 +28,7 @@
 }
 \examples{
 \dontrun{
- popset_summ <- entrez_summary(db="popset", ids=07082412)
+ popset_summ <- entrez_summary(db="popset", id=07082412)
 
 }
 }

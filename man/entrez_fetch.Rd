@@ -2,7 +2,7 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-  entrez_fetch(db, ids = "", file_format, ...)
+  entrez_fetch(db, rettype, retmode = "text", ...)
 }
 \arguments{
   \item{db}{character Name of the database to use}
@@ -10,8 +10,8 @@
   \item{ids}{integer Unique ID(s) to get data from
   (required if WebEnv not used)}
 
-  \item{file_format}{character Format in which to get data
-  (eg, fasta, xml...)}
+  \item{rettype}{character Format in which to get data (eg,
+  fasta, xml...)}
 
   \item{\dots}{character Additional terms to add to the
   request}

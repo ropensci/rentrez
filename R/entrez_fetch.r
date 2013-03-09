@@ -4,7 +4,7 @@
 #'
 #'@export
 #'@param db character Name of the database to use
-#'@param ids integer Unique ID(s) to get data from (required if WebEnv not used)
+#'@param id integer Unique ID(s) to get data from (required if WebEnv not used)
 #'@param rettype character Format in which to get data (eg, fasta, xml...)
 #'@param \dots character Additional terms to add to the request
 #'@return chracter string containing the file created

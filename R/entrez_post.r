@@ -4,7 +4,7 @@
 #'
 #'@export
 #'@param db character Name of the database from which the IDs were taken
-#'@param ids integer ID(s) for which data is being collected
+#'@param id integer ID(s) for which data is being collected
 #'@param \dots character Additional terms to add to the request 
 #
 #'@return QueryKey integer identifier for specific query in webhistory
@@ -23,7 +23,7 @@
 #'}
 
 entrez_post <- function(db, id, ...){
-    url_string <- make_entez_query("epost", db=db,id=id, ...)
+    url_string <- make_entrez_query("epost", db=db,id=id, ...)
     record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
     result <- xpathApply(record, "/ePostResult/*", xmlValue)
     names(result) <- c("QueryKey", "WebEnv")
