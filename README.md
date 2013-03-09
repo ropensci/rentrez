@@ -9,7 +9,7 @@ please let me know.
 
 ##Install
 
-For now, either download the archive above and install using `$R CMD INSTALL`
+`rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can either download the archive above and install using `$R CMD INSTALL`
 or use Hadley Wickham's [devtools](https://github.com/hadley/devtools):
 
 ```r     
