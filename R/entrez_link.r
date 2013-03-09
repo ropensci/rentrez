@@ -43,11 +43,11 @@ entrez_link <- function(db, ids, ...){
     return(result)
 }
 
-#' @S#method print elink
+#' @S3method print elink
 
-print.elink <- function(el){
-   len <- length(el)
+print.elink <- function(x, ...){
+   len <- length(x)
    cat(paste("elink result with ids from", len - 1, "databases:\n"))
-   print (names(el)[-len])
+   print (names(x)[-len])
 }
 

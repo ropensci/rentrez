@@ -53,7 +53,7 @@ entrez_search <- function(db, term, ... ){
 
 #' @S3method print esearch
 
-print.esearch <- function(x){
+print.esearch <- function(x, ...){
     cat(paste("Entrez search result with", x$count, "IDs (max =", x$retmax, ")\n"))
 }
 

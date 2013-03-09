@@ -1,3 +1,5 @@
+S3method(print,elink)
+S3method(print,esearch)
 S3method(print,pubmed_record)
 export(entrez_email)
 export(entrez_fetch)
