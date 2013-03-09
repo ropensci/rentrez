@@ -16,16 +16,13 @@
 #'\code{\link{xmlTreeParse}}
 #' @examples
 #'\dontrun{
-#'  popset_summ <- entrez_summary(db="popset", ids=07082412)
+#'  popset_summ <- entrez_summary(db="popset", id=07082412)
 #'  
 #'}
 
-entrez_summary <- function(db, ids, ...){
-    args <- c(db=db, id=paste(ids, collapse=","), 
-              email=entrez_email, tool=entrez_tool, ...)
-    url_args <- paste(paste(names(args), args, sep="="), collapse="&")
-    base_url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?retmod=xml"
-    url_string <- paste(base_url, url_args, sep="&")
+entrez_summary <- function(db, ...){
+    url_string <- make_entrez_query("esummary", db=db,
+                                    require_one_of=c("id", "WebEnv"), ...)
     record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
     return(record)
 }

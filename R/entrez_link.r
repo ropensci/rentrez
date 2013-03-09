@@ -20,12 +20,9 @@
 #' nucleotide_IDs <- linked_data$pubmed_nuccore
 #'}
 
-entrez_link <- function(db, ids, dbfrom, ...){
-    args <- c(db=db, id=paste(ids, collapse=","), 
-              email=entrez_email, tool=entrez_tool, ...)
-    url_args <- paste(paste(names(args), args, sep="="), collapse="&")
-    base_url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?"
-    url_string <- paste(base_url, url_args, sep="&")
+entrez_link <- function(db, dbfrom, ...){
+    url_string <- make_entrez_query("elink", db=db, dbfrom=dbfrom, 
+                                    require_one_of=c("id", "WebEnv"), ...)
     record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
     db_names <- xpathSApply(record, "//LinkName", xmlValue)
     get_Ids <- function(dbname){

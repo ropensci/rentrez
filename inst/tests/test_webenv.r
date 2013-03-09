@@ -6,7 +6,7 @@ test_that("Searches using WebEnv features work", {
     cookie <- web_env_search$WebEnv
     qk <- web_env_search$QueryKey 
     snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
-                              file_format = "fasta", retmax = 10)
+                              rettype = "fasta", retmax = 10)
     
     #test
     expect_that(cookie, is_a("character"))

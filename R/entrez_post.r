@@ -12,19 +12,18 @@
 #' 
 #' @examples
 #'\dontrun{  
-#' so_many_snails <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200)
-#' upload <- entrez_post(db="nuccore", ids=so_many_snails$ids)
+#' so_many_snails <- entrez_search(db="nuccore", 
+#'                       "Gastropoda[Organism] AND COI[Gene]", retmax=200)
+#' upload <- entrez_post(db="nuccore", id=so_many_snails$ids)
 #' cookie <- upload$WebEnv
-#' first <- entrez_fetch(db="nuccore", ids="", file_format="fasta", WebEnv=cookie, query_key=upload$QueryKey, retend=100)
-#' second <- entrez_fetch(db="nuccore", ids="", file_format="fasta", WebEnv=cookie, query_key=upload$QueryKey, retstart=100)
+#' first <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
+#'                       query_key=upload$QueryKey, retend=10)
+#' second <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
+#'                        query_key=upload$QueryKey, retstart=10)
 #'}
 
-entrez_post <- function(db, ids, ...){
-    args <- c(db=db, id=paste(ids, collapse=","), 
-              email=entrez_email, tool=entrez_tool, ...)
-    url_args <- paste(paste(names(args), args, sep="="), collapse="&")
-    base_url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi?"
-    url_string <- paste(base_url, url_args, sep="&")
+entrez_post <- function(db, id, ...){
+    url_string <- make_entez_query("epost", db=db,id=id, ...)
     record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
     result <- xpathApply(record, "/ePostResult/*", xmlValue)
     names(result) <- c("QueryKey", "WebEnv")

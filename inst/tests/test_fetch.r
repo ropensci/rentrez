@@ -1,10 +1,10 @@
 test_that("Functions to fetch records & summaries work", {
           #setup
           pop_ids = c("307082412", "307075396", "307075338", "307075274")
-          pop_summ <- entrez_summary(db="popset", ids=pop_ids)
+          pop_summ <- entrez_summary(db="popset", id=pop_ids)
           parsed_pop_summ <- xpathSApply(pop_summ, "//Item[@Name='Title']", 
                                          xmlValue)
-          coi <- entrez_fetch(db = "popset", ids = pop_ids[1], 
+          coi <- entrez_fetch(db = "popset", id = pop_ids[1], 
                               rettype = "fasta")
 
           #tests

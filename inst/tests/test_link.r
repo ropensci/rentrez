@@ -1,4 +1,4 @@
-test_that("The recor-linking funcitons work",{
+test_that("The record-linking funcitons work",{
     #setup
     elinks <- entrez_link(dbfrom = "pubmed", id = 20674752, db = "all")
     #tests
