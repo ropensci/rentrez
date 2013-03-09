@@ -41,7 +41,7 @@ entrez_search <- function(db, term, ... ){
 
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
-    res <- (list(file=xml_result, ids=as.integer(ids), 
+    res <- (list(file=xml_result, ids=ids, 
                  count=as.integer(count), 
                  retmax=as.integer(retmax),
                  QueryKey= as.integer(QueryKey),
