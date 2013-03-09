@@ -8,9 +8,6 @@
   \item{db}{character Name of the database to search for
   links (or use "all" to earch all NCBI databases}
 
-  \item{ids}{integer Id(s) for which data is being
-  collected}
-
   \item{dbfrom}{character Name of database from which the
   Id(s) orginate}
 

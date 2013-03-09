@@ -7,11 +7,11 @@
 \arguments{
   \item{db}{character Name of the database to use}
 
-  \item{ids}{integer Unique ID(s) to get data from
-  (required if WebEnv not used)}
-
   \item{rettype}{character Format in which to get data (eg,
   fasta, xml...)}
+
+  \item{retmode}{character Mode in which to recieve data,
+  defaults to 'text'}
 
   \item{\dots}{character Additional terms to add to the
   request}

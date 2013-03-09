@@ -7,9 +7,6 @@
 \arguments{
   \item{db}{character Name of the database to search for}
 
-  \item{ids}{integer Id(s) for which data is being
-  collected}
-
   \item{\dots}{character Additional terms to add to the
   request}
 }

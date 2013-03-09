@@ -9,7 +9,6 @@
 #'
 #'@export
 #'@param db character Name of the database to search for
-#'@param id integer Id(s) for which data is being collected
 #'@param \dots character Additional terms to add to the request 
 #
 #'@return file XMLInternalDocument xml file resulting from search, parsed with

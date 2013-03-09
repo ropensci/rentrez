@@ -8,7 +8,7 @@
   \item{db}{character Name of the database from which the
   IDs were taken}
 
-  \item{ids}{integer ID(s) for which data is being
+  \item{id}{integer ID(s) for which data is being
   collected}
 
   \item{\dots}{character Additional terms to add to the
