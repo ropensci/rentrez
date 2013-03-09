@@ -18,13 +18,18 @@
   parsed with \code{\link{xmlTreeParse}}
 }
 \description{
-  Contstructs a url with the given arguments, and downloads
-  xml record returned by that url. See the package-level
-  documentation for general advice on using the EUtils
-  functions.
+  Contstructs a query from the given arguments, including a
+  database name and list of of unique IDs for that database
+  then downloads the XML document created by that query. As
+  the XML formats used by various NCBI databases differ
+  from each other, no attempt is made to parse the xml
+  file. See the package-level documentation for general
+  advice on using the EUtils functions.
 }
 \examples{
-pubmed_search <- entrez_search(db="pubmed", term="Dwarf Elephant", retmax=1)
-pubmed_summ <- entrez_summary(db="pubmed", ids=pubmed_search$ids)
+\dontrun{
+ popset_summ <- entrez_summary(db="popset", ids=07082412)
+
+}
 }
 

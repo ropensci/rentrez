@@ -1,9 +1,8 @@
 #' Search the NCBI databases using EUtils
 #'
-#' Contstructs a url  with the given arguments, are downloads xml record
-#' returned by that url. See the package-level documentation for general advice
-#' on using the EUtils functions. 
-#'
+#' Contstructs a query with the given arguments, including a search term, and
+#' a darabase name, then retrieves the XML document created by that query. 
+#' See package-level documentation for general advice on using the Entrez functions 
 #'
 #'@export
 #'@param db character Name of the database to search for
@@ -19,12 +18,13 @@
 #'\code{\link{xmlTreeParse}}
 #' @examples
 #' \dontrun{
-#'  ratites <- entrez_search(db="popset", term="ratite", usehistory=TRUE)
-#'   entrez_fetch(db="popset", ids="", file_format="fasta", WebEnv=ratites$WebEnv, query_key=ratites$QueryKey)
+#'    web_env_search <- entrez_search(db="nuccore", 
+#'                                    term="Gastropoda[Organism] AND COI[Gene]",#'                                    usehistory="y")
+#'   cookie <- web_env_search$WebEnv
+#'   qk <- web_env_search$QueryKey 
+#'   snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
+#'                              file_format = "fasta", retmax = 10)
 #'}
-#'
-#' 
-
 
 entrez_search <- function(db, term, ... ){
     args <- c(db=db, term=gsub(" ", "+", term), email=entrez_email, 

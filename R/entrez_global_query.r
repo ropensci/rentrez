@@ -1,8 +1,6 @@
 #' See how many hits there are for a given term across all NCBI Entrez databses
 #'
-#' Contstructs a url  with the given arguments, and downloads xml record
-#' returned by that url. See the package-level documentation for general advice
-#' on using the EUtils functions. 
+#' 
 #'
 #'@export
 #'@param term the search term to use
@@ -10,7 +8,7 @@
 #'@return a named vector with counts for each a datbase
 #' @examples
 #' 
-#' mini_elephants <- entrez_global_query(term="Dwarf Elephant")
+#' NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
 
 entrez_global_query <- function(term){
     args <- c(term=gsub(" ", "+", term),email=entrez_email, tool=entrez_tool)

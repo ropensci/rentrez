@@ -8,7 +8,7 @@
   \item{db}{character Name of the database to use}
 
   \item{ids}{integer Unique ID(s) to get data from
-  (optional)}
+  (required if WebEnv not used)}
 
   \item{file_format}{character Format in which to get data
   (eg, fasta, xml...)}
@@ -23,7 +23,10 @@
   Download data from NCBI databases
 }
 \examples{
-snail_search <- entrez_search("nuccore", "Gastropoda[Organism]")
-records <- entrez_fetch("nuccore", snail_search$ids[1:2], "fasta")
+\dontrun{
+   katipo <- "Latrodectus katipo[Organism]"
+   katipo_search <- entrez_search(db="nuccore", term=katipo)
+   kaitpo_seqs <- entrez_fetch(db="nuccore", ids=katipo_search$ids, format="fasta")
+}
 }
 

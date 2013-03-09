@@ -1,4 +1,4 @@
-test_that("Searches usinh WebEnv features work", {
+test_that("Searches using WebEnv features work", {
     #setup
     web_env_search <- entrez_search(db="nuccore", 
                                     term="Gastropoda[Organism] AND COI[Gene]", 
