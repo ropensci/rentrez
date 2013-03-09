@@ -51,7 +51,7 @@ hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 Now, what sorts of data are avaliable from other NCBI database for this paper?
 
 ```r
-hox_data <- entrez_link(db="all", ids=hox_pmid, dbfrom="pubmed")
+hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
 str(hox_data)
 #List of 11
 # $ pubmed_nuccore            : chr [1:32] "290760437"  ...
@@ -102,7 +102,7 @@ file for you to further process. In this case, a little xpath can tell us about
 each dataset.
 
 ```r
-summaries <- entrez_summary(db="popset", ids=katipo_search$ids)
+summaries <- entrez_summary(db="popset", id=katipo_search$ids)
 xpathSApply(summaries, "//Item[@Name='Title']", xmlValue)
         #[1] "Latrodectus katipo 18S ribosomal RNA gene ..."
         #[2] "Latrodectus katipo cytochrome oxidase subunit 1 (COI)..."
@@ -117,8 +117,8 @@ Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
 ```r
 COI_ids <- katipo_search$ids[c(2,6)]
 trnL_ids <- katipo_search$ids[5]
-COI <- entrez_fetch(db="popset", ids=COI_ids, file_format="fasta")
-trnL <- entrez_fetch(db="popset", ids=trnL_ids, file_format="fasta")
+COI <- entrez_fetch(db="popset", id=COI_ids, file_format="fasta")
+trnL <- entrez_fetch(db="popset", id=trnL_ids, file_format="fasta")
 ```
 
 The "fetched" results are fasta formatted characters, which can be written
