@@ -1,5 +1,5 @@
 test_that("file parsers work",{
-    rec <- entrez_fetch(db="pubmed", id=20674752, file_format="xml")
+    rec <- entrez_fetch(db="pubmed", ids=20674752, file_format="xml")
     parsed_rec <- parse_pubmed_xml(rec)
 
     expect_that(parsed_rec, is_a("pubmed_record"))

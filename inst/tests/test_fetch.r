@@ -5,7 +5,7 @@ test_that("Functions to fetch records & summaries work", {
           parsed_pop_summ <- xpathSApply(pop_summ, "//Item[@Name='Title']", 
                                          xmlValue)
           coi <- entrez_fetch(db = "popset", ids = pop_ids[1], 
-                              file_format = "fasta")
+                              rettype = "fasta")
 
           #tests
           expect_that(pop_summ, is_a("XMLInternalDocument"))
