@@ -37,7 +37,17 @@ entrez_link <- function(db, ids, ...){
     # Not simplified so if a single database get a named list (for consistancy)
     result <- sapply(db_names, get_Ids, simplify=FALSE) 
     result$file <- record
+    class(result) <- c("elink", class(result))
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
     return(result)
 }
+
+#' @S#method print elink
+
+print.elink <- function(el){
+   len <- length(el)
+   cat(paste("elink result with ids from", len - 1, "databases:\n"))
+   print (names(el)[-len])
+}
+
