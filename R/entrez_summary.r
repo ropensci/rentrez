@@ -60,6 +60,7 @@ parse_esumm_structure <- function(node){
 parse_esumm_list <- function(node){
     res <- lapply(node["Item"], parse_summary)
     names(res) <- lapply(node["Item"], xmlGetAttr, "Name")
+    return(res)
 }
 
 
