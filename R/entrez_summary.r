@@ -23,42 +23,42 @@ entrez_summary <- function(db, ...){
     url_string <- make_entrez_query("esummary", db=db,
                                     require_one_of=c("id", "WebEnv"), ...)
     record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
-    return(record)
+    return(parse_esummary(record))
 }
 
 
 # Prase a sumamry XML 
 #
-# Logic goes like this
+# For each node the logic goes like this
 # 1. Find the "Type" of a node
 # 2. Convert to appropriate R object w/ functions hased in 'fun hash'
 # 3. Return the whole thing as a named list
 #
 # usage
 # snp_sum <- rentrez::entrez_summary(db="snp", id=4312)
-# xpathApply(snp_sum, "//DocSum/Item", parse_summary)
+# parse_esummary(snp_sum)
 # 
 
-parse_summary <- function(node) {
+parse_esummary <- function(record){
+    res <- xpathApply(record, "//DocSum/Item", parse_node)
+    names(res) <- xpathApply(record, "//DocSum/Item", xmlGetAttr, "Name")
+    res <- c(res, file=record)
+    class(res) <- c("esummary", class(res))
+    return(res)
+}
+
+parse_node <- function(node) {
     fxn_hash <- c(
                   "String" = xmlValue,
-                  "Integer" = parse_summ_int,
-                  "Structure" = parse_esumm_structure,
+                  "Integer" = parse_esumm_int,
+                  "Structure" = parse_esumm_list,
                   "List" = parse_esumm_list)
     node_fxn <- fxn_hash[[xmlGetAttr(node, "Type")]]
     return(node_fxn(node))
 
 }
 
-
-parse_summ_int <- function(node) as.integer(xmlValue(node))
-
-parse_esumm_structure <- function(node){
-    res <- lapply(node["Item"], parse_summary)
-    names(res) <- sapply(node["Item"], xmlGetAttr, "Name")
-    return(res)
-}
-    
+parse_esumm_int <- function(node) as.integer(xmlValue(node))
 
 parse_esumm_list <- function(node){
     res <- lapply(node["Item"], parse_summary)
