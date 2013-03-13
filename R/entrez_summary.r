@@ -33,7 +33,11 @@ entrez_summary <- function(db, ...){
 # 1. Find the "Type" of a node
 # 2. Convert to appropriate R object w/ functions hased in 'fun hash'
 # 3. Return the whole thing as a named list
-
+#
+# usage
+# snp_sum <- rentrez::entrez_summary(db="snp", id=4312)
+# xpathApply(snp_sum, "//DocSum/Item", parse_summary)
+# 
 
 parse_summary <- function(node) {
     fxn_hash <- c(
@@ -52,7 +56,6 @@ parse_summ_int <- function(node) as.integer(xmlValue(node))
 parse_esumm_structure <- function(node){
     res <- lapply(node["Item"], parse_summary)
     names(res) <- sapply(node["Item"], xmlGetAttr, "Name")
-#    return(list(xmlGetAttr(node, "Name") = res))
     return(res)
 }
     
@@ -63,8 +66,3 @@ parse_esumm_list <- function(node){
     return(res)
 }
 
-
-
-
-#parse_summary(ex_node)
-#xpathApply(rec, "//DocSum/Item", parse_summary)i
