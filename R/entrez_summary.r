@@ -25,3 +25,45 @@ entrez_summary <- function(db, ...){
     record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
     return(record)
 }
+
+
+# Prase a sumamry XML 
+#
+# Logic goes like this
+# 1. Find the "Type" of a node
+# 2. Convert to appropriate R object w/ functions hased in 'fun hash'
+# 3. Return the whole thing as a named list
+
+
+parse_summary <- function(node) {
+    fxn_hash <- c(
+                  "String" = xmlValue,
+                  "Integer" = parse_summ_int,
+                  "Structure" = parse_esumm_structure,
+                  "List" = parse_esumm_list)
+    node_fxn <- fxn_hash[[xmlGetAttr(node, "Type")]]
+    return(node_fxn(node))
+
+}
+
+
+parse_summ_int <- function(node) as.integer(xmlValue(node))
+
+parse_esumm_structure <- function(node){
+    res <- lapply(node["Item"], parse_summary)
+    names(res) <- sapply(node["Item"], xmlGetAttr, "Name")
+#    return(list(xmlGetAttr(node, "Name") = res))
+    return(res)
+}
+    
+
+parse_esumm_list <- function(node){
+    res <- lapply(node["Item"], parse_summary)
+    names(res) <- lapply(node["Item"], xmlGetAttr, "Name")
+}
+
+
+
+
+#parse_summary(ex_node)
+#xpathApply(rec, "//DocSum/Item", parse_summary)i
