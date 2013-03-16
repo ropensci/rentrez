@@ -16,6 +16,7 @@
 #' @examples
 #'\dontrun{
 #'  popset_summ <- entrez_summary(db="popset", id=07082412)
+#'  popset_summ["
 #'  
 #'}
 
@@ -23,21 +24,27 @@ entrez_summary <- function(db, ...){
     url_string <- make_entrez_query("esummary", db=db,
                                     require_one_of=c("id", "WebEnv"), ...)
     record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
-    return(parse_esummary(record))
+    return(lapply(record["//DocSum"], parse_esummary))
 }
+
+#' @S3method print esummary
+
+print.esummary <- function(x, ...){
+    len <- length(x)
+    cat(paste("esummary result with", len - 1, "items:\n"))
+    print(names(x)[-len])
+}
+
 
 
 # Prase a sumamry XML 
 #
-# For each node the logic goes like this
-# 1. Find the "Type" of a node
-# 2. Convert to appropriate R object w/ functions hased in 'fun hash'
-# 3. Return the whole thing as a named list
+# Logic goes like this
+# 1. Define functions parse_esumm_* to handle all data types
+# 2. For each node detect type, parse accordingly
+# 3. wrap it all up in function parse_esummary that 
 #
-# usage
-# snp_sum <- rentrez::entrez_summary(db="snp", id=4312)
-# parse_esummary(snp_sum)
-# 
+#
 
 parse_esummary <- function(record){
     res <- xpathApply(record, "//DocSum/Item", parse_node)
@@ -48,12 +55,12 @@ parse_esummary <- function(record){
 }
 
 parse_node <- function(node) {
-    fxn_hash <- c(
-                  "String" = xmlValue,
-                  "Integer" = parse_esumm_int,
-                  "Structure" = parse_esumm_list,
-                  "List" = parse_esumm_list)
-    node_fxn <- fxn_hash[[xmlGetAttr(node, "Type")]]
+    node_type <- xmlGetAttr(node, "Type")
+    node_fxn <- switch(node_type, 
+                       "Integer" = parse_esumm_int,
+                       "List" = parse_esumm_list,
+                       "Stucture" = parse_esumm_list,
+                       xmlValue) #unnamed arguments to switch = default val.
     return(node_fxn(node))
 
 }

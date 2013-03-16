@@ -26,6 +26,7 @@
 \examples{
 \dontrun{
  popset_summ <- entrez_summary(db="popset", id=07082412)
+ popset_summ["
 
 }
 }
