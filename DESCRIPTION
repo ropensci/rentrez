@@ -1,6 +1,6 @@
 Package: rentrez
-Version: 0.2
-Date: 2011-11-22
+Version: 0.2.1
+Date: 2013-17-03
 Title: Entrez in R
 Author: David Winter
 Maintainer: David Winter <david.winter@gmail.com>

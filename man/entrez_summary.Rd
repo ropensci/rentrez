@@ -8,26 +8,28 @@
   \item{db}{character Name of the database to search for}
 
   \item{\dots}{character Additional terms to add to the
-  request}
+  request. Requires either ID (unique id(s) for records in
+  a given database) or WebEnv (a character containing a
+  cookie created by a previous entrez query).}
 }
 \value{
+  A list of esummary records (if multiple IDs are passed)
+  or a single record.
+
   file XMLInternalDocument xml file resulting from search,
   parsed with \code{\link{xmlTreeParse}}
 }
 \description{
   Contstructs a query from the given arguments, including a
   database name and list of of unique IDs for that database
-  then downloads the XML document created by that query. As
-  the XML formats used by various NCBI databases differ
-  from each other, no attempt is made to parse the xml
-  file. See the package-level documentation for general
-  advice on using the EUtils functions.
+  then downloads the XML document created by that query.
+  The XML document is parsed, with the
 }
 \examples{
 \dontrun{
- popset_summ <- entrez_summary(db="popset", id=07082412)
- popset_summ["
-
+ pop_ids = c("307082412", "307075396", "307075338", "307075274")
+ pop_summ <- entrez_summary(db="popset", id=pop_ids)
+ sapply(popset_summ, "[[", "Title")
 }
 }
 
