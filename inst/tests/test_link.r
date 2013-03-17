@@ -1,3 +1,4 @@
+context("elink")
 test_that("The record-linking funcitons work",{
     #setup
     elinks <- entrez_link(dbfrom = "pubmed", id = 20674752, db = "all")

@@ -1,6 +1,7 @@
 # test any parts of the README or tutorial that aren't already part of the test
 # suite. Note, the final example of the README makes a lot calls to NCBI, so is
 # not included here
+context("documentation")
 
 test_that("Examples in documentation work", {
     #setup

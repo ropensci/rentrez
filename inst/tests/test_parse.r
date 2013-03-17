@@ -1,3 +1,4 @@
+context("result-parsers")
 test_that("file parsers work",{
     rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml")
     parsed_rec <- parse_pubmed_xml(rec)
@@ -11,4 +12,4 @@ test_that("file parsers work",{
 
 
    
-    
+   

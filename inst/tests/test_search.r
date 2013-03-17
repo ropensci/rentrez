@@ -1,3 +1,4 @@
+context("search")
 test_that("search functions work",{
     #setup
     gsearch <- entrez_global_query("Heliconius")

@@ -1,3 +1,4 @@
+context("fetching-records")
 test_that("Functions to fetch records & summaries work", {
           #setup
           pop_ids = c("307082412", "307075396", "307075338", "307075274")
