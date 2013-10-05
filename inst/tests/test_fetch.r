@@ -16,7 +16,10 @@ test_that("Functions to fetch records & summaries work", {
           #do lists and structures work?
           expect_that(summ_list_ele, is_a("list"))
           expect_true(length(summ_list_ele) > 0)
-          expect_true(length(summ_list_ele[[1]]) >0 )
+          #a structure
+          expect_that(summ_list_ele[[1]], is_a("list") )
+          expect_that(summ_list_ele[[1]]$Org, matches("Homo sapiens"))
+
           #does fetching sequence records work?
           expect_that(length(strsplit(coi, ">")[[1]]), 
                          equals(30))
