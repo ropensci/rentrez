@@ -63,7 +63,7 @@ parse_node <- function(node) {
     node_fxn <- switch(node_type, 
                        "Integer" = parse_esumm_int,
                        "List" = parse_esumm_list,
-                       "Stucture" = parse_esumm_list,
+                       "Structure" = parse_esumm_list,
                        xmlValue) #unnamed arguments to switch = default val.
     return(node_fxn(node))
 
@@ -76,4 +76,7 @@ parse_esumm_list <- function(node){
     names(res) <- lapply(node["Item"], xmlGetAttr, "Name")
     return(res)
 }
+
+parse_esumm_struct <- function(node){
+    res <- la
 
