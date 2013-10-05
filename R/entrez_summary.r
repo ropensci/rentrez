@@ -77,6 +77,4 @@ parse_esumm_list <- function(node){
     return(res)
 }
 
-parse_esumm_struct <- function(node){
-    res <- la
 
