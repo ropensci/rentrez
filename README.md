@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez)
+
 #rentrez
 
 rentrez provides functions that work with the [NCBI eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
