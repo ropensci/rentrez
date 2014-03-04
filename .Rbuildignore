@@ -1,3 +1,5 @@
+.gitignore
 staticdocs
-.git*
+.git/
 rentrez_*
+README.md

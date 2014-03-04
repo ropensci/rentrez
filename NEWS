@@ -1,3 +1,18 @@
-~ 0.11 
+Version 0.2.3
+
+*Edited license/description to meet CRAN requiremens
+*Added sentence to description to summarise the package
+
+
+Version 0.2.2
+--------------------------------
+
+*Parsing of esummary xmls is now much nicer. 
+*S3 items to represent most results
+*Tests to cover all functions
+
+
+Version 0.1.1
+---------------------------------
 First release on CRAN + now part of ROpenSci
 Functions cover the whole EUtils API

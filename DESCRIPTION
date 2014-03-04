@@ -1,6 +1,6 @@
 Package: rentrez
-Version: 0.2.1
-Date: 2013-17-03
+Version: 0.2.3
+Date: 2014-4-3
 Title: Entrez in R
 Author: David Winter
 Maintainer: David Winter <david.winter@gmail.com>
@@ -8,16 +8,7 @@ Depends:
     R (>= 2.6.0),
     RCurl,
     XML
-Description: NA
-License: MIT
-Collate:
-    'entrez_fetch.r'
-    'entrez_link.r'
-    'entrez_search.r'
-    'set_globals.r'
-    'parse_pubmed_xml.r'
-    'entrez_global_query.r'
-    'entrez_summary.r'
-    'help.r'
-    'entrez_post.r'
-    'make_entrez_query.r'
+Description: Rentrez provides an R interfact to the NCBI's EUtils API allowing
+    users to search databses like genbank and pubmed, process the resulting
+    files and pull data into their R sessions.
+License: MIT + file LICENSE

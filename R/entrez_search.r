@@ -18,11 +18,11 @@
 #'\code{\link{xmlTreeParse}}
 #' @examples
 #' \dontrun{
-#'    web_env_search <- entrez_search(db="nuccore", 
-#'                                    term="Gastropoda[Organism] AND COI[Gene]",#'                                    usehistory="y")
-#'   cookie <- web_env_search$WebEnv
-#'   qk <- web_env_search$QueryKey 
-#'   snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
+#'    query <- "Gastropoda[Organism] AND COI[Gene]"
+#'    web_env_search <- entrez_search(db="nuccore", query, usehistory="y")
+#'    cookie <- web_env_search$WebEnv
+#'    qk <- web_env_search$QueryKey 
+#'    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
 #'                              file_format = "fasta", retmax = 10)
 #'}
 
