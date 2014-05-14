@@ -98,20 +98,27 @@ katipo_search$count
 ```        
 
 In this search `count` is the total number of hits returned for the search term.
-We can use `entrez_summary` to learn a little about these datasets. Because 
-different databases give differnt xml files, `entrez_summary` returns an xml 
-file for you to further process. In this case, a little xpath can tell us about
-each dataset.
+We can use `entrez_summary` to learn a little about these datasets. `rentrez`
+will parse this xml into a list of `esummary` records, with each list entry 
+corresponding to one of the IDs it is passed. In this case we get six records,
+and we see what each one contains like so:
+
 
 ```coffee
-summaries <- entrez_summary(db="popset", id=katipo_search$ids)
-xpathSApply(summaries, "//Item[@Name='Title']", xmlValue)
-        #[1] "Latrodectus katipo 18S ribosomal RNA gene ..."
-        #[2] "Latrodectus katipo cytochrome oxidase subunit 1 (COI)..."
-        #[3] "Latrodectus 18S ribosomal RNA gene..."
-        #[4] "Latrodectus cytochrome 1 oxidase subunit 1 (COI)...""
-        #[5] "Latrodectus tRNA-Leu (trnL) gene ... ""                                               
-        #[6] "Theridiidae cytochrome oxidase subunit I (COI) gene ..."
+(summaries <- entrez_summary(db="popset", id=katipo_search$ids))
+    #list of  6 esummary records
+summaries[[1]]
+    #esummary result with 12 items:
+    # [1] "Caption"    "Title"      "Extra"      "Gi"         "CreateDate"
+    # [6] "UpdateDate" "Flags"      "TaxId"      "Length"     "Status"    
+    #[11] "ReplacedBy" "Comment"  
+sapply(summaries, "[[", "Title")
+    #[1] "Latrodectus katipo 18S ribosomal RNA gene... "
+    #[2] "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene ..."  
+    #[3] "Latrodectus 18S ribosomal RNA gene... "
+    #[4] "Latrodectus cytochrome oxidase subunit 1 (COI) gene ...."                                              
+    #[5] "Latrodectus tRNA-Leu (trnL) gene ..."
+    #[6] "Theridiidae cytochrome oxidase subunit I (COI) gene... "
 ```
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
