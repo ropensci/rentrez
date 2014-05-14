@@ -28,6 +28,7 @@ entrez_summary <- function(db, ...){
     if(length(rec) == 1){
         return(rec[[1]])
     }
+    class(rec) <- c("multiEsummary", class(rec))
     return(rec)
 }
 
@@ -39,6 +40,11 @@ print.esummary <- function(x, ...){
     print(names(x)[-len])
 }
 
+#' @S3method print esummary
+print.multiEsummary <- function(x, ..){
+    len <- length(x)
+    cat(paste ("list of ", len, "esummary records\n"))
+}
 
 
 # Prase a sumamry XML 
