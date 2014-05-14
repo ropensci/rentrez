@@ -150,7 +150,7 @@ tree <- nj(dist.dna(coi_aligned))
 
 ### WebEnv and big queries
 
-The NCBI provides search history features, which can be useful for dealing with alrge lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
+The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
 ```coffee	
 library(rentrez)
 snail_search <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200, usehistory="y")
