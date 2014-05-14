@@ -8,7 +8,7 @@ Depends:
     R (>= 2.6.0),
     RCurl,
     XML
-Description: Rentrez provides an R interfact to the NCBI's EUtils API allowing
-    users to search databses like genbank and pubmed, process the resulting
+Description: Rentrez provides an R interact to the NCBI's EUtils API allowing
+    users to search databases like genbank and pubmed, process the resulting
     files and pull data into their R sessions.
 License: MIT + file LICENSE
