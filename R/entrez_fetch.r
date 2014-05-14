@@ -9,11 +9,11 @@
 #'@param \dots character Additional terms to add to the request
 #'@return chracter string containing the file created
 #' @examples
-#'\dontrun{ 
-#'    katipo <- "Latrodectus katipo[Organism]"
-#'    katipo_search <- entrez_search(db="nuccore", term=katipo)
-#'    kaitpo_seqs <- entrez_fetch(db="nuccore", ids=katipo_search$ids, format="fasta")
-#'}
+#' 
+#' katipo <- "Latrodectus katipo[Organism]"
+#' katipo_search <- entrez_search(db="nuccore", term=katipo)
+#' kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
+#'
 
 entrez_fetch <- function(db, rettype, retmode="text", ...){
     url_string <- make_entrez_query("efetch", 

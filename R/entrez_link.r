@@ -13,11 +13,11 @@
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #' @examples
-#'\dontrun{ 
+#' 
 #'  pubmed_search <- entrez_search(db = "pubmed", term = "10.1016/j.ympev.2010.07.013[doi]")
 #'  linked_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
 #' nucleotide_IDs <- linked_data$pubmed_nuccore
-#'}
+#'
 
 entrez_link <- function(db, dbfrom, ...){
     url_string <- make_entrez_query("elink", db=db, dbfrom=dbfrom, 
