@@ -17,7 +17,7 @@
 #'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
-#'  sapply(popset_summ, "[[", "Title")
+#'  sapply(pop_summ, "[[", "Title")
 #'
 
 entrez_summary <- function(db, ...){

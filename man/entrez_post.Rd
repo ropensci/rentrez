@@ -6,14 +6,11 @@
 entrez_post(db, id, ...)
 }
 \arguments{
-  \item{db}{character Name of the database from which the
-  IDs were taken}
+\item{db}{character Name of the database from which the IDs were taken}
 
-  \item{id}{integer ID(s) for which data is being
-  collected}
+\item{id}{integer ID(s) for which data is being collected}
 
-  \item{\dots}{character Additional terms to add to the
-  request}
+\item{\dots}{character Additional terms to add to the request}
 }
 \value{
 QueryKey integer identifier for specific query in webhistory

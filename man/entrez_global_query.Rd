@@ -6,7 +6,7 @@
 entrez_global_query(term)
 }
 \arguments{
-  \item{term}{the search term to use}
+\item{term}{the search term to use}
 }
 \value{
 a named vector with counts for each a datbase

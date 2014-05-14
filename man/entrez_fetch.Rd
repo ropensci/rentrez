@@ -6,16 +6,13 @@
 entrez_fetch(db, rettype, retmode = "text", ...)
 }
 \arguments{
-  \item{db}{character Name of the database to use}
+\item{db}{character Name of the database to use}
 
-  \item{rettype}{character Format in which to get data (eg,
-  fasta, xml...)}
+\item{rettype}{character Format in which to get data (eg, fasta, xml...)}
 
-  \item{retmode}{character Mode in which to recieve data,
-  defaults to 'text'}
+\item{retmode}{character Mode in which to recieve data, defaults to 'text'}
 
-  \item{\dots}{character Additional terms to add to the
-  request}
+\item{\dots}{character Additional terms to add to the request}
 }
 \value{
 chracter string containing the file created
@@ -24,10 +21,8 @@ chracter string containing the file created
 Download data from NCBI databases
 }
 \examples{
-\dontrun{
-   katipo <- "Latrodectus katipo[Organism]"
-   katipo_search <- entrez_search(db="nuccore", term=katipo)
-   kaitpo_seqs <- entrez_fetch(db="nuccore", ids=katipo_search$ids, format="fasta")
-}
+katipo <- "Latrodectus katipo[Organism]"
+katipo_search <- entrez_search(db="nuccore", term=katipo)
+kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
 }
 

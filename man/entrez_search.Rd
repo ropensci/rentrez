@@ -6,12 +6,11 @@
 entrez_search(db, term, ...)
 }
 \arguments{
-  \item{db}{character Name of the database to search for}
+\item{db}{character Name of the database to search for}
 
-  \item{term}{character The search term}
+\item{term}{character The search term}
 
-  \item{\dots}{character Additional terms to add to the
-  request}
+\item{\dots}{character Additional terms to add to the request}
 }
 \value{
 ids integer Unique IDS returned by the search

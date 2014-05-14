@@ -6,14 +6,11 @@
 entrez_link(db, dbfrom, ...)
 }
 \arguments{
-  \item{db}{character Name of the database to search for
-  links (or use "all" to earch all NCBI databases}
+\item{db}{character Name of the database to search for links (or use "all" to earch all NCBI databases}
 
-  \item{dbfrom}{character Name of database from which the
-  Id(s) orginate}
+\item{dbfrom}{character Name of database from which the Id(s) orginate}
 
-  \item{\dots}{character Additional terms to add to the
-  request}
+\item{\dots}{character Additional terms to add to the request}
 }
 \value{
 An elink object containing vectors of unique IDs
@@ -27,10 +24,8 @@ Contstructs a query with the given arguments and downloands the XML
 document created by that query. Unique IDs from linked-databases
 }
 \examples{
-\dontrun{
- pubmed_search <- entrez_search(db = "pubmed", term = "10.1016/j.ympev.2010.07.013[doi]")
+pubmed_search <- entrez_search(db = "pubmed", term = "10.1016/j.ympev.2010.07.013[doi]")
  linked_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
 nucleotide_IDs <- linked_data$pubmed_nuccore
-}
 }
 
