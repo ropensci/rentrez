@@ -14,11 +14,11 @@
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #' @examples
-#'\dontrun{
+#'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
 #'  sapply(popset_summ, "[[", "Title")
-#'}
+#'
 
 entrez_summary <- function(db, ...){
     url_string <- make_entrez_query("esummary", db=db,
@@ -51,8 +51,8 @@ print.esummary <- function(x, ...){
 #
 
 parse_esummary <- function(record){
-    res <- xpathApply(record, "//DocSum/Item", parse_node)
-    names(res) <- xpathApply(record, "//DocSum/Item", xmlGetAttr, "Name")
+    res <- xpathApply(record, "Item", parse_node)
+    names(res) <- xpathApply(record, "Item", xmlGetAttr, "Name")
     res <- c(res, file=record)
     class(res) <- c("esummary", class(res))
     return(res)
