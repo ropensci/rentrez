@@ -1,5 +1,9 @@
-Version 0.2.3
+Version 0.2.4
+-------------------------
+*minor release to fix bug in esummary parsing
 
+Version 0.2.3
+---------------------------------
 *Edited license/description to meet CRAN requiremens
 *Added sentence to description to summarise the package
 
