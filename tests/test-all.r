@@ -1,2 +1,2 @@
 library(testthat)
-test_package("rentrez")
+test_check("rentrez")
