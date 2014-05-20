@@ -1,6 +1,6 @@
 Package: rentrez
 Version: 0.2.4
-Date: 2014-4-3
+Date: 2014-05-20
 Title: Entrez in R
 Author: David Winter
 Maintainer: David Winter <david.winter@gmail.com>
@@ -13,4 +13,5 @@ Suggests:
 Description: Rentrez provides an R interact to the NCBI's EUtils API allowing
     users to search databases like genbank and pubmed, process the resulting
     files and pull data into their R sessions.
+Roxygen: list(wrap = FALSE)
 License: MIT + file LICENSE
