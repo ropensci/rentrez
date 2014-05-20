@@ -1,6 +1,5 @@
 .gitignore
 staticdocs
 .git/
-rentrez_*
 README.md
 .travis.yml
