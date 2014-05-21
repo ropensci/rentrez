@@ -48,7 +48,7 @@ entrez_search <- function(db, term, ... ){
     return(res)
 }
 
-#' @S3method print esearch
+#' @export
 
 print.esearch <- function(x, ...){
     cat(paste("Entrez search result with", x$count, "IDs (max =", x$retmax, ")\n"))

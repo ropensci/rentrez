@@ -32,7 +32,7 @@ entrez_summary <- function(db, ...){
     return(rec)
 }
 
-#' @S3method print esummary
+#' @export 
 
 print.esummary <- function(x, ...){
     len <- length(x)
@@ -40,8 +40,8 @@ print.esummary <- function(x, ...){
     print(names(x)[-len])
 }
 
-#' @S3method print esummary
-print.multiEsummary <- function(x, ..){
+#' @export 
+print.multiEsummary <- function(x, ...){
     len <- length(x)
     cat(paste ("list of ", len, "esummary records\n"))
 }

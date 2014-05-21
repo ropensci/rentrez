@@ -29,7 +29,7 @@ parse_pubmed_xml <- function(paper){
  return(res) 
 }
 
-#' @S3method print pubmed_record
+#' @export
 print.pubmed_record  <- function(x, ...){
  if(length(x$authors) == 1){
   display.author <- x$authors[1]

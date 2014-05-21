@@ -39,7 +39,7 @@ entrez_link <- function(db, dbfrom, ...){
     return(result)
 }
 
-#' @S3method print elink
+#' @export
 
 print.elink <- function(x, ...){
    len <- length(x)
