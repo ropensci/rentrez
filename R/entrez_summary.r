@@ -7,7 +7,7 @@
 #'@export
 #'@param db character Name of the database to search for
 #'@param \dots character Additional terms to add to the request. Requires either
-#'   ID (unique id(s) for records in a given database) or WebEnv (a character
+#'   id (unique id(s) for records in a given database) or WebEnv (a character
 #'   containing a cookie created by a previous entrez query).
 #'@return A list of esummary records (if multiple IDs are passed) or a single
 #' record.
@@ -18,13 +18,24 @@
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
 #'  sapply(pop_summ, "[[", "Title")
-#'
+#'  
+#'  # clinvar example
+#'  res <- entrez_search(db = "clinvar", term = "BRCA1")
+#'  cv <- entrez_summary(db="clinvar", id=res$ids)
+#'  cv[[1]] # get the names of the list for each result
+#'  sapply(cv, "[[", "title") # titles
+#'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
+#'  sapply(cv, "[[", "gene_sort") # gene_sort
 
 entrez_summary <- function(db, ...){
     url_string <- make_entrez_query("esummary", db=db,
                                     require_one_of=c("id", "WebEnv"), ...)
     whole_record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
-    rec <- lapply(whole_record["//DocSum"], parse_esummary)
+    if(db == 'clinvar'){
+      rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
+    } else {
+      rec <- lapply(whole_record["//DocSum"], parse_esummary)      
+    }
     if(length(rec) == 1){
         return(rec[[1]])
     }
@@ -84,3 +95,18 @@ parse_esumm_list <- function(node){
 }
 
 
+parse_esummary_clinvar <- function(record){
+  easynodes <- c('obj_type','accession','accession_version','title','supporting_submissions',
+    'gene_sort','chr_sort','location_sort','variation_set_name')
+  res <- sapply(easynodes, function(x) xpathApply(record, x, xmlValue))
+  res$clinical_significance <- xpathApply(record, 'clinical_significance', xmlToList)[[1]]
+  variation_set <- xpathApply(record, 'variation_set', xmlToList)[[1]]$variation
+  variation_set$variation$aliases <- unlist(variation_set$variation$aliases, use.names = FALSE)
+  trait_set <- xpathApply(record, 'trait_set', xmlToList)[[1]]$trait
+  trait_set$trait$trait_xrefs <- unname(trait_set$trait$trait_xrefs)
+  res$variation_set <- variation_set
+  res$trait_set <- trait_set
+  res <- c(res, file=record)
+  class(res) <- c("esummary", class(res))
+  return(res)
+}
