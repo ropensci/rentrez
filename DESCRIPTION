@@ -9,9 +9,11 @@ Depends:
     RCurl,
     XML
 Suggests:
-    testthat
+    testthat,
+    knitr
 Description: Rentrez provides an R interact to the NCBI's EUtils API allowing
     users to search databases like genbank and pubmed, process the resulting
     files and pull data into their R sessions.
+VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: MIT + file LICENSE

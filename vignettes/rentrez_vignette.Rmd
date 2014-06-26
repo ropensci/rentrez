@@ -2,7 +2,7 @@
 
 <!--
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{An R Markdown Vignette made with knitr}
+%\VignetteIndexEntry{rentrez tutorial}
 -->
  
 ```{r, eval=TRUE, echo=FALSE}
