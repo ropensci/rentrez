@@ -2,12 +2,8 @@
 
 #rentrez
 
-rentrez provides functions that work with the [NCBI eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
-to search or download data from various NCBI databases. 
+rentrez provides functions that work with the [NCBI eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) to search or download data from various NCBI databases.
 
-The package hasn't been thoroughly tested yet, but the functions for each of 
-the Eutils functions are implimented. If you try the package and find bugs
-please let me know.
 
 ##Install
 
