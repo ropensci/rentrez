@@ -1,6 +1,6 @@
-.gitignore
-staticdocs
-.git/
-rentrez_*
-README.md
-.travis.yml
+^\.gitignore$
+^staticdocs$
+^\.git/$
+^rentrez_*\.tar\.gz$
+^README\.md$
+^\.travis\.yml$
