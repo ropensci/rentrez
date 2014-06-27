@@ -20,7 +20,9 @@ rentrez tutorial
 What rentrez does
 -----------------
 
-At present the functions provided by rentrez cover the entire Eutils API. Basically, the functions take arguments provided by a user, produce the URL needed to query the NCBI’s API and fetches the resulting data. In most cases the functions return lists that contain the parts of the resulting file that are most likely to be useful as items. When the returned file is XML the list contains the XML file for those that want to dig deeper.
+At present the functions provided by rentrez cover the entire Eutils API.
+Basically, the functions take arguments provided by a user, produce the URL
+needed to query the NCBI's API and fetches the resulting data. In most cases the functions return lists that contain the parts of the resulting file that are most likely to be useful as items. When the returned file is XML the list contains the XML file for those that want to dig deeper.
 
 `rentrez` presumes you already know your way around the Eutils' API, [which is well documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Make sure you read the documentation, and in particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times.
 
@@ -63,7 +65,10 @@ All the functions in `rentrez` create a URL to get data from the NCBI, then fetc
 
 ## Find data related to a particular record in an NCBI database
 
-OK, now we have the PMID, what data does NCBI have for this paper? The `entrez_link` function lets us find out. In this case the `db` argument can be used to limit the number of data sources to check, but I want to see every data source here so I'll set this paramater to “all”:
+OK, now we have the PMID, what data does NCBI have for this paper? The
+`entrez_link` function lets us find out. In this case the `db` argument can be
+used to limit the number of data sources to check, but I want to see every data
+source here so I'll set this paramater to "all":
 
 ```{r entrez_link, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
 NCBI_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
@@ -132,7 +137,7 @@ a large lists of IDs (which will not fit in a single URL) or repeated searches. 
 snail_search <- entrez_search(db = "nuccore", "Gastropoda[Organism] AND COI[Gene]", usehistory = "y")
 ```
 
-Because we set usehistory to “y” the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the hundreds of ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
+Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the hundreds of ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
 
 ```{r webenvs2, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
 cookie <- snail_search$WebEnv
