@@ -3,14 +3,16 @@
 #'
 #'
 #'@export
-#'@param paper character the record to be parsed (as a character, 
+#'@param raw_xml character the record to be parsed (as a character, 
 #' expected to come from \code{\link{entrez_fetch}})
 #'@return Either a single pubmed_record object, or a list of several 
 #'@examples
 #' 
 #' hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 #' hox_rel <- entrez_link(db="pubmed", dbfrom="pubmed", id=hox_paper$ids)
-#' recs <- entrez_fetch(db="pubmed", id=hox_rel$pubmed_pubmed[1:3])
+#' recs <- entrez_fetch(db="pubmed", 
+#'                        id=hox_rel$pubmed_pubmed[1:3], 
+#'                        rettype="xml")
 #' parse_pubmed_xml(recs)
 #'
 
