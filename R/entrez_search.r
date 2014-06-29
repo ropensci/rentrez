@@ -14,6 +14,7 @@
 #'@return retmax integer Maximum number of hits returned by the search
 #'@return QueryKey integer identifier for specific query in webhistory
 #'@return WebEnv character identifier for session key to use with history
+#'@import RCurl XML
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #' @examples

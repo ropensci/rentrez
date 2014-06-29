@@ -13,6 +13,8 @@
 #' record.
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
+#'@import XML
+#'@import RCurl
 #' @examples
 #'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")

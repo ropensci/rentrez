@@ -1,7 +1,7 @@
 #' Summarise an XML record from pubmed.
 #'
 #'
-#'
+#'@import XML
 #'@export
 #'@param raw_xml character the record to be parsed (as a character, 
 #' expected to come from \code{\link{entrez_fetch}})

@@ -9,7 +9,8 @@
 #
 #'@return QueryKey integer identifier for specific query in webhistory
 #'@return WebEnv character identifier for session key to use with history
-#' 
+#'@import RCurl XML
+#'
 #' @examples
 #'\dontrun{  
 #' so_many_snails <- entrez_search(db="nuccore", 

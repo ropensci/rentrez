@@ -6,6 +6,8 @@
 #'@param term the search term to use
 #
 #'@return a named vector with counts for each a datbase
+#'
+#'@import RCurl XML
 #' @examples
 #' 
 #' NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")

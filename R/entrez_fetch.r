@@ -8,6 +8,7 @@
 #'@param retmode character Mode in which to recieve data, defaults to 'text'
 #'@param \dots character Additional terms to add to the request
 #'@return chracter string containing the file created
+#'@import RCurl
 #' @examples
 #' 
 #' katipo <- "Latrodectus katipo[Organism]"
