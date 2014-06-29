@@ -4,7 +4,7 @@
 #'
 #'@export
 #'@param term the search term to use
-#
+#'@param ... additional arguments to add to the query
 #'@return a named vector with counts for each a datbase
 #'
 #'@import RCurl XML
@@ -12,11 +12,10 @@
 #' 
 #' NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
 
-entrez_global_query <- function(term){
-    args <- c(term=gsub(" ", "+", term),email=entrez_email, tool=entrez_tool)
-    url_args <- paste(paste(names(args), args, sep="="), collapse="&")
-    base_url <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/egquery.fcgi?retmode=xml"
-    url_string <- paste(base_url, url_args, sep="&")
+entrez_global_query <- function(term, ...){
+    url_string <- make_entrez_query("egquery", 
+                                    term=gsub(" ", "+", term), 
+                                    ...)
     record <- xmlTreeParse(url_string, useInternalNodes=TRUE, isURL=TRUE)
     db_names <- xpathSApply(record, "//ResultItem/DbName", xmlValue)
     get_Ids <- function(dbname){

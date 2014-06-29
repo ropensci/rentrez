@@ -3,10 +3,12 @@
 \alias{entrez_global_query}
 \title{See how many hits there are for a given term across all NCBI Entrez databses}
 \usage{
-entrez_global_query(term)
+entrez_global_query(term, ...)
 }
 \arguments{
 \item{term}{the search term to use}
+
+\item{...}{additional arguments to add to the query}
 }
 \value{
 a named vector with counts for each a datbase
