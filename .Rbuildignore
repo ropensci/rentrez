@@ -4,3 +4,4 @@
 ^rentrez_*\.tar\.gz$
 ^README\.md$
 ^\.travis\.yml$
+^appveyor\.yml$

@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez)
+[![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
 
 #rentrez
 
@@ -10,7 +11,7 @@ rentrez provides functions that work with the [NCBI eutils](http://www.ncbi.nlm.
 `rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can either download the archive above and install using `$R CMD INSTALL`
 or use Hadley Wickham's [devtools](https://github.com/hadley/devtools):
 
-```coffee     
+```coffee
 library(devtools)
 install_github("rentrez", "ropensci")
 ```
@@ -18,18 +19,18 @@ install_github("rentrez", "ropensci")
 
 ##The Eutils API
 
-`rentrez` presumes you already know your way around the Eutils' API, [which is well 
+`rentrez` presumes you already know your way around the Eutils' API, [which is well
 documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Make sure you read the
 documentation, and in particular, be aware of the NCBI's usage policies and try to
-limit very large requests to off peak (USA) times. 
+limit very large requests to off peak (USA) times.
 
-The functions in `rentrez` are designed to create URLs in the form required by 
+The functions in `rentrez` are designed to create URLs in the form required by
 the api, fetch the file and parse information from it. Specific examples below illustrate
 how the functions work.
 
 ##Examples
 
-To see how the package works, let's look at a couple of possible uses of the 
+To see how the package works, let's look at a couple of possible uses of the
 library
 
 ###Getting data from that great paper you've just read
@@ -66,12 +67,12 @@ str(hox_data)
 ```
 
 Each of the character vectors in this object contain unique IDS for records in
-the named databases. These functions try to make the most useful bits of the 
-returned files available to users, but they also return the original file in case 
+the named databases. These functions try to make the most useful bits of the
+returned files available to users, but they also return the original file in case
 you want to dive into the XML yourself.
 
 In this case we'll get the protein sequences as genbank files, using ' `entrez_fetch`:
- 
+
 ```coffee
 hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, file_format="gb")
 ```
@@ -79,7 +80,7 @@ hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, file_for
 ###Retreiving datasets associated a particular organism.
 
 I like spiders. So let's say I want to learn a little more about New Zealand's
-endemic "black widow" the katipo. Specifically, in the past the katipo has 
+endemic "black widow" the katipo. Specifically, in the past the katipo has
 been split into two species, can we make a phylogeny to test this idea?
 
 The first step here is to use the function `entrez_search` to find datasets
@@ -91,11 +92,11 @@ library(rentrez)
 katipo_search <- entrez_search(db="popset", term="Latrodectus katipo[Organism]")
 katipo_search$count
         # [1] 6
-```        
+```
 
 In this search `count` is the total number of hits returned for the search term.
 We can use `entrez_summary` to learn a little about these datasets. `rentrez`
-will parse this xml into a list of `esummary` records, with each list entry 
+will parse this xml into a list of `esummary` records, with each list entry
 corresponding to one of the IDs it is passed. In this case we get six records,
 and we see what each one contains like so:
 
@@ -106,13 +107,13 @@ and we see what each one contains like so:
 summaries[[1]]
     #esummary result with 12 items:
     # [1] "Caption"    "Title"      "Extra"      "Gi"         "CreateDate"
-    # [6] "UpdateDate" "Flags"      "TaxId"      "Length"     "Status"    
+    # [6] "UpdateDate" "Flags"      "TaxId"      "Length"     "Status"
     #[11] "ReplacedBy" "Comment"  
 sapply(summaries, "[[", "Title")
     #[1] "Latrodectus katipo 18S ribosomal RNA gene... "
     #[2] "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene ..."  
     #[3] "Latrodectus 18S ribosomal RNA gene... "
-    #[4] "Latrodectus cytochrome oxidase subunit 1 (COI) gene ...."                                              
+    #[4] "Latrodectus cytochrome oxidase subunit 1 (COI) gene ...."
     #[5] "Latrodectus tRNA-Leu (trnL) gene ..."
     #[6] "Theridiidae cytochrome oxidase subunit I (COI) gene... "
 ```
@@ -130,11 +131,11 @@ The "fetched" results are fasta formatted characters, which can be written
 to disk easily:
 
 ```coffee
-write(COI, "Test/COI.fasta")      
+write(COI, "Test/COI.fasta")
 write(trnL, "Test/trnL.fasta")
 ```
 
-Once you've got the sequences you can do what you want with them, but I wanted 
+Once you've got the sequences you can do what you want with them, but I wanted
 a phylogeny so let's do that with ape:
 
 ```coffee
@@ -147,12 +148,12 @@ tree <- nj(dist.dna(coi_aligned))
 ### WebEnv and big queries
 
 The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
-```coffee	
+```coffee
 library(rentrez)
 snail_search <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200, usehistory="y")
 ```
-       
-Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the 200 ids we turned up to make a new URL and fetch the sequences we can use the webhistory features. 
+
+Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the 200 ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
 
 ```coffee
 cookie <- snail_search$WebEnv
@@ -166,7 +167,7 @@ This is one is a little more trivial, but you can also use entrez to search pubm
 the EUtils API allows you to limit searches by the year in which the paper was published.
 That gives is a chance to find the trendiest -omics going around (this has quite a lot
 of repeated searching, so it you want to run your own version be sure to do it
-in off peak times). 
+in off peak times).
 
 Let's start by making a function that finds the number of records matching a given
 search term for each of several years (using the `mindate` and `maxdate` terms from
@@ -177,12 +178,12 @@ library(rentrez)
 papers_by_year <- function(years, search_term){
             return(sapply(years, function(y) entrez_search(db="pubmed",term=search_term, mindate=y, maxdate=y, retmax=0)$count))
         }
-```        
+```
 
-With that we can fetch the data for earch term and, by searching with no term, 
+With that we can fetch the data for earch term and, by searching with no term,
 find the total number of papers published in each year:
 
-        
+
 ```coffee
 years <- 1990:2011
 total_papers <- papers_by_year(years, "")
@@ -190,7 +191,7 @@ omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic"
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))
 trend_props <- trend_data/total_papers
 ```
-        
+
 That's the data, let's plot it:
 
 ```coffee
