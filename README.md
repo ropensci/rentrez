@@ -11,7 +11,7 @@ rentrez provides functions that work with the [NCBI eutils](http://www.ncbi.nlm.
 `rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can either download the archive above and install using `$R CMD INSTALL`
 or use Hadley Wickham's [devtools](https://github.com/hadley/devtools):
 
-```coffee
+```r     
 library(devtools)
 install_github("rentrez", "ropensci")
 ```
@@ -41,7 +41,7 @@ data required to replicate their results. First, I need the unique ID for this
 paper in pubmed (the PMID). Annoyingly, many journals don't give PMIDS for their
 papers, but we can use `entrez_search` to find the paper using the doi field:
 
-```coffee  
+```r  
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 (hox_pmid <- hox_paper$ids)
         # [1] 20203609
@@ -49,7 +49,7 @@ hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 
 Now, what sorts of data are avaliable from other NCBI database for this paper?
 
-```coffee
+```r
 hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
 str(hox_data)
 #List of 11
@@ -72,8 +72,10 @@ returned files available to users, but they also return the original file in cas
 you want to dive into the XML yourself.
 
 In this case we'll get the protein sequences as genbank files, using ' `entrez_fetch`:
+<<<<<<< HEAD
 
-```coffee
+ 
+```r
 hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, file_format="gb")
 ```
 
@@ -87,7 +89,7 @@ The first step here is to use the function `entrez_search` to find datasets
 that include katipo sequences. The `popset` database has sequences arising from
 phylogenetic or population-level studies, so let's start there.
 
-```coffee
+```r
 library(rentrez)
 katipo_search <- entrez_search(db="popset", term="Latrodectus katipo[Organism]")
 katipo_search$count
@@ -101,7 +103,7 @@ corresponding to one of the IDs it is passed. In this case we get six records,
 and we see what each one contains like so:
 
 
-```coffee
+```r
 (summaries <- entrez_summary(db="popset", id=katipo_search$ids))
     #list of  6 esummary records
 summaries[[1]]
@@ -120,7 +122,7 @@ sapply(summaries, "[[", "Title")
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
 
-```coffee
+```r
 COI_ids <- katipo_search$ids[c(2,6)]
 trnL_ids <- katipo_search$ids[5]
 COI <- entrez_fetch(db="popset", id=COI_ids, file_format="fasta")
@@ -130,15 +132,15 @@ trnL <- entrez_fetch(db="popset", id=trnL_ids, file_format="fasta")
 The "fetched" results are fasta formatted characters, which can be written
 to disk easily:
 
-```coffee
-write(COI, "Test/COI.fasta")
+```r
+write(COI, "Test/COI.fasta")      
 write(trnL, "Test/trnL.fasta")
 ```
 
 Once you've got the sequences you can do what you want with them, but I wanted
 a phylogeny so let's do that with ape:
 
-```coffee
+```r
 library(ape)
 coi <- read.dna("Test/COI.fasta", "fasta")
 coi_aligned <- clustal(coi)
@@ -148,17 +150,18 @@ tree <- nj(dist.dna(coi_aligned))
 ### WebEnv and big queries
 
 The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
-```coffee
+
+```r	
 library(rentrez)
 snail_search <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200, usehistory="y")
 ```
 
 Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the 200 ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
 
-```coffee
+```r
 cookie <- snail_search$WebEnv
 qk <- snail_search$QueryKey
-snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, file_format="fasta", retmax=10)
+snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, rettype="fasta", retmax=10)
 ```
 
 ###Trendy topics in genetics
@@ -173,7 +176,7 @@ Let's start by making a function that finds the number of records matching a giv
 search term for each of several years (using the `mindate` and `maxdate` terms from
 the Eutils API):
 
-```coffee
+```r
 library(rentrez)
 papers_by_year <- function(years, search_term){
             return(sapply(years, function(y) entrez_search(db="pubmed",term=search_term, mindate=y, maxdate=y, retmax=0)$count))
@@ -183,9 +186,10 @@ papers_by_year <- function(years, search_term){
 With that we can fetch the data for earch term and, by searching with no term,
 find the total number of papers published in each year:
 
-
-```coffee
-years <- 1990:2011
+        
+```r
+years <- 1990:2013
+>>>>>>> README bugs
 total_papers <- papers_by_year(years, "")
 omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))
@@ -194,14 +198,12 @@ trend_props <- trend_data/total_papers
 
 That's the data, let's plot it:
 
-```coffee
+```r
 library(reshape)
 library(ggplot2)
-trend_df <- melt(as.data.frame(trend_props), id.vars="years")
+trend_df <- melt(data.frame(years, trend_props), id.vars="years")
 p <- ggplot(trend_df, aes(years, value, colour=variable))
-png("trendy.png", width=500, height=250)
 p + geom_line(size=1) + scale_y_log10("number of papers")
-dev.off()
 ```
 
 
