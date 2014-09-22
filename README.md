@@ -147,6 +147,41 @@ coi_aligned <- clustal(coi)
 tree <- nj(dist.dna(coi_aligned))
 ```
 
+###Making use of `httr` configuration options
+
+
+As of version 0.3, rentrez uses [httr](https://github.com/hadley/httr) to manage
+calls to the Eutils API. This allows users to take advantage of some of `httr`'s
+configuration options. In particular, any `rentrez` function that interacts
+with the Eutils api will pass the contents of the `config` along to `httr`'s 
+`GET` function. So, if you acess the internet through a proxy you can add those 
+details in the function call:
+
+```r
+entrez_search(db="pubmed", 
+              term="10.1038/nature08789[doi]", 
+              config=use_proxy("0.0.0.0", port=80,username="user", password="****")
+```
+Other options include `verbose()` which prints a detailed account of what's
+going on during a request, `timeout()` which sets the number of seconds to wait 
+for a response before giving up, and, in the development version of `httr`, 
+`progress()` which prints a simle progress bar to screen. 
+
+`rentrez` functions will also be effected by global `httr` configurations set by
+`httr::set_config()`, for instance, it's possible to have all calls to Eutils 
+via a proxy and produce verbose output
+
+```r
+httr::set_config(use_proxy("0.0.0.0", port=80,username="user", password="****"),
+                 verbose() )
+entrez_search(db="pubmed",  term="10.1038/nature08789[doi]")
+```
+
+
+
+
+
+
 ### WebEnv and big queries
 
 The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
