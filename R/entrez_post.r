@@ -24,8 +24,8 @@
 #'}
 
 entrez_post <- function(db, id, ...){
-    url_string <- make_entrez_query("epost", db=db,id=id, ...)
-    record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
+    response  <- make_entrez_query("epost", db=db,id=id, ...)
+    record <- xmlTreeParse(response, useInternalNodes=TRUE)
     result <- xpathApply(record, "/ePostResult/*", xmlValue)
     names(result) <- c("QueryKey", "WebEnv")
     result$file <- record

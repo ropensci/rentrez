@@ -11,26 +11,47 @@
 #                                 rettype="xml")
 #
 
+
 make_entrez_query <- function(util, require_one_of=NULL, ...){
-    args <- list(..., email=entrez_email, tool=entrez_tool)
+    args <- list(..., emails=entrez_email, tool=entrez_tool)
     arg_names <- names(args)
-    
     if(length(require_one_of) > 1 ){
-        if(!any(require_one_of %in% arg_names)){
+        if(!sum(require_one_of %in% arg_names)==1){
             msg <- paste("Function requires either", require_one_of[1], "or",
                          require_one_of[2], "to be set as arguments\n")
             stop(msg)
         }
     }
     
-    if("id" %in% arg_names){
-        args[["id"]] = paste(args[["id"]], collapse=",")
-      
+   if("id" %in% arg_names){
+        args$id <- paste(args$id, collapse=",")      
     }
-    base_url <- paste("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, ".fcgi?", sep="")
-    url_args <- paste(paste(arg_names, args, sep="="), collapse="&")
-    query <- paste(base_url, url_args, sep="&")
-    return(query)
+    uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, ".fcgi?")
+    response <- httr::GET(uri, query=args)
+    stop_for_status(response)
+    return(httr::content(response, as="text"))
+
 }
-    
+#make_entrez_query <- function(util, require_one_of=NULL, ...){
+#    args <- list(..., email=entrez_email, tool=entrez_tool)
+#    arg_names <- names(args)
+#    
+#    if(length(require_one_of) > 1 ){
+#        if(!any(require_one_of %in% arg_names)){
+#            msg <- paste("Function requires either", require_one_of[1], "or",
+#                         require_one_of[2], "to be set as arguments\n")
+#            stop(msg)
+#        }
+#    }
+#    
+#    if("id" %in% arg_names){
+#        args[["id"]] = paste(args[["id"]], collapse=",")
+#      
+#    }
+#    base_url <- paste("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, ".fcgi?", sep="")
+#    url_args <- paste(paste(arg_names, args, sep="="), collapse="&")
+#    query <- paste(base_url, url_args, sep="&")
+#    return(query)
+#}
+#    
   

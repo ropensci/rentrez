@@ -30,9 +30,9 @@
 #'  sapply(cv, "[[", "gene_sort") # gene_sort
 
 entrez_summary <- function(db, ...){
-    url_string <- make_entrez_query("esummary", db=db,
+    response  <- make_entrez_query("esummary", db=db,
                                     require_one_of=c("id", "WebEnv"), ...)
-    whole_record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
+    whole_record <- xmlTreeParse(response, useInternalNodes=TRUE)
     if(db == 'clinvar'){
       rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
     } else {

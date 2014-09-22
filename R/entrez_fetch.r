@@ -17,9 +17,7 @@
 #'
 
 entrez_fetch <- function(db, rettype, retmode="text", ...){
-    url_string <- make_entrez_query("efetch", db=db, rettype=rettype, ..., 
-          require_one_of = c("id", "WebEnv"))
-    records <- getURL(url_string)
+    records <- make_entrez_query("efetch", db=db, rettype=rettype, ..., require_one_of = c("id", "WebEnv"))
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
     return(records)

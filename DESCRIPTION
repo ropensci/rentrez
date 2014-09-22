@@ -9,6 +9,7 @@ Authors@R: c(person("David", "Winter", role=c("aut", "cre"),
 Depends:
     R (>= 2.6.0),
     RCurl,
+    httr,
     XML
 Suggests:
     testthat,

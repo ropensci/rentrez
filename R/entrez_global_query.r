@@ -13,10 +13,10 @@
 #' NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
 
 entrez_global_query <- function(term, ...){
-    url_string <- make_entrez_query("egquery", 
+    response <- make_entrez_query("egquery", 
                                     term=gsub(" ", "+", term), 
                                     ...)
-    record <- xmlTreeParse(url_string, useInternalNodes=TRUE, isURL=TRUE)
+    record <- xmlTreeParse(response, useInternalNodes=TRUE)
     db_names <- xpathSApply(record, "//ResultItem/DbName", xmlValue)
     get_Ids <- function(dbname){
         path <-  paste("//ResultItem/DbName[text()='", dbname, "']/../Count", sep="")

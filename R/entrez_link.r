@@ -21,9 +21,9 @@
 #'
 
 entrez_link <- function(db, dbfrom, ...){
-    url_string <- make_entrez_query("elink", db=db, dbfrom=dbfrom,
+    response <- make_entrez_query("elink", db=db, dbfrom=dbfrom,
                                     require_one_of=c("id", "WebEnv"), ...)
-    record <- xmlTreeParse(getURL(url_string), useInternalNodes=TRUE)
+    record <- xmlTreeParse(response, useInternalNodes=TRUE)
     db_names <- xpathSApply(record, "//LinkName", xmlValue)
     get_Ids <- function(dbname){
         path <-  paste("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/Id", sep="")
