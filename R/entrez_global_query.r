@@ -4,17 +4,20 @@
 #'
 #'@export
 #'@param term the search term to use
+#'@param config vector configuration options passed to httr::GET  
 #'@param ... additional arguments to add to the query
+#'@seealso \code{\link[httr]{config}} for avaliable configs 
 #'@return a named vector with counts for each a datbase
 #'
-#'@import RCurl XML
+#'@import XML
 #' @examples
 #' 
 #' NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
 
-entrez_global_query <- function(term, ...){
+entrez_global_query <- function(term, config=NULL, ...){
     response <- make_entrez_query("egquery", 
                                     term=gsub(" ", "+", term), 
+                                    config=config,
                                     ...)
     record <- xmlTreeParse(response, useInternalNodes=TRUE)
     db_names <- xpathSApply(record, "//ResultItem/DbName", xmlValue)

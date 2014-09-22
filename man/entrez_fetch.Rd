@@ -3,7 +3,7 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, rettype, retmode = "text", ...)
+entrez_fetch(db, rettype, retmode = "text", config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to use}
@@ -13,6 +13,8 @@ entrez_fetch(db, rettype, retmode = "text", ...)
 \item{retmode}{character Mode in which to recieve data, defaults to 'text'}
 
 \item{\dots}{character Additional terms to add to the request}
+
+\item{config}{vector configuration options passed to httr::GET}
 }
 \value{
 chracter string containing the file created
@@ -24,5 +26,8 @@ Download data from NCBI databases
 katipo <- "Latrodectus katipo[Organism]"
 katipo_search <- entrez_search(db="nuccore", term=katipo)
 kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
+}
+\seealso{
+\code{\link[httr]{config}} for avaliable configs
 }
 

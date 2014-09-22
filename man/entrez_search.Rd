@@ -3,7 +3,7 @@
 \alias{entrez_search}
 \title{Search the NCBI databases using EUtils}
 \usage{
-entrez_search(db, term, ...)
+entrez_search(db, term, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
@@ -11,6 +11,8 @@ entrez_search(db, term, ...)
 \item{term}{character The search term}
 
 \item{\dots}{character Additional terms to add to the request}
+
+\item{config}{vector configuration options passed to httr::GET}
 }
 \value{
 ids integer Unique IDS returned by the search
@@ -40,5 +42,8 @@ See package-level documentation for general advice on using the Entrez functions
    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
                              file_format = "fasta", retmax = 10)
 }
+}
+\seealso{
+\code{\link[httr]{config}} for avaliable configs
 }
 

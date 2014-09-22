@@ -13,11 +13,10 @@
 
 
 make_entrez_query <- function(util, 
-                              require_one_of=NULL, 
+                              require_one_of=NULL,
+                              config,
                               ...){
     args <- list(..., emails=entrez_email, tool=entrez_tool)
-    httr_opts <- args$config
-    args$config <- NULL
     arg_names <- names(args)
     if(length(require_one_of) > 1 ){
         if(!sum(require_one_of %in% arg_names)==1){
@@ -31,8 +30,8 @@ make_entrez_query <- function(util,
         args$id <- paste(args$id, collapse=",")      
     }
     uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, ".fcgi?")
-    response <- httr::GET(uri, query=args, config=httr_opts)
-    stop_for_status(response)
+    response <- httr::GET(uri, query=args, config= config)
+    httr::stop_for_status(response)
     return(httr::content(response, as="text"))
 
 }

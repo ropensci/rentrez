@@ -1,3 +1,11 @@
+Version 0.3
+------------------------
+*using httr to handle HTTP GETs and some url building
+*parsing for esummary parsing for clinvar database
+*Scott Chamberlain added as contributer for above
+*Pubmed parser handles multi-record files
+*html vignette included
+
 Version 0.2.4
 -------------------------
 *minor release to fix bug in esummary parsing

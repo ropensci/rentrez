@@ -9,12 +9,13 @@
 #'@param \dots character Additional terms to add to the request. Requires either
 #'   id (unique id(s) for records in a given database) or WebEnv (a character
 #'   containing a cookie created by a previous entrez query).
+#'@param config vector configuration options passed to httr::GET  
+#'@seealso \code{\link[httr]{config}} for avaliable configs 
 #'@return A list of esummary records (if multiple IDs are passed) or a single
 #' record.
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #'@import XML
-#'@import RCurl
 #' @examples
 #'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
@@ -29,8 +30,8 @@
 #'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
 #'  sapply(cv, "[[", "gene_sort") # gene_sort
 
-entrez_summary <- function(db, ...){
-    response  <- make_entrez_query("esummary", db=db,
+entrez_summary <- function(db, config=NULL, ...){
+    response  <- make_entrez_query("esummary", db=db, config=config,
                                     require_one_of=c("id", "WebEnv"), ...)
     whole_record <- xmlTreeParse(response, useInternalNodes=TRUE)
     if(db == 'clinvar'){

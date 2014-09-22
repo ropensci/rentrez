@@ -3,12 +3,13 @@
 #' Contstructs a query with the given arguments and downloands the XML
 #' document created by that query. Unique IDs from linked-databases
 #'
-#'@import RCurl XML
+#'@import XML
 #'@export
 #'@param db character Name of the database to search for links (or use "all" to earch all NCBI databases
 #'@param dbfrom character Name of database from which the Id(s) orginate
 #'@param \dots character Additional terms to add to the request
-#
+#'@param config vector configuration options passed to httr::GET  
+#'@seealso \code{\link[httr]{config}} for avaliable configs 
 #'@return An elink object containing vectors of unique IDs
 #' the vectors names take the form [db_from]_[db_to]
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
@@ -20,9 +21,10 @@
 #' nucleotide_IDs <- linked_data$pubmed_nuccore
 #'
 
-entrez_link <- function(db, dbfrom, ...){
+entrez_link <- function(db, dbfrom, config=NULL, ...){
     response <- make_entrez_query("elink", db=db, dbfrom=dbfrom,
-                                    require_one_of=c("id", "WebEnv"), ...)
+                                  config=config, ..., 
+                                  require_one_of=c("id", "WebEnv"))
     record <- xmlTreeParse(response, useInternalNodes=TRUE)
     db_names <- xpathSApply(record, "//LinkName", xmlValue)
     get_Ids <- function(dbname){

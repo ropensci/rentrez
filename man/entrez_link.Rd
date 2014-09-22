@@ -3,7 +3,7 @@
 \alias{entrez_link}
 \title{Get links to datasets related to a unique ID from an NCBI database}
 \usage{
-entrez_link(db, dbfrom, ...)
+entrez_link(db, dbfrom, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for links (or use "all" to earch all NCBI databases}
@@ -11,6 +11,8 @@ entrez_link(db, dbfrom, ...)
 \item{dbfrom}{character Name of database from which the Id(s) orginate}
 
 \item{\dots}{character Additional terms to add to the request}
+
+\item{config}{vector configuration options passed to httr::GET}
 }
 \value{
 An elink object containing vectors of unique IDs
@@ -27,5 +29,8 @@ document created by that query. Unique IDs from linked-databases
 pubmed_search <- entrez_search(db = "pubmed", term = "10.1016/j.ympev.2010.07.013[doi]")
  linked_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
 nucleotide_IDs <- linked_data$pubmed_nuccore
+}
+\seealso{
+\code{\link[httr]{config}} for avaliable configs
 }
 

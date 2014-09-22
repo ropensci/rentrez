@@ -3,7 +3,7 @@
 \alias{entrez_post}
 \title{Post IDs to Eutils for later use}
 \usage{
-entrez_post(db, id, ...)
+entrez_post(db, id, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database from which the IDs were taken}
@@ -11,6 +11,8 @@ entrez_post(db, id, ...)
 \item{id}{integer ID(s) for which data is being collected}
 
 \item{\dots}{character Additional terms to add to the request}
+
+\item{config}{vector configuration options passed to httr::GET}
 }
 \value{
 QueryKey integer identifier for specific query in webhistory
@@ -31,5 +33,8 @@ first <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
 second <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
                        query_key=upload$QueryKey, retstart=10)
 }
+}
+\seealso{
+\code{\link[httr]{config}} for avaliable configs
 }
 

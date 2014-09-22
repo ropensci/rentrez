@@ -8,13 +8,15 @@
 #'@param db character Name of the database to search for
 #'@param term character The search term
 #'@param \dots character Additional terms to add to the request 
+#'@param config vector configuration options passed to httr::GET  
+#'@seealso \code{\link[httr]{config}} for avaliable configs 
 #
 #'@return ids integer Unique IDS returned by the search
 #'@return count integer Total number of hits for the search
 #'@return retmax integer Maximum number of hits returned by the search
 #'@return QueryKey integer identifier for specific query in webhistory
 #'@return WebEnv character identifier for session key to use with history
-#'@import RCurl XML
+#'@import  XML
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #' @examples
@@ -27,8 +29,12 @@
 #'                              file_format = "fasta", retmax = 10)
 #'}
 
-entrez_search <- function(db, term, ... ){
-    response <- make_entrez_query("esearch", db=db, term=term, ...)
+entrez_search <- function(db, term, config=NULL, ... ){
+    response <- make_entrez_query("esearch", 
+                                  db=db, 
+                                  term=term, 
+                                  config=config, 
+                                  ...)
     xml_result <- xmlParse(response)
     ids <- xpathSApply(xml_result, "//IdList/Id", xmlValue)
     count <- xpathSApply(xml_result, "/eSearchResult/Count", xmlValue)
