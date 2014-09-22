@@ -16,8 +16,8 @@ make_entrez_query <- function(util,
                               require_one_of=NULL, 
                               ...){
     args <- list(..., emails=entrez_email, tool=entrez_tool)
-    httr_opts <- args$httr_options
-    args$httr_options <- NULL
+    httr_opts <- args$config
+    args$config <- NULL
     arg_names <- names(args)
     if(length(require_one_of) > 1 ){
         if(!sum(require_one_of %in% arg_names)==1){
