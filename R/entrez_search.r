@@ -28,8 +28,7 @@
 #'}
 
 entrez_search <- function(db, term, ... ){
-    response <- make_entrez_query("esearch", db=db, 
-                                    term=gsub(" ", "+", term), ...)
+    response <- make_entrez_query("esearch", db=db, term=term, ...)
     xml_result <- xmlParse(response)
     ids <- xpathSApply(xml_result, "//IdList/Id", xmlValue)
     count <- xpathSApply(xml_result, "/eSearchResult/Count", xmlValue)
