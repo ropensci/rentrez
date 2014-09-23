@@ -224,7 +224,6 @@ find the total number of papers published in each year:
         
 ```r
 years <- 1990:2013
->>>>>>> README bugs
 total_papers <- papers_by_year(years, "")
 omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))
@@ -244,7 +243,7 @@ p + geom_line(size=1) + scale_y_log10("number of papers")
 
 Giving us... well this:
 
-![](http://i.imgur.com/LDpP1.png)
+![](http://i.imgur.com/oSYuWqz.png)
 
 
 
