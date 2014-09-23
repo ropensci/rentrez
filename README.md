@@ -152,24 +152,27 @@ tree <- nj(dist.dna(coi_aligned))
 
 As of version 0.3, rentrez uses [httr](https://github.com/hadley/httr) to manage
 calls to the Eutils API. This allows users to take advantage of some of `httr`'s
-configuration options. In particular, any `rentrez` function that interacts
-with the Eutils api will pass the contents of the `config` along to `httr`'s 
-`GET` function. So, if you acess the internet through a proxy you can add those 
-details in the function call:
+configuration options. 
+
+In particular, any `rentrez` function that interacts with the Eutils api will 
+pass the value of argument `config` along to `httr`'s  `GET` function. For 
+instance, if you acess the internet through a proxy you use the `httr` function
+`use_proxy()` to provide connection details to an entrez call:
 
 ```r
 entrez_search(db="pubmed", 
               term="10.1038/nature08789[doi]", 
               config=use_proxy("0.0.0.0", port=80,username="user", password="****")
 ```
+
 Other options include `verbose()` which prints a detailed account of what's
 going on during a request, `timeout()` which sets the number of seconds to wait 
 for a response before giving up, and, in the development version of `httr`, 
 `progress()` which prints a simle progress bar to screen. 
 
 `rentrez` functions will also be effected by global `httr` configurations set by
-`httr::set_config()`, for instance, it's possible to have all calls to Eutils 
-via a proxy and produce verbose output
+`httr::set_config()`. For example, it's possible to have all calls to Eutils
+pass through proxy and produce verbose output
 
 ```r
 httr::set_config(use_proxy("0.0.0.0", port=80,username="user", password="****"),
