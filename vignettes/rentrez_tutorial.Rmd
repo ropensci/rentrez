@@ -101,8 +101,6 @@ Ok, since we might expect nuclear and mitochondrial genes to hav different histo
 ```{r entrez_fetch, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
 coi <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[1])
 rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[3])
-write(coi, "~/moray_coi_raw.fasta")
-write(rag1, "~/moray_rag1_raw.fasta")
 ```
 
 So I've got the data on hand - that's all the I need `rentrez` for, but I might as well align these sequences and make gene trees for each. I'll just do a quick and diry neighbor-joining tree using `ape` and we can clean up the long OTU names with the help of `stingr`. (I put the fussy work of cleaning the names and rooting the trees into a function `clean_and_root`):
@@ -115,6 +113,9 @@ as part of the vignette_
 library(ape)
 library(stringr)
 clean_and_root <- function(tr, outgroup, resolved = TRUE) {
+write(coi, "~/moray_coi_raw.fasta")
+write(rag1, "~/moray_rag1_raw.fasta")
+
     tr$tip.label <- sapply(str_split(tr$tip.label, " "), function(x) paste(x[2:3],
         collapse = "_"))
     return(root(tr, outgroup, resolve.root = resolved))

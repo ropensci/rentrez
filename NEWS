@@ -1,3 +1,7 @@
+Version 0.3.1
+------------------------
+*Squashed a bug in the vignette which wrote to users $HOME
+
 Version 0.3
 ------------------------
 *using httr to handle HTTP GETs and some url building
