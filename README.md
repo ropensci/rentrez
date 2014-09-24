@@ -72,8 +72,6 @@ returned files available to users, but they also return the original file in cas
 you want to dive into the XML yourself.
 
 In this case we'll get the protein sequences as genbank files, using ' `entrez_fetch`:
-<<<<<<< HEAD
-
  
 ```r
 hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, file_format="gb")
@@ -154,8 +152,8 @@ As of version 0.3, rentrez uses [httr](https://github.com/hadley/httr) to manage
 calls to the Eutils API. This allows users to take advantage of some of `httr`'s
 configuration options. 
 
-In particular, any `rentrez` function that interacts with the Eutils api will 
-pass the value of argument `config` along to `httr`'s  `GET` function. For 
+Any `rentrez` function that interacts with the Eutils api will 
+pass the value of the argument `config` along to `httr`'s  `GET` function. For 
 instance, if you acess the internet through a proxy you use the `httr` function
 `use_proxy()` to provide connection details to an entrez call:
 
@@ -168,11 +166,11 @@ entrez_search(db="pubmed",
 Other options include `verbose()` which prints a detailed account of what's
 going on during a request, `timeout()` which sets the number of seconds to wait 
 for a response before giving up, and, in the development version of `httr`, 
-`progress()` which prints a simle progress bar to screen. 
+`progress()` which prints a progress bar to screen. 
 
-`rentrez` functions will also be effected by global `httr` configurations set by
+`rentrez` functions will also be effected by the global `httr` configuration set by
 `httr::set_config()`. For example, it's possible to have all calls to Eutils
-pass through proxy and produce verbose output
+pass through a proxy and produce verbose output
 
 ```r
 httr::set_config(use_proxy("0.0.0.0", port=80,username="user", password="****"),
@@ -182,12 +180,9 @@ entrez_search(db="pubmed",  term="10.1038/nature08789[doi]")
 
 
 
-
-
-
 ### WebEnv and big queries
 
-The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
+The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the snail (Gastropod) species we can find in the nucleotide database:
 
 ```r	
 library(rentrez)
