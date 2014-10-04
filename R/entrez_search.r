@@ -8,6 +8,8 @@
 #'@param db character Name of the database to search for
 #'@param term character The search term
 #'@param \dots character Additional terms to add to the request 
+#'@param retmode character One of json (default) or xml. This will make no
+#' difference in most cases.
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for avaliable configs 
 #
@@ -29,33 +31,44 @@
 #'                              file_format = "fasta", retmax = 10)
 #'}
 
-entrez_search <- function(db, term, config=NULL, ... ){
+entrez_search <- function(db, term, config=NULL, retmode="json", ... ){
     response <- make_entrez_query("esearch", 
                                   db=db, 
                                   term=term, 
-                                  config=config, 
+                                  config=config,
+                                  retmode=retmode, 
                                   ...)
-    xml_result <- xmlParse(response)
-    ids <- xpathSApply(xml_result, "//IdList/Id", xmlValue)
-    count <- xpathSApply(xml_result, "/eSearchResult/Count", xmlValue)
-    retmax <- xpathSApply(xml_result, "/eSearchResult/RetMax", xmlValue)
-    QueryKey <- xpathSApply(xml_result, "/eSearchResult/QueryKey", xmlValue)
-    WebEnv <- xpathSApply(xml_result, "/eSearchResult/WebEnv", xmlValue)
+    parsed <- parse_respone(response, retmode)
+    parse_esearch(parsed)
+}
 
-    #NCBI limits requests to three per second
-    Sys.sleep(0.33)
-    res <- (list(file=xml_result, ids=ids, 
-                 count=as.integer(count), 
-                 retmax=as.integer(retmax),
-                 QueryKey= as.integer(QueryKey),
-                 WebEnv = WebEnv
-            ))
-    class(res) <- c("esearch", class(res))
+
+#'@export
+parse_esearch <- function(x) UseMethod("parse_esearch")
+   
+#'@export
+parse_esearch.XMLInternalDocument <- function(x){
+    res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
+                 count    = xpathSApply(x, "/eSearchResult/Count", xmlValue),
+                 retmax   = xpathSApply(x, "/eSearchResult/RetMax", xmlValue),
+                 QueryKey = xpathSApply(x, "/eSearchResult/QueryKey", xmlValue),
+                 WebEnv   = xpathSApply(x, "/eSearchResult/WebEnv", xmlValue),
+                 file     = x)
+    class(res) <- c("esearch", "list")
     return(res)
 }
 
-#' @export
+#'@export
+parse_esearch.list <- function(x){
+    res <- x$esearchresult[ c("idlist", "count", "retmax", "querykey", "webenv") ]
+    names(res)[1] <- "ids"
+    res <- Filter(function(x) !is.null(x), res)
+    res$file <- x
+    class(res) <- c("esearch", "list")
+    return(res)
+}
 
+#'@export
 print.esearch <- function(x, ...){
     cat(paste("Entrez search result with", x$count, "IDs (max =", x$retmax, ")\n"))
 }

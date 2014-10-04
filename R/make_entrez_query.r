@@ -26,14 +26,24 @@ make_entrez_query <- function(util,
         }
     }
     
-   if("id" %in% arg_names){
+    if("id" %in% arg_names){
         args$id <- paste(args$id, collapse=",")      
     }
     uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, ".fcgi?")
     response <- httr::GET(uri, query=args, config= config)
     httr::stop_for_status(response)
     return(httr::content(response, as="text"))
-
 }
 
-  
+parse_respone <- function(x, type){
+    res <- switch(type, 
+            "json" = jsonlite::fromJSON(x),
+            "xml"  = xmlTreeParse(x, useInternalNodes=TRUE)
+    )
+    return(res)
+}
+
+
+
+
+
