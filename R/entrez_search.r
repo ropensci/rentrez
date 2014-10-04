@@ -61,7 +61,7 @@ parse_esearch.XMLInternalDocument <- function(x){
 #'@export
 parse_esearch.list <- function(x){
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querykey", "webenv") ]
-    names(res)[1] <- "ids"
+    names(res)[c(1,4,5)] <- c("ids", "QueryKey", "WebEnv")
     res <- Filter(function(x) !is.null(x), res)
     res$file <- x
     class(res) <- c("esearch", "list")
@@ -70,6 +70,13 @@ parse_esearch.list <- function(x){
 
 #'@export
 print.esearch <- function(x, ...){
-    cat(paste("Entrez search result with", x$count, "IDs (max =", x$retmax, ")\n"))
+    msg<- paste("Entrez search result with", x$count, 
+                "hits (object contains", length(x$ids), "IDs")
+    if("WebEnv" %in% names(x)){
+        cat(msg, "and a cookie)\n")
+    }
+    else{
+        cat(msg, "and no cookie)\n")
+    }
 }
 
