@@ -22,35 +22,53 @@ entrez_info <- function(db=NULL, config=NULL){
 }
 
 
-entrez_avaliable_dbs <- function(config=NULL){
+entrez_dbs <- function(config=NULL){
     xpathSApply(entrez_info(config), "//DbName", xmlValue)
 }
 
 #'@export
-entrez_linked_dbs <- function(db, config=NULL){
+entrez_db_links <- function(db, config=NULL){
     unparsed <- xpathApply(entrez_info(db, config), "//Link", xmlChildren)
-    res <- lapply(unparsed, parse_einfo_link)
+    res <- lapply(unparsed, lapply, xmlValue)
     names(res) <- sapply(res, "[[", "Name")
+    class(res) <- c("eInfoLink", "eInfoList", "list")
     return(res)
-
-
 }
 
-
-parse_einfo_link <- function(x){
-    res <- lapply(x,xmlValue)
-    class(res) <- c("eInfoLink", "link")
+#'@export
+entrez_db_summary <- function(db, config=NULL){
+    rec <- entrez_info(db, config)
+    unparsed <- xpathApply( rec, "//DbInfo/*[not(self::LinkList or self::FieldList)]")
+    res <- sapply(unparsed, xmlValue)
+    names(res) <- sapply(unparsed, xmlName)
     res
 }
-#'@export
-print.eInfoLink <- function(x, ...){
- cat("\tdb_to = ", x$DbTo, "\n\t", x$Description, "\n")
+
+entrez_db_searchable <- function(db, config=NULL){
+    rec <- entrez_info(db, config)
+    unparsed <- xpathApply(rec, 
+                           "/eInfoResult/DbInfo/FieldList/Field",
+                           xmlChildren)
+    res <- lapply(unparsed, lapply, xmlValue)
+    names(res) <- sapply(res, "[[", "Name")
+    class(res) <- c("eInfoSearch", "eInfoList", "list")
+    res
 }
 
+print_maker <- function(x, name){
+    function(x, ...){
+        cat(name, "result with the following fields:\n")
+        print(names(x))
+    }
+}
 
+#'@export
+print.eInfoSearch <- print_maker(x, "Search fields")
 
+#'@export
+print.eInfoLink <-  print_maker(x, "Linked dbs")
 
-
-
-
-
+#'@export
+as.data.frame.eInfoList <- function(x, ...){
+    data.frame(do.call("rbind", x))
+}
