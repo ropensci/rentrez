@@ -34,7 +34,7 @@
 #'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
 #'  sapply(cv, "[[", "gene_sort") # gene_sort
 
-entrez_summary <- function(db, config=NULL, retmode="xml", ...){
+entrez_summary <- function(db, retmode="json", config=NULL, ...){
     response  <- make_entrez_query("esummary", db=db, config=config,
                                    retmode=retmode,
                                    require_one_of=c("id", "WebEnv"), ...)
@@ -60,6 +60,7 @@ entrez_summary <- function(db, config=NULL, retmode="xml", ...){
 parse_esummary <- function(x) UseMethod("parse_esummary")
 
 rename_reclass <- function(x){
+    #capetilise names to keep consitancy with xml recs
     names(x) <- sapply(names(x), function(x) paste0(toupper(substr(x,1,1)), substr(x,2,nchar(x))))
     class(x) <- "esummary"
     x
