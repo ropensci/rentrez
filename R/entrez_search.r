@@ -1,9 +1,8 @@
 #' Search the NCBI databases using EUtils
 #'
 #' Contstructs a query with the given arguments, including a search term, and
-#' a darabase name, then retrieves the XML document created by that query. 
-#' See package-level documentation for general advice on using the Entrez functions 
-#'
+#' a database name, then retrieves the XML document created by that query. 
+#' 
 #'@export
 #'@param db character Name of the database to search for
 #'@param term character The search term
@@ -12,15 +11,18 @@
 #' difference in most cases.
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for avaliable configs 
-#
+#'@seealso \code{\link{entrez_db_searchable}} to get a set of search fields that
+#' can be userd in \code{term} for any base
 #'@return ids integer Unique IDS returned by the search
 #'@return count integer Total number of hits for the search
 #'@return retmax integer Maximum number of hits returned by the search
 #'@return QueryKey integer identifier for specific query in webhistory
 #'@return WebEnv character identifier for session key to use with history
 #'@import  XML
-#'@return file XMLInternalDocument xml file resulting from search, parsed with
-#'\code{\link{xmlTreeParse}}
+#'@return file either and XMLInternalDocument xml file resulting from search, parsed with
+#'\code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
+#' resulting from the returned JSON file being parsed with
+#' \code{\link[jsonlite]{fromJSON}}.
 #' @examples
 #' \dontrun{
 #'    query <- "Gastropoda[Organism] AND COI[Gene]"
@@ -29,6 +31,16 @@
 #'    qk <- web_env_search$QueryKey 
 #'    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
 #'                              file_format = "fasta", retmax = 10)
+#'}
+#'\donttest{
+#' 
+#' fly_id <- entrez_search(db="taxonomy", term="Drosophila")
+#' #Oh, right. There is a genus and a subgenus name Drosophila...
+#' #how can we limit this seach
+#' (tax_fields <- entrez_db_searchable("taxonomy"))
+#' #"RANK" loots promising
+#' tax_fields$RANK
+#' entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
 #'}
 
 entrez_search <- function(db, term, config=NULL, retmode="xml", ... ){
