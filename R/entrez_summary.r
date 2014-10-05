@@ -9,7 +9,11 @@
 #'@param \dots character Additional terms to add to the request. Requires either
 #'   id (unique id(s) for records in a given database) or WebEnv (a character
 #'   containing a cookie created by a previous entrez query).
-#'@param config vector configuration options passed to httr::GET  
+#'@param config vector configuration options passed to \code{httr::GET}
+#'@param retmode character One of json (default) or xml. The json objects
+#' returned by NCBI for some databases contain more information than the older
+#' XML files, so json is the default and users would not normally need to change
+#' this value. Whatever the exchange format, an \code{esummary} is returned
 #'@seealso \code{\link[httr]{config}} for avaliable configs 
 #'@return A list of esummary records (if multiple IDs are passed) or a single
 #' record.

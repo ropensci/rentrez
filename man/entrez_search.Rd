@@ -3,7 +3,7 @@
 \alias{entrez_search}
 \title{Search the NCBI databases using EUtils}
 \usage{
-entrez_search(db, term, config = NULL, ...)
+entrez_search(db, term, config = NULL, retmode = "xml", ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
@@ -11,6 +11,9 @@ entrez_search(db, term, config = NULL, ...)
 \item{term}{character The search term}
 
 \item{\dots}{character Additional terms to add to the request}
+
+\item{retmode}{character One of json (default) or xml. This will make no
+difference in most cases.}
 
 \item{config}{vector configuration options passed to httr::GET}
 }

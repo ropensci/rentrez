@@ -3,7 +3,7 @@
 \alias{entrez_summary}
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
-entrez_summary(db, config = NULL, ...)
+entrez_summary(db, config = NULL, retmode = "xml", ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
@@ -12,7 +12,12 @@ entrez_summary(db, config = NULL, ...)
 id (unique id(s) for records in a given database) or WebEnv (a character
 containing a cookie created by a previous entrez query).}
 
-\item{config}{vector configuration options passed to httr::GET}
+\item{config}{vector configuration options passed to \code{httr::GET}}
+
+\item{retmode}{character One of json (default) or xml. The json objects
+returned by NCBI for some databases contain more information than the older
+XML files, so json is the default and users would not normally need to change
+this value. Whatever the exchange format, an \code{esummary} is returned}
 }
 \value{
 A list of esummary records (if multiple IDs are passed) or a single
