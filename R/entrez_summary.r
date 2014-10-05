@@ -30,36 +30,42 @@
 #'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
 #'  sapply(cv, "[[", "gene_sort") # gene_sort
 
-entrez_summary <- function(db, config=NULL, ...){
+entrez_summary <- function(db, config=NULL, retmode="xml", ...){
     response  <- make_entrez_query("esummary", db=db, config=config,
-                                    require_one_of=c("id", "WebEnv"), ...)
-    whole_record <- xmlTreeParse(response, useInternalNodes=TRUE)
-    if(db == 'clinvar'){
-      rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
-    } else {
-      rec <- lapply(whole_record["//DocSum"], parse_esummary)      
+                                   retmode=retmode,
+                                   require_one_of=c("id", "WebEnv"), ...)
+    
+    whole_record <- parse_respone(response, retmode)
+
+    if(db == 'clinvar' & retmode == 'xml'){
+        rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
+        if(length(rec)==1){
+            rec <- rec[[1]]
+        }
+        else{
+            class(rec) <- "multiEsummary"
+        }
     }
-    if(length(rec) == 1){
-        return(rec[[1]])
+    else {
+      rec <- parse_esummary(whole_record)
     }
-    class(rec) <- c("multiEsummary", class(rec))
     return(rec)
 }
 
-#' @export 
-
-print.esummary <- function(x, ...){
-    len <- length(x)
-    cat(paste("esummary result with", len - 1, "items:\n"))
-    print(names(x)[-len])
-}
 
 #' @export 
-print.multiEsummary <- function(x, ...){
-    len <- length(x)
-    cat(paste ("list of ", len, "esummary records\n"))
-}
+parse_esummary <- function(x) UseMethod("parse_esummary")
 
+rename_reclass <- function(x){
+    names(x) <- sapply(names(x), function(x) paste0(toupper(substr(x,1,1)), substr(x,2,nchar(x))))
+    class(x) <- "esummary"
+    x
+}
+#' @export
+parse_esummary.list <- function(x){
+    res <- x$result[2: length(x$result)]
+    res <- lapply(res, rename_reclass)
+}
 
 # Prase a sumamry XML 
 #
@@ -69,13 +75,25 @@ print.multiEsummary <- function(x, ...){
 # 3. wrap it all up in function parse_esummary that 
 #
 #
+#' @export
+parse_esummary.XMLInternalDocument  <- function(x){
+    recs <- x["//DocSum"]
 
-parse_esummary <- function(record){
-    res <- xpathApply(record, "Item", parse_node)
-    names(res) <- xpathApply(record, "Item", xmlGetAttr, "Name")
-    res <- c(res, file=record)
-    class(res) <- c("esummary", class(res))
+    per_rec <- function(r){
+        res <- xpathApply(r, "Item", parse_node)
+        names(res) <- xpathApply(r, "Item", xmlGetAttr, "Name")
+        res <- c(res, file=x)
+        class(res) <- c("esummary", class(res))
+        return(res)
+    }
+    if(length(recs) == 1){
+        res <- per_rec(recs[[1]])
+    } else{
+        res <- lapply(recs, per_rec)
+        class(res) <- c("multiEsummary", class(res))
+    }
     return(res)
+
 }
 
 parse_node <- function(node) {
@@ -113,3 +131,23 @@ parse_esummary_clinvar <- function(record){
   class(res) <- c("esummary", class(res))
   return(res)
 }
+
+
+
+
+#' @export 
+
+print.esummary <- function(x, ...){
+    len <- length(x)
+    cat(paste("esummary result with", len - 1, "items:\n"))
+    print(names(x)[-len])
+}
+
+#' @export 
+print.multiEsummary <- function(x, ...){
+    len <- length(x)
+    cat(paste ("list of ", len, "esummary records\n"))
+}
+
+
+
