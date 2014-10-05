@@ -16,13 +16,19 @@ databases avaliable in Eutils (if db is not set) or one pariticular database
 (set by 'db')
 }
 \description{
-Contstructs a query to NCBI's einfo and return parsed XML object
-Note The most common uses for einfo API are to list fields against which
-a database can be searched, or linked databases avaliabl,
+Contstructs a query to NCBI's einfo and returns a parsed XML object
+Note: The most common uses-cases for the einfo util are finding the list of
+search fields avalible for a given database or the other NCBI databses to
+which records in a given database might be linked. Both these use cases
+are implementd in higher-level functions that return just this information
+(\code{entrez_db_searchable} and \code{entrez_db_links} respectively).
+Consequently most users will not have a reason to use this function (though
+it is exported by \code{rentrez} for the sake of completeness.
 }
 \examples{
 all_the_data <- entrez_info()
 xpathSApply(all_the_data, "//DbName", xmlValue)
+entrez_dbs()
 }
 \seealso{
 \code{\link[httr]{config}} for avaliable httr configurations

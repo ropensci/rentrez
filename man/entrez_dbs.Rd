@@ -12,7 +12,7 @@ entrez_dbs(config = NULL)
 character vector listing avaliable dbs
 }
 \description{
-Retreives a list of databases avaliable from NCBI
+Retreives the names of  databases avaliable through the EUtils API
 }
 \examples{
 \donttest{

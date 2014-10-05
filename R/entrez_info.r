@@ -70,21 +70,30 @@ entrez_db_summary <- function(db, config=NULL){
 # List avaliable links for records from a given NCBI database
 #'
 #'Can be used in conjunction with \code{\link{entrez_link}} to find
-#' the right name for the \code{db} argument
+#' the right name for the \code{db} argument in that function.
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database t
 #'@return An eInfoLink object (subclassed from list) summarising linked-datbases.
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
-#' the name of each element.
+#' the name of each element (which is the corrent name for \code{entrez_link},
+#' and can be used to get (a little) more information about each linked database
+#' (see example below).
 #'@family einfo
 #'@seealso \code{\link{entrez_link}}
 #'@examples
+#' \donttest{
 #'taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
-#'entrez_db_links("taxonomy")
-#'entrez_link(
+#'(tax_links <- entrez_db_links("taxonomy"))
+#'tax_links[["pubmed"]]
+#'entrez_link(dbfrom="taxonomy", db="pmc", id=taxid)
+#'
+#'sra_links <- entrez_db_links("sra")
+#'as.data.frame(sra_links)
+#'}
 #'@export
 entrez_db_links <- function(db, config=NULL){
-    unparsed <- xpathApply(entrez_info(db, config), "//Link", xmlChildren)
+    rec <- entrez_info(db, config)
+    unparsed <- xpathApply(rec, "//Link", xmlChildren)
     res <- lapply(unparsed, lapply, xmlValue)
     names(res) <- sapply(res, "[[", "DbTo")
     class(res) <- c("eInfoLink", "eInfoList", "list")
@@ -96,14 +105,24 @@ entrez_db_links <- function(db, config=NULL){
 # List avaliable search fields for a given database
 #
 #' Can be used in conjunction with \code{\link{entrez_search}} to find avaliable
-#' search fields to include in the \code{term} argument
+#' search fields to include in the \code{term} argument of that function.
 #'@param config config vector passedto \code{httr::GET}
 #'@param db character, name of database to get search field from
 #'@return An eInfoSearch object (subclassed from list) summarising linked-datbases. 
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
-#' shows only the names of each avaliable search field.
+#' shows only the names of each avaliable search field. 
 #'@seealso \code{\link{entrez_search}}
 #'@family einfo
+#'@examples
+#'\donttest{
+#' (pmc_fields <- entrez_db_searchable("pmc"))
+#' pmc_fields[["AFFL"]]
+#' entrez_search(db="pmc", term="Otago[AFFL]", retmax=0)
+#' entrez_search(db="pmc", term="Auckland[AFFL]", retmax=0)
+#'
+#' sra_fields <- entrez_db_searchable("sra")
+#' as.data.frame(sra_fields)
+#'}
 #'@export
 
 entrez_db_searchable <- function(db, config=NULL){
@@ -118,6 +137,9 @@ entrez_db_searchable <- function(db, config=NULL){
     res
 }
 
+#Because FUNctionals are FUN, a print function factory that makes print methods
+# for similar S3 classes. "result desciption" should briefly describe the result
+# contained in the object
 print_maker <- function(x, result_description){
     function(x, ...){
         cat(result_description, " for database '", attr(x, "db"), "'\n", sep="")
@@ -126,12 +148,12 @@ print_maker <- function(x, result_description){
 }
 
 #'@export
-print.eInfoSearch <- print_maker(x, "searchable fields")
+print.eInfoSearch <- print_maker(x, "Searchable fields")
 
 #'@export
 print.eInfoLink <-  print_maker(x, "Databases with linked records")
 
 #'@export
 as.data.frame.eInfoList <- function(x, ...){
-    data.frame(do.call("rbind", x))
+    data.frame(do.call("rbind", x), row.names=NULL)
 }

@@ -2,7 +2,7 @@
 \name{entrez_db_searchable}
 \alias{entrez_db_searchable}
 \title{Can be used in conjunction with \code{\link{entrez_search}} to find avaliable
-search fields to include in the \code{term} argument}
+search fields to include in the \code{term} argument of that function.}
 \usage{
 entrez_db_searchable(db, config = NULL)
 }
@@ -18,7 +18,18 @@ shows only the names of each avaliable search field.
 }
 \description{
 Can be used in conjunction with \code{\link{entrez_search}} to find avaliable
-search fields to include in the \code{term} argument
+search fields to include in the \code{term} argument of that function.
+}
+\examples{
+\donttest{
+(pmc_fields <- entrez_db_searchable("pmc"))
+pmc_fields[["AFFL"]]
+entrez_search(db="pmc", term="Otago[AFFL]", retmax=0)
+entrez_search(db="pmc", term="Auckland[AFFL]", retmax=0)
+
+sra_fields <- entrez_db_searchable("sra")
+as.data.frame(sra_fields)
+}
 }
 \seealso{
 \code{\link{entrez_search}}

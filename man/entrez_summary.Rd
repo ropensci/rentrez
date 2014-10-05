@@ -3,7 +3,7 @@
 \alias{entrez_summary}
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
-entrez_summary(db, config = NULL, retmode = "xml", ...)
+entrez_summary(db, retmode = "json", config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}

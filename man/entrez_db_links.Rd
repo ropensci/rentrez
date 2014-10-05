@@ -2,7 +2,7 @@
 \name{entrez_db_links}
 \alias{entrez_db_links}
 \title{Can be used in conjunction with \code{\link{entrez_link}} to find
-the right name for the \code{db_to} argument}
+the right name for the \code{db} argument in that function.}
 \usage{
 entrez_db_links(db, config = NULL)
 }
@@ -14,11 +14,24 @@ entrez_db_links(db, config = NULL)
 \value{
 An eInfoLink object (subclassed from list) summarising linked-datbases.
 Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
-the name of each element.
+the name of each element (which is the corrent name for \code{entrez_link},
+and can be used to get (a little) more information about each linked database
+(see example below).
 }
 \description{
 Can be used in conjunction with \code{\link{entrez_link}} to find
-the right name for the \code{db_to} argument
+the right name for the \code{db} argument in that function.
+}
+\examples{
+\donttest{
+taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
+(tax_links <- entrez_db_links("taxonomy"))
+tax_links[["pubmed"]]
+entrez_link(dbfrom="taxonomy", db="pmc", id=taxid)
+
+sra_links <- entrez_db_links("sra")
+as.data.frame(sra_links)
+}
 }
 \seealso{
 \code{\link{entrez_link}}
