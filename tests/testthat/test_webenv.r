@@ -11,7 +11,7 @@ test_that("Searches using WebEnv features work", {
     
     #test
     expect_that(cookie, is_a("character"))
-    expect_that(qk, is_a("integer"))
+    expect_that(as.integer(qk), is_a("integer"))
     expect_that(snail_coi, is_a("character"))
     expect_that(length(strsplit(snail_coi, ">")[[1]]), equals(11))
 })

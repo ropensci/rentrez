@@ -31,7 +31,7 @@
 #'                              file_format = "fasta", retmax = 10)
 #'}
 
-entrez_search <- function(db, term, config=NULL, retmode="json", ... ){
+entrez_search <- function(db, term, config=NULL, retmode="xml", ... ){
     response <- make_entrez_query("esearch", 
                                   db=db, 
                                   term=term, 
