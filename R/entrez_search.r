@@ -54,6 +54,7 @@ parse_esearch.XMLInternalDocument <- function(x){
                  QueryKey = xpathSApply(x, "/eSearchResult/QueryKey", xmlValue),
                  WebEnv   = xpathSApply(x, "/eSearchResult/WebEnv", xmlValue),
                  file     = x)
+    res <- Filter(function(x) length(x) > 0, res)
     class(res) <- c("esearch", "list")
     return(res)
 }
