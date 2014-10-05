@@ -28,13 +28,14 @@ QueryKey integer identifier for specific query in webhistory
 
 WebEnv character identifier for session key to use with history
 
-file XMLInternalDocument xml file resulting from search, parsed with
-\code{\link{xmlTreeParse}}
+file either and XMLInternalDocument xml file resulting from search, parsed with
+\code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
+resulting from the returned JSON file being parsed with
+\code{\link[jsonlite]{fromJSON}}.
 }
 \description{
 Contstructs a query with the given arguments, including a search term, and
-a darabase name, then retrieves the XML document created by that query.
-See package-level documentation for general advice on using the Entrez functions
+a database name, then retrieves the XML document created by that query.
 }
 \examples{
 \dontrun{
@@ -45,8 +46,21 @@ See package-level documentation for general advice on using the Entrez functions
    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
                              file_format = "fasta", retmax = 10)
 }
+\donttest{
+
+fly_id <- entrez_search(db="taxonomy", term="Drosophila")
+#Oh, right. There is a genus and a subgenus name Drosophila...
+#how can we limit this seach
+(tax_fields <- entrez_db_searchable("taxonomy"))
+#"RANK" loots promising
+tax_fields$RANK
+entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
+}
 }
 \seealso{
 \code{\link[httr]{config}} for avaliable configs
+
+\code{\link{entrez_db_searchable}} to get a set of search fields that
+can be userd in \code{term} for any base
 }
 
