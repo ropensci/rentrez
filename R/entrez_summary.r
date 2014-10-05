@@ -38,16 +38,14 @@ entrez_summary <- function(db, config=NULL, retmode="xml", ...){
     response  <- make_entrez_query("esummary", db=db, config=config,
                                    retmode=retmode,
                                    require_one_of=c("id", "WebEnv"), ...)
-    
     whole_record <- parse_respone(response, retmode)
 
+    #Clinvar summary documents just have to be different...
+    # special fxn for them defined below
     if(db == 'clinvar' & retmode == 'xml'){
         rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
         if(length(rec)==1){
             rec <- rec[[1]]
-        }
-        else{
-            class(rec) <- "multiEsummary"
         }
     }
     else {
@@ -57,7 +55,8 @@ entrez_summary <- function(db, config=NULL, retmode="xml", ...){
 }
 
 
-#' @export 
+# 
+#@export 
 parse_esummary <- function(x) UseMethod("parse_esummary")
 
 rename_reclass <- function(x){
@@ -65,10 +64,15 @@ rename_reclass <- function(x){
     class(x) <- "esummary"
     x
 }
-#' @export
+#
+# @export
 parse_esummary.list <- function(x){
     res <- x$result[2: length(x$result)]
     res <- lapply(res, rename_reclass)
+    if(length(res)==1){
+        return(res[[1]])
+    }
+    return(res)
 }
 
 # Prase a sumamry XML 
@@ -78,8 +82,9 @@ parse_esummary.list <- function(x){
 # 2. For each node detect type, parse accordingly
 # 3. wrap it all up in function parse_esummary that 
 #
+
 #
-#' @export
+#@export
 parse_esummary.XMLInternalDocument  <- function(x){
     recs <- x["//DocSum"]
 
@@ -94,7 +99,7 @@ parse_esummary.XMLInternalDocument  <- function(x){
         res <- per_rec(recs[[1]])
     } else{
         res <- lapply(recs, per_rec)
-        class(res) <- c("multiEsummary", class(res))
+        names(res) <-  xpathSApply(rec, "//DocSum/Id", xmlValue)
     }
     return(res)
 
@@ -140,18 +145,12 @@ parse_esummary_clinvar <- function(record){
 
 
 #' @export 
-
 print.esummary <- function(x, ...){
     len <- length(x)
     cat(paste("esummary result with", len - 1, "items:\n"))
     print(names(x)[-len])
 }
 
-#' @export 
-print.multiEsummary <- function(x, ...){
-    len <- length(x)
-    cat(paste ("list of ", len, "esummary records\n"))
-}
 
 
 

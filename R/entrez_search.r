@@ -43,10 +43,12 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", ... ){
 }
 
 
-#'@export
+#
+#@export
 parse_esearch <- function(x) UseMethod("parse_esearch")
    
-#'@export
+#
+#@export
 parse_esearch.XMLInternalDocument <- function(x){
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
                  count    = xpathSApply(x, "/eSearchResult/Count", xmlValue),
@@ -59,7 +61,8 @@ parse_esearch.XMLInternalDocument <- function(x){
     return(res)
 }
 
-#'@export
+#
+#@export
 parse_esearch.list <- function(x){
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querykey", "webenv") ]
     names(res)[c(1,4,5)] <- c("ids", "QueryKey", "WebEnv")
