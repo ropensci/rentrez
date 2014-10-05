@@ -10,7 +10,8 @@ Depends:
     R (>= 2.6.0),
     XML
 Imports:
-    httr
+    httr,
+    jsonlite
 Suggests:
     testthat,
     knitr
