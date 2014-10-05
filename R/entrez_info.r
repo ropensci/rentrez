@@ -1,8 +1,13 @@
 #' Get infromation about EUtils databases
 #'
-#'Contstructs a query to NCBI's einfo and return parsed XML object
-#'Note The most common uses for einfo API are to list fields against which
-#'a database can be searched, or linked databases avaliabl,
+#'Contstructs a query to NCBI's einfo and returns a parsed XML object
+#'Note: The most common uses-cases for the einfo util are finding the list of
+#' search fields avalible for a given database or the other NCBI databses to
+#' which records in a given database might be linked. Both these use cases
+#' are implementd in higher-level functions that return just this information
+#' (\code{entrez_db_searchable} and \code{entrez_db_links} respectively).
+#' Consequently most users will not have a reason to use this function (though
+#' it is exported by \code{rentrez} for the sake of completeness.
 #'@param db characater database about which to retreive information (optional,
 #'@param config config vector passed on to \code{httr::GET}
 #'@return XMLInternalDocument with information describing either all the
@@ -13,6 +18,7 @@
 #'@examples
 #'all_the_data <- entrez_info()
 #'xpathSApply(all_the_data, "//DbName", xmlValue)
+#'entrez_dbs()
 #'@export
 
 entrez_info <- function(db=NULL, config=NULL){
@@ -22,7 +28,7 @@ entrez_info <- function(db=NULL, config=NULL){
 
 #' List databases avaliable from the NCBI
 #'
-#' Retreives a list of databases avaliable from NCBI
+#' Retreives the names of  databases avaliable through the EUtils API
 #'@param config config vector passedto \code{httr::GET}
 #'@family einfo
 #'@return character vector listing avaliable dbs
@@ -36,7 +42,7 @@ entrez_dbs <- function(config=NULL){
 }
 
 
-#' Summarise a NCBI database
+#' Retreive summary information about an NCBI database
 #'
 #'@param config config vector passedto \code{httr::GET}
 #'@param db character, name of database t
@@ -48,6 +54,8 @@ entrez_dbs <- function(config=NULL){
 #'@return DbBuild Unique ID for current build of databse
 #'@return LastUpdate Date of most recent update to databse
 #'@family einfo
+#'@examples
+#'entrez_db_summary("pubmed")
 #'@export
 
 entrez_db_summary <- function(db, config=NULL){
@@ -59,10 +67,10 @@ entrez_db_summary <- function(db, config=NULL){
 }
 
 
-# List avaliable links for records from a given database
+# List avaliable links for records from a given NCBI database
 #'
 #'Can be used in conjunction with \code{\link{entrez_link}} to find
-#' the right name for the \code{db_to} argument
+#' the right name for the \code{db} argument
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database t
 #'@return An eInfoLink object (subclassed from list) summarising linked-datbases.
@@ -70,12 +78,17 @@ entrez_db_summary <- function(db, config=NULL){
 #' the name of each element.
 #'@family einfo
 #'@seealso \code{\link{entrez_link}}
+#'@examples
+#'taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
+#'entrez_db_links("taxonomy")
+#'entrez_link(
 #'@export
 entrez_db_links <- function(db, config=NULL){
     unparsed <- xpathApply(entrez_info(db, config), "//Link", xmlChildren)
     res <- lapply(unparsed, lapply, xmlValue)
-    names(res) <- sapply(res, "[[", "Name")
+    names(res) <- sapply(res, "[[", "DbTo")
     class(res) <- c("eInfoLink", "eInfoList", "list")
+    attr(res, 'db') <- xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
     return(res)
 }
 
@@ -101,21 +114,22 @@ entrez_db_searchable <- function(db, config=NULL){
     res <- lapply(unparsed, lapply, xmlValue)
     names(res) <- sapply(res, "[[", "Name")
     class(res) <- c("eInfoSearch", "eInfoList", "list")
+    attr(res, 'db') <- xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
     res
 }
 
-print_maker <- function(x, name){
+print_maker <- function(x, result_description){
     function(x, ...){
-        cat(name, "result with the following fields:\n")
-        print(names(x))
+        cat(result_description, " for database '", attr(x, "db"), "'\n", sep="")
+        print(names(x), quote=FALSE)
     }
 }
 
 #'@export
-print.eInfoSearch <- print_maker(x, "Search fields")
+print.eInfoSearch <- print_maker(x, "searchable fields")
 
 #'@export
-print.eInfoLink <-  print_maker(x, "Linked dbs")
+print.eInfoLink <-  print_maker(x, "Databases with linked records")
 
 #'@export
 as.data.frame.eInfoList <- function(x, ...){
