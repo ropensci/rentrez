@@ -100,7 +100,7 @@ parse_esummary.XMLInternalDocument  <- function(x){
         res <- per_rec(recs[[1]])
     } else{
         res <- lapply(recs, per_rec)
-        names(res) <-  xpathSApply(rec, "//DocSum/Id", xmlValue)
+        names(res) <-  xpathSApply(x, "//DocSum/Id", xmlValue)
     }
     return(res)
 
