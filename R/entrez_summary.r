@@ -201,7 +201,7 @@ parse_esummary_clinvar <- function(record){
 print.esummary <- function(x, ...){
     len <- length(x)
     cat(paste("esummary result with", len - 1, "items:\n"))
-    print(names(x)[-len])
+    print(names(x)[-len], quote=FALSE)
 }
 
 
