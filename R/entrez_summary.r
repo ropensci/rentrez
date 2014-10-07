@@ -62,7 +62,7 @@ parse_esummary <- function(x) UseMethod("parse_esummary")
 rename_reclass <- function(x){
     #capetilise names to keep consitancy with xml recs
     names(x) <- sapply(names(x), function(x) paste0(toupper(substr(x,1,1)), substr(x,2,nchar(x))))
-    class(x) <- "esummary"
+    class(x) <- c("esummary", "list")
     x
 }
 #
@@ -141,6 +141,58 @@ parse_esummary_clinvar <- function(record){
   class(res) <- c("esummary", class(res))
   return(res)
 }
+
+#' @export
+`[[.esummary` <- function(x, name, ...){
+    res <- NextMethod("[[") 
+    if(is.null(res)){
+        msg <- paste0("Esummary object '", deparse(substitute(x)), "' has no object",
+                     " named '", name, "' \b.\nIf you were expecting values from a ",
+                     " 'versoin 1.0' esummary record, try setting 'version' to ",
+                     " '1.0' in entrez_summary (see documentation for more)\n")
+        warning(msg)
+     }
+    res
+}
+
+
+#' @export
+`[.esummary` <- function(x, ...){
+    res <- NextMethod("[") 
+    if(any(vapply(res, is.null, TRUE))){
+        msg <- paste("Some values missing from Esumamry object. If you were",
+                     "expecting a 'Version 1.0' esummary record, try setting",
+                     "'version' to '1.0' in entrez_summary()")
+       warning(msg) 
+     }
+    res
+}
+
+
+
+#' @export
+`$.esummary` <- function(x, name){
+    suppressWarnings(
+        res <- x[[name]]
+    )
+    if(!is.null(res)){
+        return(res)
+    }
+    suppressWarnings(res <- x[[name, exact=FALSE]])
+    if(!is.null(res) &&  getOption("warnPartialMatchDollar", default=FALSE)){
+        warning("Returning partial match")
+        return(res)
+    }
+    if(is.null(res)){
+         msg <- paste0("Esummary object '", deparse(substitute(x)), "' has no object",
+                     " named '", name, "' \b.\nIf you were expecting values from a ",
+                     " 'versoin 1.0' esummary record, try setting 'version' to ",
+                     " '1.0' in entrez_summary (see documentation for more)\n")
+        warning(msg)
+    }
+    res
+}
+
 
 
 
