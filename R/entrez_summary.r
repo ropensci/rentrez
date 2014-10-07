@@ -59,9 +59,7 @@ entrez_summary <- function(db, retmode="json", config=NULL, ...){
 #@export 
 parse_esummary <- function(x) UseMethod("parse_esummary")
 
-rename_reclass <- function(x){
-    #capetilise names to keep consitancy with xml recs
-    names(x) <- sapply(names(x), function(x) paste0(toupper(substr(x,1,1)), substr(x,2,nchar(x))))
+reclass <- function(x){
     class(x) <- c("esummary", "list")
     x
 }
@@ -69,7 +67,7 @@ rename_reclass <- function(x){
 # @export
 parse_esummary.list <- function(x){
     res <- x$result[2: length(x$result)]
-    res <- lapply(res, rename_reclass)
+    res <- lapply(res, reclass)
     if(length(res)==1){
         return(res[[1]])
     }
