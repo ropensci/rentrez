@@ -1,8 +1,20 @@
 #' Get summaries of objects in NCBI datasets from a unique ID 
 #'
 #' Contstructs a query from the given arguments, including a database name and
-#' list of of unique IDs for that database then downloads the XML document 
-#' created by that query. The XML document is parsed, with the 
+#' list of of unique IDs for that database.
+#' 
+#' The NCBI offer two distinct formats for summary docuements.
+#' Version 1.0 is a relatively limited summary of a database record based on a 
+#' shared Document Type Definition. Version 1.0 summaries are only avaliable as
+#' XML and are not avaliable for some newer databases
+#' Version 2.0 summaries generally contian more information about a given
+#' record, but each database has its own distinct format. 2.0 summaries are 
+#' avaliable for records in all databases and as JSON and XML files. 
+#' As of version 0.4, rentrez fetches version 2.0 summaries by default and
+#' uses JSON as teh exchange format (as JSON object can be more easily converted
+#' into native R types). Existing scripts which relied on the stucture and
+#' naming of the "Version 1.0" summary files updated through new \code{version}
+#' argument.
 #'
 #'@export
 #'@param db character Name of the database to search for
@@ -10,10 +22,7 @@
 #'   id (unique id(s) for records in a given database) or WebEnv (a character
 #'   containing a cookie created by a previous entrez query).
 #'@param config vector configuration options passed to \code{httr::GET}
-#'@param retmode character One of json (default) or xml. The json objects
-#' returned by NCBI for some databases contain more information than the older
-#' XML files, so json is the default and users would not normally need to change
-#' this value. Whatever the exchange format, an \code{esummary} is returned
+#'@param version either 1.0 or 2.0 see above for description
 #'@seealso \code{\link[httr]{config}} for avaliable configs 
 #'@return A list of esummary records (if multiple IDs are passed) or a single
 #' record.
@@ -34,9 +43,13 @@
 #'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
 #'  sapply(cv, "[[", "gene_sort") # gene_sort
 
-entrez_summary <- function(db, retmode="json", config=NULL, ...){
+entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
+    v <-match.arg(version)
+    if(v == "2.0"){
+        retmode <- "json"
+    }else retmode <- "xml"
     response  <- make_entrez_query("esummary", db=db, config=config,
-                                   retmode=retmode,
+                                   retmode=retmode, version=v,
                                    require_one_of=c("id", "WebEnv"), ...)
     whole_record <- parse_respone(response, retmode)
 
@@ -55,17 +68,16 @@ entrez_summary <- function(db, retmode="json", config=NULL, ...){
 }
 
 
-# 
-#@export 
 parse_esummary <- function(x) UseMethod("parse_esummary")
 
 reclass <- function(x){
     class(x) <- c("esummary", "list")
     x
 }
-#
-# @export
+
+
 parse_esummary.list <- function(x){
+    #already parsed by jsonlite, just add class info to each one
     res <- x$result[2: length(x$result)]
     res <- lapply(res, reclass)
     if(length(res)==1){
