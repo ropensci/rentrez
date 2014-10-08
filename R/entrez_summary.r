@@ -55,15 +55,15 @@ entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
 
     #Clinvar summary documents just have to be different...
     # special fxn for them defined below
-    if(db == 'clinvar' & retmode == 'xml'){
-        rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
-        if(length(rec)==1){
-            rec <- rec[[1]]
-        }
-    }
-    else {
+   # if(db == 'clinvar' & retmode == 'xml'){
+   #     rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
+   #     if(length(rec)==1){
+   #         rec <- rec[[1]]
+   #     }
+   # }
+   # else {
       rec <- parse_esummary(whole_record)
-    }
+#    }
     return(rec)
 }
 
@@ -98,7 +98,9 @@ parse_esummary.list <- function(x){
 #@export
 parse_esummary.XMLInternalDocument  <- function(x){
     recs <- x["//DocSum"]
-
+    if(length(recs)==0){
+       stop("Esummary document contains no DocSums, try 'version=2.0'?)")
+    }
     per_rec <- function(r){
         res <- xpathApply(r, "Item", parse_node)
         names(res) <- xpathApply(r, "Item", xmlGetAttr, "Name")
@@ -136,21 +138,21 @@ parse_esumm_list <- function(node){
 }
 
 
-parse_esummary_clinvar <- function(record){
-  easynodes <- c('obj_type','accession','accession_version','title','supporting_submissions',
-    'gene_sort','chr_sort','location_sort','variation_set_name')
-  res <- sapply(easynodes, function(x) xpathApply(record, x, xmlValue))
-  res$clinical_significance <- xpathApply(record, 'clinical_significance', xmlToList)[[1]]
-  variation_set <- xpathApply(record, 'variation_set', xmlToList)[[1]]$variation
-  variation_set$variation$aliases <- unlist(variation_set$variation$aliases, use.names = FALSE)
-  trait_set <- xpathApply(record, 'trait_set', xmlToList)[[1]]$trait
-  trait_set$trait$trait_xrefs <- unname(trait_set$trait$trait_xrefs)
-  res$variation_set <- variation_set
-  res$trait_set <- trait_set
-  res <- c(res, file=record)
-  class(res) <- c("esummary", class(res))
-  return(res)
-}
+#parse_esummary_clinvar <- function(record){
+#  easynodes <- c('obj_type','accession','accession_version','title','supporting_submissions',
+#    'gene_sort','chr_sort','location_sort','variation_set_name')
+#  res <- sapply(easynodes, function(x) xpathApply(record, x, xmlValue))
+#  res$clinical_significance <- xpathApply(record, 'clinical_significance', xmlToList)[[1]]
+#  variation_set <- xpathApply(record, 'variation_set', xmlToList)[[1]]$variation
+#  variation_set$variation$aliases <- unlist(variation_set$variation$aliases, use.names = FALSE)
+#  trait_set <- xpathApply(record, 'trait_set', xmlToList)[[1]]$trait
+#  trait_set$trait$trait_xrefs <- unname(trait_set$trait$trait_xrefs)
+#  res$variation_set <- variation_set
+#  res$trait_set <- trait_set
+#  res <- c(res, file=record)
+#  class(res) <- c("esummary", class(res))
+#  return(res)
+#}
 
 #' @export
 `[[.esummary` <- function(x, name, ...){
