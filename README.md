@@ -3,35 +3,134 @@
 
 #rentrez
 
-rentrez provides functions that work with the [NCBI eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) to search or download data from various NCBI databases.
+`rentrez` provides functions that work with the [NCBI Eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
+API to search, download or data from variously interact with NCBI databases.
 
 
 ##Install
 
-`rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can either download the archive above and install using `$R CMD INSTALL`
-or use Hadley Wickham's [devtools](https://github.com/hadley/devtools):
+`rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can install 
+the current github version using Hadley Wickham's [devtools](https://github.com/hadley/devtools).
 
-```r     
+```
 library(devtools)
-install_github("rentrez", "ropensci")
+install_github("ropensci/rentrez")
 ```
 
+##Getting started with EUtils
 
-##The Eutils API
+The NCBI provides thorough and clear [documentation for Eutils] (http://www.ncbi.nlm.nih.gov/books/NBK25500/). 
+Be sure to read the official documenation. In particular, be aware of the NCBI's usage 
+policies and try to limit very large requests to off peak (USA) times (`rentrez`
+takes care of limiting the number of requests per second, and seeting the
+appropriate entrez tool name in each request).
 
-`rentrez` presumes you already know your way around the Eutils' API, [which is well
-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Make sure you read the
-documentation, and in particular, be aware of the NCBI's usage policies and try to
-limit very large requests to off peak (USA) times.
+`rentrez` also provides some helper functions that help you learn a bit about
+what's avaliable through Eutils. First `entrez_dbs()` gives you a list of
+avaliable databases:
 
-The functions in `rentrez` are designed to create URLs in the form required by
-the api, fetch the file and parse information from it. Specific examples below illustrate
-how the functions work.
 
-##Examples
+```r
+entrez_dbs()
+```
 
-To see how the package works, let's look at a couple of possible uses of the
-library
+```
+##  [1] "pubmed"          "protein"         "nuccore"        
+##  [4] "nucleotide"      "nucgss"          "nucest"         
+##  [7] "structure"       "genome"          "assembly"       
+## [10] "genomeprj"       "bioproject"      "biosample"      
+## [13] "blastdbinfo"     "books"           "cdd"            
+## [16] "clinvar"         "clone"           "gap"            
+## [19] "gapplus"         "dbvar"           "epigenomics"    
+## [22] "gene"            "gds"             "geoprofiles"    
+## [25] "homologene"      "medgen"          "journals"       
+## [28] "mesh"            "ncbisearch"      "nlmcatalog"     
+## [31] "omim"            "orgtrack"        "pmc"            
+## [34] "popset"          "probe"           "proteinclusters"
+## [37] "pcassay"         "biosystems"      "pccompound"     
+## [40] "pcsubstance"     "pubmedhealth"    "seqannot"       
+## [43] "snp"             "sra"             "taxonomy"       
+## [46] "toolkit"         "toolkitall"      "toolkitbook"    
+## [49] "unigene"         "gencoll"         "gtr"
+```
+
+You can get some summary data about each of these databases with a set of
+functions starting with `entrez_db_`:
+
+**Summary information**
+
+
+```r
+entrez_db_summary("cdd")
+```
+
+```
+##                      DbName                    MenuName 
+##                       "cdd"         "Conserved Domains" 
+##                 Description                     DbBuild 
+## "Conserved Domain Database"        "Build141002-1144.3" 
+##                       Count                  LastUpdate 
+##                     "49955"          "2014/10/06 17:28"
+```
+
+**Databases with linked records (see entrez_link())**
+
+```r
+entrez_db_links("omim")
+```
+
+```
+## Databases with linked records for database 'omim'
+##  [1] biosample   biosystems  books       clinvar     dbvar      
+##  [6] gene        genetests   geoprofiles gtr         homologene 
+## [11] mapview     medgen      medgen      nuccore     nucest     
+## [16] nucgss      omim        pcassay     pccompound  pcsubstance
+## [21] pmc         protein     pubmed      pubmed      snp        
+## [26] snp         snp         sra         structure   unigene
+```
+
+**Search fields avaliable for a given database**
+
+
+```r
+search_fields <- entrez_db_searchable("pmc")
+search_fields$GRNT
+```
+
+```
+## $Name
+## [1] "GRNT"
+## 
+## $FullName
+## [1] "Grant Number"
+## 
+## $Description
+## [1] "NIH Grant Numbers"
+## 
+## $TermCount
+## [1] "2092294"
+## 
+## $IsDate
+## [1] "N"
+## 
+## $IsNumerical
+## [1] "N"
+## 
+## $SingleToken
+## [1] "Y"
+## 
+## $Hierarchy
+## [1] "N"
+## 
+## $IsHidden
+## [1] "N"
+```
+
+##Getting stuff done with EUtils
+
+In many cases, doing something interesting with `EUtils` will take multiple
+calls. Here are a few examples of how the functions work together (check out the
+package vignette for others).
 
 ###Getting data from that great paper you've just read
 
@@ -41,29 +140,37 @@ data required to replicate their results. First, I need the unique ID for this
 paper in pubmed (the PMID). Annoyingly, many journals don't give PMIDS for their
 papers, but we can use `entrez_search` to find the paper using the doi field:
 
-```r  
+
+```r
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 (hox_pmid <- hox_paper$ids)
-        # [1] 20203609
+```
+
+```
+## [1] "20203609"
 ```
 
 Now, what sorts of data are avaliable from other NCBI database for this paper?
 
+
 ```r
 hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
-str(hox_data)
-#List of 11
-# $ pubmed_nuccore            : chr [1:32] "290760437"  ...
-# $ pubmed_pmc_refs           : chr [1:11] "3218823" ...
-# $ pubmed_protein            : chr [1:49] "290760438" ...
-# $ pubmed_pubmed             : chr [1:128] "20203609" ...
-# $ pubmed_pubmed_citedin     : chr [1:10] "22016857"  ...
-# $ pubmed_pubmed_combined    : chr [1:6] "20203609" " ...
-# $ pubmed_pubmed_five        : chr [1:6] "20203609" ...
-# $ pubmed_pubmed_reviews     : chr [1:31] "20203609"  ...
-# $ pubmed_pubmed_reviews_five: chr [1:6] "20203609"  ...
-# $ pubmed_taxonomy_entrez    : chr [1:14] "742354"  ...
-# $ file                      :Classes 'XMLInternalDocument'...'
+hox_data
+```
+
+```
+## elink result with ids from 22 databases:
+##  [1] pubmed_gene                    pubmed_gene_bookrecords       
+##  [3] pubmed_medgen                  pubmed_mesh_major             
+##  [5] pubmed_nuccore                 pubmed_nucleotide             
+##  [7] pubmed_omim_bookrecords        pubmed_pcsubstance_bookrecords
+##  [9] pubmed_pmc_bookrecords         pubmed_pmc_local              
+## [11] pubmed_pmc_refs                pubmed_protein                
+## [13] pubmed_pubmed                  pubmed_pubmed_alsoviewed      
+## [15] pubmed_pubmed_bookrecords      pubmed_pubmed_citedin         
+## [17] pubmed_pubmed_combined         pubmed_pubmed_five            
+## [19] pubmed_pubmed_pmh_cited        pubmed_pubmed_reviews         
+## [21] pubmed_pubmed_reviews_five     pubmed_taxonomy_entrez
 ```
 
 Each of the character vectors in this object contain unique IDS for records in
@@ -71,10 +178,16 @@ the named databases. These functions try to make the most useful bits of the
 returned files available to users, but they also return the original file in case
 you want to dive into the XML yourself.
 
-In this case we'll get the protein sequences as genbank files, using ' `entrez_fetch`:
+In this case we'll get the protein sequences as genbank files, using '
+`entrez_fetch`:
  
+
 ```r
-hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, file_format="gb")
+hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, rettype="gb")
+```
+
+```
+## Error: Function requires either id or WebEnv to be set as arguments
 ```
 
 ###Retreiving datasets associated a particular organism.
@@ -87,11 +200,15 @@ The first step here is to use the function `entrez_search` to find datasets
 that include katipo sequences. The `popset` database has sequences arising from
 phylogenetic or population-level studies, so let's start there.
 
+
 ```r
 library(rentrez)
 katipo_search <- entrez_search(db="popset", term="Latrodectus katipo[Organism]")
 katipo_search$count
-        # [1] 6
+```
+
+```
+## [1] "6"
 ```
 
 In this search `count` is the total number of hits returned for the search term.
@@ -101,30 +218,46 @@ corresponding to one of the IDs it is passed. In this case we get six records,
 and we see what each one contains like so:
 
 
+
 ```r
-(summaries <- entrez_summary(db="popset", id=katipo_search$ids))
-    #list of  6 esummary records
+summaries <- entrez_summary(db="popset", id=katipo_search$ids)
 summaries[[1]]
-    #esummary result with 12 items:
-    # [1] "Caption"    "Title"      "Extra"      "Gi"         "CreateDate"
-    # [6] "UpdateDate" "Flags"      "TaxId"      "Length"     "Status"
-    #[11] "ReplacedBy" "Comment"  
-sapply(summaries, "[[", "Title")
-    #[1] "Latrodectus katipo 18S ribosomal RNA gene... "
-    #[2] "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene ..."  
-    #[3] "Latrodectus 18S ribosomal RNA gene... "
-    #[4] "Latrodectus cytochrome oxidase subunit 1 (COI) gene ...."
-    #[5] "Latrodectus tRNA-Leu (trnL) gene ..."
-    #[6] "Theridiidae cytochrome oxidase subunit I (COI) gene... "
+```
+
+```
+## esummary result with 16 items:
+##  [1] uid        caption    title      extra      gi         settype   
+##  [7] createdate updatedate flags      taxid      authors    article   
+## [13] journal    statistics properties oslt
+```
+
+```r
+sapply(summaries, "[[", "title")
+```
+
+```
+##                                                                                                                                                                                                                  167843272 
+## "Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
+##                                                                                                                                                                                                                  167843256 
+##                                                                                                                                  "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
+##                                                                                                                                                                                                                  145206810 
+##        "Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
+##                                                                                                                                                                                                                  145206746 
+##                                                                                                                                         "Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
+##                                                                                                                                                                                                                   41350664 
+##                                                                                             "Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial." 
+##                                                                                                                                                                                                                   39980346 
+##                                                                                                                                         "Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial."
 ```
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
 
+
 ```r
 COI_ids <- katipo_search$ids[c(2,6)]
 trnL_ids <- katipo_search$ids[5]
-COI <- entrez_fetch(db="popset", id=COI_ids, file_format="fasta")
-trnL <- entrez_fetch(db="popset", id=trnL_ids, file_format="fasta")
+COI <- entrez_fetch(db="popset", id=COI_ids, rettype="fasta")
+trnL <- entrez_fetch(db="popset", id=trnL_ids, rettype="fasta")
 ```
 
 The "fetched" results are fasta formatted characters, which can be written
@@ -184,12 +317,13 @@ entrez_search(db="pubmed",  term="10.1038/nature08789[doi]")
 
 The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the snail (Gastropod) species we can find in the nucleotide database:
 
-```r	
-library(rentrez)
+
+```r
 snail_search <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200, usehistory="y")
 ```
 
 Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the 200 ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
+
 
 ```r
 cookie <- snail_search$WebEnv

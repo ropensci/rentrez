@@ -2,6 +2,7 @@
 ^staticdocs$
 ^\.git/$
 ^rentrez_*\.tar\.gz$
-^README\.md$
+^README\.md\.rmd$
 ^\.travis\.yml$
 ^appveyor\.yml$
+
