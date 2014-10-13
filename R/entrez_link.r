@@ -51,5 +51,5 @@ entrez_link <- function(db, dbfrom, config=NULL, ...){
 print.elink <- function(x, ...){
    len <- length(x)
    cat(paste("elink result with ids from", len - 1, "databases:\n"))
-   print (names(x)[-len])
+   print (names(x)[-len], quote=FALSE)
 }
