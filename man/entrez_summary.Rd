@@ -3,7 +3,7 @@
 \alias{entrez_summary}
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
-entrez_summary(db, retmode = "json", config = NULL, ...)
+entrez_summary(db, version = c("2.0", "1.0"), config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
@@ -14,10 +14,7 @@ containing a cookie created by a previous entrez query).}
 
 \item{config}{vector configuration options passed to \code{httr::GET}}
 
-\item{retmode}{character One of json (default) or xml. The json objects
-returned by NCBI for some databases contain more information than the older
-XML files, so json is the default and users would not normally need to change
-this value. Whatever the exchange format, an \code{esummary} is returned}
+\item{version}{either 1.0 or 2.0 see above for description}
 }
 \value{
 A list of esummary records (if multiple IDs are passed) or a single
@@ -28,8 +25,21 @@ file XMLInternalDocument xml file resulting from search, parsed with
 }
 \description{
 Contstructs a query from the given arguments, including a database name and
-list of of unique IDs for that database then downloads the XML document
-created by that query. The XML document is parsed, with the
+list of of unique IDs for that database.
+}
+\details{
+The NCBI offer two distinct formats for summary docuements.
+Version 1.0 is a relatively limited summary of a database record based on a
+shared Document Type Definition. Version 1.0 summaries are only avaliable as
+XML and are not avaliable for some newer databases
+Version 2.0 summaries generally contian more information about a given
+record, but each database has its own distinct format. 2.0 summaries are
+avaliable for records in all databases and as JSON and XML files.
+As of version 0.4, rentrez fetches version 2.0 summaries by default and
+uses JSON as teh exchange format (as JSON object can be more easily converted
+into native R types). Existing scripts which relied on the stucture and
+naming of the "Version 1.0" summary files updated through new \code{version}
+argument.
 }
 \examples{
 pop_ids = c("307082412", "307075396", "307075338", "307075274")

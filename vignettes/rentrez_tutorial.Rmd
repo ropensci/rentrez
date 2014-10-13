@@ -22,10 +22,11 @@ rentrez tutorial
 
 What rentrez does
 -----------------
-
-At present the functions provided by rentrez cover the entire Eutils API.
-Basically, the functions take arguments provided by a user, produce the URL
-needed to query the NCBI's API and fetches the resulting data. In most cases the functions return lists that contain the parts of the resulting file that are most likely to be useful as items. When the returned file is XML the list contains the XML file for those that want to dig deeper.
+`rentrez` provides a low-level R wrapper to the NCBI's EUtils API.
+The core functions take a set of arguments provided by a user, produce the URL
+needed to query the NCBI's API and then fetches the resulting data. In most
+cases the functions return lists that contain the parts of the resulting file
+that are most likely to be useful as items. 
 
 `rentrez` presumes you already know your way around the Eutils' API, [which is well documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Make sure you read the documentation, and in particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times.
 
@@ -70,18 +71,26 @@ All the functions in `rentrez` create a URL to get data from the NCBI, then fetc
 
 OK, now we have the PMID, what data does NCBI have for this paper? The
 `entrez_link` function lets us find out. In this case the `db` argument can be
-used to limit the number of data sources to check, but I want to see every data
-source here so I'll set this paramater to "all":
+used to limit the number of data sources to check ( a list of avaliable
+linked-databases can be found via `entrez_db_links()`. In this case, I want to see every data
+source so I'll set `db` to "all":
 
 ```{r entrez_link, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
 NCBI_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
-str(NCBI_data)
+NCBI_data
 ```
 
 ## Fetch a summary of a record
 
 The most relevant data here is the from the [popset](ncbi.nlm.nih.gov/popset)
-database, which containts population and phylogenetic datasets. If I want to see
+database, which containts population and phylogenetic datasets. We can find out
+a little bit more about this datbase with `entrez_db_summary()`
+
+```{r summ}
+entrez_db_summary("popset")
+```
+
+If I want to see
 what each of the four popset datasets associated with this paper are about I can
 use `entrez_summary` to have a look. This function collects summaries of
 database records, and returns a list of parsed records with each element of a
@@ -92,7 +101,7 @@ kind of information they contain then extract the Title from each record:
 ```{r entrez_summary, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
 data_summaries <- entrez_summary(db = "popset", id = NCBI_data$pubmed_popset)
 data_summaries[[1]]
-sapply(data_summaries, "[[", "Title")
+sapply(data_summaries, "[[", "title")
 ```
 
 ## Fetch data
@@ -113,13 +122,14 @@ as part of the vignette_
 library(ape)
 library(stringr)
 clean_and_root <- function(tr, outgroup, resolved = TRUE) {
-write(coi, "~/moray_coi_raw.fasta")
-write(rag1, "~/moray_rag1_raw.fasta")
 
     tr$tip.label <- sapply(str_split(tr$tip.label, " "), function(x) paste(x[2:3],
         collapse = "_"))
     return(root(tr, outgroup, resolve.root = resolved))
 }
+write(coi, "~/moray_coi_raw.fasta")
+write(rag1, "~/moray_rag1_raw.fasta")
+
 par(mfrow = c(1, 2))
 
 coi_ali <- muscle(read.dna("~/moray_coi_raw.fasta", "fasta"))
@@ -141,10 +151,22 @@ Working with WebEnvs
 --------------------
 
 The NCBI provides search history features, which can be useful for dealing with
-a large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the land snail (Stylommatophora) species we can find in the nucleotide database:
+a large lists of IDs (which will not fit in a single URL) or repeated searches. 
+As an example, we will go searching for COI sequences from all the snail 
+(Gastrppod) species we can find in the nucleotide database. 
+
+`entrez_db_searchable` helps us find fields that can make part of a search term. 
+
+
+```{r fields}
+search_fields <- entrez_db_searchable("nuccore")
+search_fields
+search_fields$ORGN
+```
+We can then use those terms in a call to `entrez_search`:
 
 ```{r webenvs1, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-snail_search <- entrez_search(db = "nuccore", "Gastropoda[Organism] AND COI[Gene]", usehistory = "y")
+snail_search <- entrez_search(db = "nuccore", "Gastropoda[ORGN] AND COI[Gene]", usehistory = "y")
 ```
 
 Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the hundreds of ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
@@ -166,11 +188,10 @@ part of this vignette so save you time and the NCBI some server-load):
 ```r
 for (start_rec in seq(0, 200, 50)) {
     fname <- paste("snail_coi_", start_rec, ".fasta", sep = "")
-    recs <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk, rettype = "fasta",
-        retstart = start_rec, retmax = 50)
+    recs <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk, rettype = "fasta", retstart = start_rec, retmax = 50)
     write(recs, fname)
     print(paste("wrote records to ", fname, sep = ""))
-
+}
 ```
 
 
@@ -182,7 +203,7 @@ To cite `rentrez` in publications use:
 
 <br>
 
-> David Winter (2014). rentrez: Entrez in R. R package version 0.2.3.
+> David Winter (2014). rentrez: Entrez in R. R package version 0.4
 
 <section id="license_bugs">
 
