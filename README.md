@@ -4,7 +4,7 @@
 #rentrez
 
 `rentrez` provides functions that work with the [NCBI Eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
-API to search, download or data from variously interact with NCBI databases.
+API to search, download data from, and otherwise interact with NCBI databases.
 
 
 ##Install
@@ -35,23 +35,7 @@ entrez_dbs()
 ```
 
 ```
-##  [1] "pubmed"          "protein"         "nuccore"        
-##  [4] "nucleotide"      "nucgss"          "nucest"         
-##  [7] "structure"       "genome"          "assembly"       
-## [10] "genomeprj"       "bioproject"      "biosample"      
-## [13] "blastdbinfo"     "books"           "cdd"            
-## [16] "clinvar"         "clone"           "gap"            
-## [19] "gapplus"         "dbvar"           "epigenomics"    
-## [22] "gene"            "gds"             "geoprofiles"    
-## [25] "homologene"      "medgen"          "journals"       
-## [28] "mesh"            "ncbisearch"      "nlmcatalog"     
-## [31] "omim"            "orgtrack"        "pmc"            
-## [34] "popset"          "probe"           "proteinclusters"
-## [37] "pcassay"         "biosystems"      "pccompound"     
-## [40] "pcsubstance"     "pubmedhealth"    "seqannot"       
-## [43] "snp"             "sra"             "taxonomy"       
-## [46] "toolkit"         "toolkitall"      "toolkitbook"    
-## [49] "unigene"         "gencoll"         "gtr"
+## Error: could not find function "entrez_dbs"
 ```
 
 You can get some summary data about each of these databases with a set of
@@ -65,12 +49,7 @@ entrez_db_summary("cdd")
 ```
 
 ```
-##                      DbName                    MenuName 
-##                       "cdd"         "Conserved Domains" 
-##                 Description                     DbBuild 
-## "Conserved Domain Database"        "Build141002-1144.3" 
-##                       Count                  LastUpdate 
-##                     "49955"          "2014/10/06 17:28"
+## Error: could not find function "entrez_db_summary"
 ```
 
 **Databases with linked records (see entrez_link())**
@@ -80,13 +59,7 @@ entrez_db_links("omim")
 ```
 
 ```
-## Databases with linked records for database 'omim'
-##  [1] biosample   biosystems  books       clinvar     dbvar      
-##  [6] gene        genetests   geoprofiles gtr         homologene 
-## [11] mapview     medgen      medgen      nuccore     nucest     
-## [16] nucgss      omim        pcassay     pccompound  pcsubstance
-## [21] pmc         protein     pubmed      pubmed      snp        
-## [26] snp         snp         sra         structure   unigene
+## Error: could not find function "entrez_db_links"
 ```
 
 **Search fields avaliable for a given database**
@@ -94,36 +67,18 @@ entrez_db_links("omim")
 
 ```r
 search_fields <- entrez_db_searchable("pmc")
+```
+
+```
+## Error: could not find function "entrez_db_searchable"
+```
+
+```r
 search_fields$GRNT
 ```
 
 ```
-## $Name
-## [1] "GRNT"
-## 
-## $FullName
-## [1] "Grant Number"
-## 
-## $Description
-## [1] "NIH Grant Numbers"
-## 
-## $TermCount
-## [1] "2092294"
-## 
-## $IsDate
-## [1] "N"
-## 
-## $IsNumerical
-## [1] "N"
-## 
-## $SingleToken
-## [1] "Y"
-## 
-## $Hierarchy
-## [1] "N"
-## 
-## $IsHidden
-## [1] "N"
+## Error: object 'search_fields' not found
 ```
 
 ##Getting stuff done with EUtils
@@ -143,11 +98,18 @@ papers, but we can use `entrez_search` to find the paper using the doi field:
 
 ```r
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
+```
+
+```
+## Error: could not find function "entrez_search"
+```
+
+```r
 (hox_pmid <- hox_paper$ids)
 ```
 
 ```
-## [1] "20203609"
+## Error: object 'hox_paper' not found
 ```
 
 Now, what sorts of data are avaliable from other NCBI database for this paper?
@@ -155,22 +117,18 @@ Now, what sorts of data are avaliable from other NCBI database for this paper?
 
 ```r
 hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
+```
+
+```
+## Error: could not find function "entrez_link"
+```
+
+```r
 hox_data
 ```
 
 ```
-## elink result with ids from 22 databases:
-##  [1] pubmed_gene                    pubmed_gene_bookrecords       
-##  [3] pubmed_medgen                  pubmed_mesh_major             
-##  [5] pubmed_nuccore                 pubmed_nucleotide             
-##  [7] pubmed_omim_bookrecords        pubmed_pcsubstance_bookrecords
-##  [9] pubmed_pmc_bookrecords         pubmed_pmc_local              
-## [11] pubmed_pmc_refs                pubmed_protein                
-## [13] pubmed_pubmed                  pubmed_pubmed_alsoviewed      
-## [15] pubmed_pubmed_bookrecords      pubmed_pubmed_citedin         
-## [17] pubmed_pubmed_combined         pubmed_pubmed_five            
-## [19] pubmed_pubmed_pmh_cited        pubmed_pubmed_reviews         
-## [21] pubmed_pubmed_reviews_five     pubmed_taxonomy_entrez
+## Error: object 'hox_data' not found
 ```
 
 Each of the character vectors in this object contain unique IDS for records in
@@ -187,7 +145,7 @@ hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, rettype=
 ```
 
 ```
-## Error: Function requires either id or WebEnv to be set as arguments
+## Error: could not find function "entrez_fetch"
 ```
 
 ###Retreiving datasets associated a particular organism.
@@ -203,6 +161,13 @@ phylogenetic or population-level studies, so let's start there.
 
 ```r
 library(rentrez)
+```
+
+```
+## Loading required package: XML
+```
+
+```r
 katipo_search <- entrez_search(db="popset", term="Latrodectus katipo[Organism]")
 katipo_search$count
 ```
@@ -226,9 +191,10 @@ summaries[[1]]
 
 ```
 ## esummary result with 16 items:
-##  [1] uid        caption    title      extra      gi         settype   
-##  [7] createdate updatedate flags      taxid      authors    article   
-## [13] journal    statistics properties oslt
+##  [1] "Uid"        "Caption"    "Title"      "Extra"      "Gi"        
+##  [6] "Settype"    "Createdate" "Updatedate" "Flags"      "Taxid"     
+## [11] "Authors"    "Article"    "Journal"    "Statistics" "Properties"
+## [16] "Oslt"
 ```
 
 ```r
@@ -236,18 +202,23 @@ sapply(summaries, "[[", "title")
 ```
 
 ```
-##                                                                                                                                                                                                                  167843272 
-## "Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
-##                                                                                                                                                                                                                  167843256 
-##                                                                                                                                  "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
-##                                                                                                                                                                                                                  145206810 
-##        "Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
-##                                                                                                                                                                                                                  145206746 
-##                                                                                                                                         "Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
-##                                                                                                                                                                                                                   41350664 
-##                                                                                             "Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial." 
-##                                                                                                                                                                                                                   39980346 
-##                                                                                                                                         "Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial."
+## $`167843272`
+## NULL
+## 
+## $`167843256`
+## NULL
+## 
+## $`145206810`
+## NULL
+## 
+## $`145206746`
+## NULL
+## 
+## $`41350664`
+## NULL
+## 
+## $`39980346`
+## NULL
 ```
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
