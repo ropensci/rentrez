@@ -2,9 +2,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
 
 
-```
-## Loading rentrez
-```
 
 #rentrez
 
@@ -22,116 +19,20 @@ library(devtools)
 install_github("ropensci/rentrez")
 ```
 
-##Getting started with EUtils
+##The EUtils API
 
-The NCBI provides thorough and clear [documentation for Eutils] (http://www.ncbi.nlm.nih.gov/books/NBK25500/). 
-Be sure to read the official documenation. In particular, be aware of the NCBI's usage 
+Each of the functions exportd by `rentrez` is documented, and this README and 
+the pakage vignette provide examples of how to use the functions together as part 
+of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). 
+Be sure to read the official documenation to get the most out of API. In particular, be aware of the NCBI's usage 
 policies and try to limit very large requests to off peak (USA) times (`rentrez`
 takes care of limiting the number of requests per second, and seeting the
 appropriate entrez tool name in each request).
 
-`rentrez` also provides some helper functions that help you learn a bit about
-what's avaliable through Eutils. First `entrez_dbs()` gives you a list of
-avaliable databases:
+See [getting information about NCBI databases](#getting-information-about-NCBI-databases)
 
 
-```r
-entrez_dbs()
-```
-
-```
-##  [1] "pubmed"          "protein"         "nuccore"        
-##  [4] "nucleotide"      "nucgss"          "nucest"         
-##  [7] "structure"       "genome"          "assembly"       
-## [10] "genomeprj"       "bioproject"      "biosample"      
-## [13] "blastdbinfo"     "books"           "cdd"            
-## [16] "clinvar"         "clone"           "gap"            
-## [19] "gapplus"         "dbvar"           "epigenomics"    
-## [22] "gene"            "gds"             "geoprofiles"    
-## [25] "homologene"      "medgen"          "journals"       
-## [28] "mesh"            "ncbisearch"      "nlmcatalog"     
-## [31] "omim"            "orgtrack"        "pmc"            
-## [34] "popset"          "probe"           "proteinclusters"
-## [37] "pcassay"         "biosystems"      "pccompound"     
-## [40] "pcsubstance"     "pubmedhealth"    "seqannot"       
-## [43] "snp"             "sra"             "taxonomy"       
-## [46] "toolkit"         "toolkitall"      "toolkitbook"    
-## [49] "unigene"         "gencoll"         "gtr"
-```
-
-You can get some summary data about each of these databases with a set of
-functions starting with `entrez_db_`:
-
-**Summary information**
-
-
-```r
-entrez_db_summary("cdd")
-```
-
-```
-##                      DbName                    MenuName 
-##                       "cdd"         "Conserved Domains" 
-##                 Description                     DbBuild 
-## "Conserved Domain Database"        "Build141002-1144.3" 
-##                       Count                  LastUpdate 
-##                     "49955"          "2014/10/06 17:28"
-```
-
-**Databases with linked records (see entrez_link())**
-
-```r
-entrez_db_links("omim")
-```
-
-```
-## Databases with linked records for database 'omim'
-##  [1] biosample   biosystems  books       clinvar     dbvar      
-##  [6] gene        genetests   geoprofiles gtr         homologene 
-## [11] mapview     medgen      medgen      nuccore     nucest     
-## [16] nucgss      omim        pcassay     pccompound  pcsubstance
-## [21] pmc         protein     pubmed      pubmed      snp        
-## [26] snp         snp         sra         structure   unigene
-```
-
-**Search fields avaliable for a given database**
-
-
-```r
-search_fields <- entrez_db_searchable("pmc")
-search_fields$GRNT
-```
-
-```
-## $Name
-## [1] "GRNT"
-## 
-## $FullName
-## [1] "Grant Number"
-## 
-## $Description
-## [1] "NIH Grant Numbers"
-## 
-## $TermCount
-## [1] "2092294"
-## 
-## $IsDate
-## [1] "N"
-## 
-## $IsNumerical
-## [1] "N"
-## 
-## $SingleToken
-## [1] "Y"
-## 
-## $Hierarchy
-## [1] "N"
-## 
-## $IsHidden
-## [1] "N"
-```
-
-##Getting stuff done with EUtils
+##Examples
 
 In many cases, doing something interesting with `EUtils` will take multiple
 calls. Here are a few examples of how the functions work together (check out the
@@ -334,6 +235,116 @@ Because we set usehistory to "y" the `snail_search` object contains a unique ID 
 cookie <- snail_search$WebEnv
 qk <- snail_search$QueryKey
 snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, rettype="fasta", retmax=10)
+```
+
+###Getting information about NCBI databases
+
+Most of the exmples above required some background information about what 
+databases NCBI has to offer, and how they can be searched. `rentrez` provides 
+a set of functions with names starting `entrez_db` that help you to discover
+this information in an interactive session. 
+
+First up, `entrez_dbs()` gives you a list of database names
+
+
+
+```r
+entrez_dbs()
+```
+
+```
+##  [1] "pubmed"          "protein"         "nuccore"        
+##  [4] "nucleotide"      "nucgss"          "nucest"         
+##  [7] "structure"       "genome"          "assembly"       
+## [10] "genomeprj"       "bioproject"      "biosample"      
+## [13] "blastdbinfo"     "books"           "cdd"            
+## [16] "clinvar"         "clone"           "gap"            
+## [19] "gapplus"         "dbvar"           "epigenomics"    
+## [22] "gene"            "gds"             "geoprofiles"    
+## [25] "homologene"      "medgen"          "journals"       
+## [28] "mesh"            "ncbisearch"      "nlmcatalog"     
+## [31] "omim"            "orgtrack"        "pmc"            
+## [34] "popset"          "probe"           "proteinclusters"
+## [37] "pcassay"         "biosystems"      "pccompound"     
+## [40] "pcsubstance"     "pubmedhealth"    "seqannot"       
+## [43] "snp"             "sra"             "taxonomy"       
+## [46] "toolkit"         "toolkitall"      "toolkitbook"    
+## [49] "unigene"         "gencoll"         "gtr"
+```
+
+Some of the names are a little opaque, so you can get some more descriptve 
+information about each with `entrez_db_summary()`
+
+
+```r
+entrez_db_summary("cdd")
+```
+
+```
+##                      DbName                    MenuName 
+##                       "cdd"         "Conserved Domains" 
+##                 Description                     DbBuild 
+## "Conserved Domain Database"        "Build141002-1144.3" 
+##                       Count                  LastUpdate 
+##                     "49955"          "2014/10/06 17:28"
+```
+
+`entrez_db_searchable()` lets you discover the fields avalible for search terms
+for a given database. You get back a named-list, with names are fields. Each
+element has additional information about each named search field (you can also
+use `as.data.frame` to create a dataframe, with one search-field per row):
+
+
+```r
+search_fields <- entrez_db_searchable("pmc")
+search_fields$GRNT
+```
+
+```
+## $Name
+## [1] "GRNT"
+## 
+## $FullName
+## [1] "Grant Number"
+## 
+## $Description
+## [1] "NIH Grant Numbers"
+## 
+## $TermCount
+## [1] "2092294"
+## 
+## $IsDate
+## [1] "N"
+## 
+## $IsNumerical
+## [1] "N"
+## 
+## $SingleToken
+## [1] "Y"
+## 
+## $Hierarchy
+## [1] "N"
+## 
+## $IsHidden
+## [1] "N"
+```
+
+Finally, `entrez_db_links` takes a database name, and returns a list of other
+NCBI databases which might contain linked-records. 
+
+
+```r
+entrez_db_links("omim")
+```
+
+```
+## Databases with linked records for database 'omim'
+##  [1] biosample   biosystems  books       clinvar     dbvar      
+##  [6] gene        genetests   geoprofiles gtr         homologene 
+## [11] mapview     medgen      medgen      nuccore     nucest     
+## [16] nucgss      omim        pcassay     pccompound  pcsubstance
+## [21] pmc         protein     pubmed      pubmed      snp        
+## [26] snp         snp         sra         structure   unigene
 ```
 
 ###Trendy topics in genetics

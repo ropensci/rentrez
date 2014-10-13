@@ -2,7 +2,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
 
 ```{r setup, echo=FALSE}
-load_all()
+load_all(quiet=TRUE)
 ```
 
 #rentrez
@@ -21,44 +21,20 @@ library(devtools)
 install_github("ropensci/rentrez")
 ```
 
-##Getting started with EUtils
+##The EUtils API
 
-The NCBI provides thorough and clear [documentation for Eutils] (http://www.ncbi.nlm.nih.gov/books/NBK25500/). 
-Be sure to read the official documenation. In particular, be aware of the NCBI's usage 
+Each of the functions exportd by `rentrez` is documented, and this README and 
+the pakage vignette provide examples of how to use the functions together as part 
+of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). 
+Be sure to read the official documenation to get the most out of API. In particular, be aware of the NCBI's usage 
 policies and try to limit very large requests to off peak (USA) times (`rentrez`
 takes care of limiting the number of requests per second, and seeting the
 appropriate entrez tool name in each request).
 
-`rentrez` also provides some helper functions that help you learn a bit about
-what's avaliable through Eutils. First `entrez_dbs()` gives you a list of
-avaliable databases:
+See [getting information about NCBI databases](#getting-information-about-NCBI-databases)
 
-```{r dbs}
-entrez_dbs()
-```
 
-You can get some summary data about each of these databases with a set of
-functions starting with `entrez_db_`:
-
-**Summary information**
-
-```{r summary}
-entrez_db_summary("cdd")
-```
-
-**Databases with linked records (see entrez_link())**
-```{r elinks}
-entrez_db_links("omim")
-```
-
-**Search fields avaliable for a given database**
-
-```{r fields}
-search_fields <- entrez_db_searchable("pmc")
-search_fields$GRNT
-```
-
-##Getting stuff done with EUtils
+##Examples
 
 In many cases, doing something interesting with `EUtils` will take multiple
 calls. Here are a few examples of how the functions work together (check out the
@@ -201,6 +177,44 @@ Because we set usehistory to "y" the `snail_search` object contains a unique ID 
 cookie <- snail_search$WebEnv
 qk <- snail_search$QueryKey
 snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, rettype="fasta", retmax=10)
+```
+
+###Getting information about NCBI databases
+
+Most of the exmples above required some background information about what 
+databases NCBI has to offer, and how they can be searched. `rentrez` provides 
+a set of functions with names starting `entrez_db` that help you to discover
+this information in an interactive session. 
+
+First up, `entrez_dbs()` gives you a list of database names
+
+
+```{r dbs}
+entrez_dbs()
+```
+
+Some of the names are a little opaque, so you can get some more descriptve 
+information about each with `entrez_db_summary()`
+
+```{r summary}
+entrez_db_summary("cdd")
+```
+
+`entrez_db_searchable()` lets you discover the fields avalible for search terms
+for a given database. You get back a named-list, with names are fields. Each
+element has additional information about each named search field (you can also
+use `as.data.frame` to create a dataframe, with one search-field per row):
+
+```{r fields}
+search_fields <- entrez_db_searchable("pmc")
+search_fields$GRNT
+```
+
+Finally, `entrez_db_links` takes a database name, and returns a list of other
+NCBI databases which might contain linked-records. 
+
+```{r elinks}
+entrez_db_links("omim")
 ```
 
 ###Trendy topics in genetics
