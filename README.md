@@ -2,6 +2,9 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
 
 
+```
+## Loading required package: XML
+```
 
 #rentrez
 
@@ -29,7 +32,7 @@ policies and try to limit very large requests to off peak (USA) times (`rentrez`
 takes care of limiting the number of requests per second, and seeting the
 appropriate entrez tool name in each request).
 
-See [getting information about NCBI databases](#getting-information-about-NCBI-databases)
+See [getting information about NCBI databases](#getting-information-about-ncbi-databases)
 
 
 ##Examples
@@ -286,7 +289,7 @@ entrez_db_summary("cdd")
 ##                 Description                     DbBuild 
 ## "Conserved Domain Database"        "Build141002-1144.3" 
 ##                       Count                  LastUpdate 
-##                     "49955"          "2014/10/06 17:28"
+##                     "49955"          "2014/10/06 17:49"
 ```
 
 `entrez_db_searchable()` lets you discover the fields avalible for search terms

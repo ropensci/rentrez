@@ -31,7 +31,7 @@ policies and try to limit very large requests to off peak (USA) times (`rentrez`
 takes care of limiting the number of requests per second, and seeting the
 appropriate entrez tool name in each request).
 
-See [getting information about NCBI databases](#getting-information-about-NCBI-databases)
+See [getting information about NCBI databases](#getting-information-about-ncbi-databases)
 
 
 ##Examples
