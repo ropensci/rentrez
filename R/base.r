@@ -15,6 +15,7 @@
 make_entrez_query <- function(util, 
                               require_one_of=NULL,
                               config,
+                              interface=".fcgi?",
                               ...){
     args <- list(..., emails=entrez_email, tool=entrez_tool)
     arg_names <- names(args)
@@ -25,11 +26,10 @@ make_entrez_query <- function(util,
             stop(msg)
         }
     }
-    
     if("id" %in% arg_names){
         args$id <- paste(args$id, collapse=",")      
     }
-    uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, ".fcgi?")
+    uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     response <- httr::GET(uri, query=args, config= config)
     httr::stop_for_status(response)
     return(httr::content(response, as="text"))
@@ -43,7 +43,7 @@ parse_respone <- function(x, type){
     return(res)
 }
 
-
-
-
-
+.last <- function(s){
+    len <- nchar(s)
+    substr(s, len-1, len)
+}
