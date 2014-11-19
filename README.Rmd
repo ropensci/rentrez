@@ -21,6 +21,14 @@ library(devtools)
 install_github("ropensci/rentrez")
 ```
 
+##Get help
+Hopefully this README, and the package's vignette and in-line documentation,
+, provide you with enough information to get started with `rentrez`. If you need
+more help, or if discover a bug in `rentrez` please let us know, either through
+one of the [contact methods described here](http://ropensci.org/contact.html),
+or [by filing an issue](https://github.com/ropensci/rentrez/issues)
+
+
 ##The EUtils API
 
 Each of the functions exportd by `rentrez` is documented, and this README and
