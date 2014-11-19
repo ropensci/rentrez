@@ -8,13 +8,13 @@
 
 #rentrez
 
-`rentrez` provides functions that work with the [NCBI Eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
+`rentrez` provides functions that work with the [NCBI Eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/)
 API to search, download data from, and otherwise interact with NCBI databases.
 
 
 ##Install
 
-`rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can install 
+`rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can install
 the current github version using Hadley Wickham's [devtools](https://github.com/hadley/devtools).
 
 ```
@@ -22,12 +22,20 @@ library(devtools)
 install_github("ropensci/rentrez")
 ```
 
+##Get help
+Hopefully this README, and the package's vignette and in-line documentation,
+, provide you with enough information to get started with `rentrez`. If you need
+more help, or if discover a bug in `rentrez` please let us know, either through
+one of the [contact methods described here](http://ropensci.org/contact.html),
+or [by filing an issue](https://github.com/ropensci/rentrez/issues)
+
+
 ##The EUtils API
 
-Each of the functions exportd by `rentrez` is documented, and this README and 
-the pakage vignette provide examples of how to use the functions together as part 
-of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). 
-Be sure to read the official documenation to get the most out of API. In particular, be aware of the NCBI's usage 
+Each of the functions exportd by `rentrez` is documented, and this README and
+the pakage vignette provide examples of how to use the functions together as part
+of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/).
+Be sure to read the official documenation to get the most out of API. In particular, be aware of the NCBI's usage
 policies and try to limit very large requests to off peak (USA) times (`rentrez`
 takes care of limiting the number of requests per second, and seeting the
 appropriate entrez tool name in each request).
@@ -68,18 +76,14 @@ hox_data
 ```
 
 ```
-## elink result with ids from 22 databases:
-##  [1] pubmed_gene                    pubmed_gene_bookrecords       
-##  [3] pubmed_medgen                  pubmed_mesh_major             
-##  [5] pubmed_nuccore                 pubmed_nucleotide             
-##  [7] pubmed_omim_bookrecords        pubmed_pcsubstance_bookrecords
-##  [9] pubmed_pmc_bookrecords         pubmed_pmc_local              
-## [11] pubmed_pmc_refs                pubmed_protein                
-## [13] pubmed_pubmed                  pubmed_pubmed_alsoviewed      
-## [15] pubmed_pubmed_bookrecords      pubmed_pubmed_citedin         
-## [17] pubmed_pubmed_combined         pubmed_pubmed_five            
-## [19] pubmed_pubmed_pmh_cited        pubmed_pubmed_reviews         
-## [21] pubmed_pubmed_reviews_five     pubmed_taxonomy_entrez
+## elink result with ids from 13 databases:
+##  [1] pubmed_medgen              pubmed_mesh_major         
+##  [3] pubmed_nuccore             pubmed_nucleotide         
+##  [5] pubmed_pmc_refs            pubmed_protein            
+##  [7] pubmed_pubmed              pubmed_pubmed_citedin     
+##  [9] pubmed_pubmed_combined     pubmed_pubmed_five        
+## [11] pubmed_pubmed_reviews      pubmed_pubmed_reviews_five
+## [13] pubmed_taxonomy_entrez
 ```
 
 Each of the character vectors in this object contain unique IDS for records in
@@ -89,7 +93,7 @@ you want to dive into the XML yourself.
 
 In this case we'll get the protein sequences as genbank files, using '
 `entrez_fetch`:
- 
+
 
 ```r
 hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, rettype="gb")
@@ -173,7 +177,7 @@ The "fetched" results are fasta formatted characters, which can be written
 to disk easily:
 
 ```r
-write(COI, "Test/COI.fasta")      
+write(COI, "Test/COI.fasta")
 write(trnL, "Test/trnL.fasta")
 ```
 
@@ -192,23 +196,23 @@ tree <- nj(dist.dna(coi_aligned))
 
 As of version 0.3, rentrez uses [httr](https://github.com/hadley/httr) to manage
 calls to the Eutils API. This allows users to take advantage of some of `httr`'s
-configuration options. 
+configuration options.
 
-Any `rentrez` function that interacts with the Eutils api will 
-pass the value of the argument `config` along to `httr`'s  `GET` function. For 
+Any `rentrez` function that interacts with the Eutils api will
+pass the value of the argument `config` along to `httr`'s  `GET` function. For
 instance, if you acess the internet through a proxy you use the `httr` function
 `use_proxy()` to provide connection details to an entrez call:
 
 ```r
-entrez_search(db="pubmed", 
-              term="10.1038/nature08789[doi]", 
+entrez_search(db="pubmed",
+              term="10.1038/nature08789[doi]",
               config=use_proxy("0.0.0.0", port=80,username="user", password="****")
 ```
 
 Other options include `verbose()` which prints a detailed account of what's
-going on during a request, `timeout()` which sets the number of seconds to wait 
-for a response before giving up, and, in the development version of `httr`, 
-`progress()` which prints a progress bar to screen. 
+going on during a request, `timeout()` which sets the number of seconds to wait
+for a response before giving up, and, in the development version of `httr`,
+`progress()` which prints a progress bar to screen.
 
 `rentrez` functions will also be effected by the global `httr` configuration set by
 `httr::set_config()`. For example, it's possible to have all calls to Eutils
@@ -242,10 +246,10 @@ snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, rettype="fa
 
 ###Getting information about NCBI databases
 
-Most of the exmples above required some background information about what 
-databases NCBI has to offer, and how they can be searched. `rentrez` provides 
+Most of the exmples above required some background information about what
+databases NCBI has to offer, and how they can be searched. `rentrez` provides
 a set of functions with names starting `entrez_db` that help you to discover
-this information in an interactive session. 
+this information in an interactive session.
 
 First up, `entrez_dbs()` gives you a list of database names
 
@@ -262,20 +266,21 @@ entrez_dbs()
 ## [10] "genomeprj"       "bioproject"      "biosample"      
 ## [13] "blastdbinfo"     "books"           "cdd"            
 ## [16] "clinvar"         "clone"           "gap"            
-## [19] "gapplus"         "dbvar"           "epigenomics"    
-## [22] "gene"            "gds"             "geoprofiles"    
-## [25] "homologene"      "medgen"          "journals"       
-## [28] "mesh"            "ncbisearch"      "nlmcatalog"     
-## [31] "omim"            "orgtrack"        "pmc"            
-## [34] "popset"          "probe"           "proteinclusters"
-## [37] "pcassay"         "biosystems"      "pccompound"     
-## [40] "pcsubstance"     "pubmedhealth"    "seqannot"       
-## [43] "snp"             "sra"             "taxonomy"       
-## [46] "toolkit"         "toolkitall"      "toolkitbook"    
-## [49] "unigene"         "gencoll"         "gtr"
+## [19] "gapplus"         "grasp"           "dbvar"          
+## [22] "epigenomics"     "gene"            "gds"            
+## [25] "geoprofiles"     "homologene"      "medgen"         
+## [28] "journals"        "mesh"            "ncbisearch"     
+## [31] "nlmcatalog"      "omim"            "orgtrack"       
+## [34] "pmc"             "popset"          "probe"          
+## [37] "proteinclusters" "pcassay"         "biosystems"     
+## [40] "pccompound"      "pcsubstance"     "pubmedhealth"   
+## [43] "seqannot"        "snp"             "sra"            
+## [46] "taxonomy"        "toolkit"         "toolkitall"     
+## [49] "toolkitbook"     "unigene"         "gencoll"        
+## [52] "gtr"
 ```
 
-Some of the names are a little opaque, so you can get some more descriptve 
+Some of the names are a little opaque, so you can get some more descriptve
 information about each with `entrez_db_summary()`
 
 
@@ -289,7 +294,7 @@ entrez_db_summary("cdd")
 ##                 Description                     DbBuild 
 ## "Conserved Domain Database"        "Build141002-1144.3" 
 ##                       Count                  LastUpdate 
-##                     "49955"          "2014/10/06 17:49"
+##                     "49955"          "2014/10/06 18:00"
 ```
 
 `entrez_db_searchable()` lets you discover the fields avalible for search terms
@@ -314,7 +319,7 @@ search_fields$GRNT
 ## [1] "NIH Grant Numbers"
 ## 
 ## $TermCount
-## [1] "2092294"
+## [1] "2094173"
 ## 
 ## $IsDate
 ## [1] "N"
@@ -333,7 +338,7 @@ search_fields$GRNT
 ```
 
 Finally, `entrez_db_links` takes a database name, and returns a list of other
-NCBI databases which might contain linked-records. 
+NCBI databases which might contain linked-records.
 
 
 ```r
@@ -372,7 +377,7 @@ papers_by_year <- function(years, search_term){
 With that we can fetch the data for earch term and, by searching with no term,
 find the total number of papers published in each year:
 
-        
+
 ```r
 years <- 1990:2013
 total_papers <- papers_by_year(years, "")
@@ -397,6 +402,10 @@ Giving us... well this:
 ![](http://i.imgur.com/oSYuWqz.png)
 
 
+
+---
+
+This package is part of a richer suite called [fulltext](https://github.com/ropensci/fulltext), along with several other packages, that provides the ability to search for and retrieve full text of open access scholarly articles.
 
 ---
 
