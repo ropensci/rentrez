@@ -2,9 +2,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
 
 
-```
-## Loading required package: XML
-```
 
 #rentrez
 
