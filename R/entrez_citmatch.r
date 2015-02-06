@@ -7,7 +7,7 @@
 #' fit. Fields can be left empty, but be sure to keep 6 pipes.
 #'@param db character, the database to search. Defaults to pubmed,
 #' the only database currently avaliabe
-#'@param rettype character, file format to retrieve. Defaults to xml, as 
+#'@param retmode character, file format to retrieve. Defaults to xml, as 
 #' per the API documentation, though, note the API only returns plain text
 #'@param config vector configuration options passed to httr::GET  
 #'@return A character vector containing PMIDs

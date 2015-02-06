@@ -16,10 +16,10 @@ fit. Fields can be left empty, but be sure to keep 6 pipes.}
 \item{db}{character, the database to search. Defaults to pubmed,
 the only database currently avaliabe}
 
-\item{config}{vector configuration options passed to httr::GET}
-
-\item{rettype}{character, file format to retrieve. Defaults to xml, as
+\item{retmode}{character, file format to retrieve. Defaults to xml, as
 per the API documentation, though, note the API only returns plain text}
+
+\item{config}{vector configuration options passed to httr::GET}
 }
 \value{
 A character vector containing PMIDs
