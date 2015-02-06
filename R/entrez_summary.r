@@ -1,5 +1,5 @@
 #' Get summaries of objects in NCBI datasets from a unique ID 
-#'
+#
 #' Contstructs a query from the given arguments, including a database name and
 #' list of of unique IDs for that database.
 #' 
@@ -33,10 +33,10 @@
 #'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
-#'  sapply(pop_summ, "[[", "Title")
+#'  sapply(pop_summ, "[[", "title")
 #'  
 #'  # clinvar example
-#'  res <- entrez_search(db = "clinvar", term = "BRCA1")
+#'  res <- entrez_search(db = "clinvar", term = "BRCA1", retmax=10)
 #'  cv <- entrez_summary(db="clinvar", id=res$ids)
 #'  cv[[1]] # get the names of the list for each result
 #'  sapply(cv, "[[", "title") # titles
@@ -52,19 +52,7 @@ entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
                                    retmode=retmode, version=v,
                                    require_one_of=c("id", "WebEnv"), ...)
     whole_record <- parse_respone(response, retmode)
-
-    #Clinvar summary documents just have to be different...
-    # special fxn for them defined below
-   # if(db == 'clinvar' & retmode == 'xml'){
-   #     rec <- lapply(whole_record["//DocumentSummary"], parse_esummary_clinvar)
-   #     if(length(rec)==1){
-   #         rec <- rec[[1]]
-   #     }
-   # }
-   # else {
-      rec <- parse_esummary(whole_record)
-#    }
-    return(rec)
+    parse_esummary(whole_record)
 }
 
 
