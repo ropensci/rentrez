@@ -35,7 +35,7 @@ resulting from the returned JSON file being parsed with
 \code{\link[jsonlite]{fromJSON}}.
 }
 \description{
-Contstructs a query with the given arguments, including a search term, and
+Constructs a query with the given arguments, including a search term, and
 a database name, then retrieves the XML document created by that query.
 }
 \examples{
@@ -59,7 +59,7 @@ entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
 }
 }
 \seealso{
-\code{\link[httr]{config}} for avaliable configs
+\code{\link[httr]{config}} for available configs
 
 \code{\link{entrez_db_searchable}} to get a set of search fields that
 can be userd in \code{term} for any base

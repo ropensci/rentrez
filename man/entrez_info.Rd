@@ -7,21 +7,21 @@
 entrez_info(db = NULL, config = NULL)
 }
 \arguments{
-\item{db}{characater database about which to retreive information (optional,}
+\item{db}{characater database about which to retrieve information (optional,}
 
 \item{config}{config vector passed on to \code{httr::GET}}
 }
 \value{
 XMLInternalDocument with information describing either all the
-databases avaliable in Eutils (if db is not set) or one pariticular database
+databases available in Eutils (if db is not set) or one particular database
 (set by 'db')
 }
 \description{
-Contstructs a query to NCBI's einfo and returns a parsed XML object
+Constructs a query to NCBI's einfo and returns a parsed XML object
 Note: The most common uses-cases for the einfo util are finding the list of
-search fields avalible for a given database or the other NCBI databses to
+search fields available for a given database or the other NCBI databases to
 which records in a given database might be linked. Both these use cases
-are implementd in higher-level functions that return just this information
+are implemented in higher-level functions that return just this information
 (\code{entrez_db_searchable} and \code{entrez_db_links} respectively).
 Consequently most users will not have a reason to use this function (though
 it is exported by \code{rentrez} for the sake of completeness.
@@ -32,7 +32,7 @@ xpathSApply(all_the_data, "//DbName", xmlValue)
 entrez_dbs()
 }
 \seealso{
-\code{\link[httr]{config}} for avaliable httr configurations
+\code{\link[httr]{config}} for available httr configurations
 
 Other einfo: \code{\link{entrez_db_links}};
   \code{\link{entrez_db_searchable}};

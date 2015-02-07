@@ -7,7 +7,7 @@
 #'@param id integer ID(s) for which data is being collected
 #'@param \dots character Additional terms to add to the request 
 #'@param config vector configuration options passed to httr::GET  
-#'@seealso \code{\link[httr]{config}} for avaliable configs 
+#'@seealso \code{\link[httr]{config}} for available configs 
 #'@return QueryKey integer identifier for specific query in webhistory
 #'@return WebEnv character identifier for session key to use with history
 #'@import XML

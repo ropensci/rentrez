@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_info.r
 \name{entrez_db_searchable}
 \alias{entrez_db_searchable}
-\title{Can be used in conjunction with \code{\link{entrez_search}} to find avaliable
+\title{Can be used in conjunction with \code{\link{entrez_search}} to find available
 search fields to include in the \code{term} argument of that function.}
 \usage{
 entrez_db_searchable(db, config = NULL)
@@ -10,15 +10,15 @@ entrez_db_searchable(db, config = NULL)
 \arguments{
 \item{db}{character, name of database to get search field from}
 
-\item{config}{config vector passedto \code{httr::GET}}
+\item{config}{config vector passed to \code{httr::GET}}
 }
 \value{
 An eInfoSearch object (subclassed from list) summarising linked-datbases.
 Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
-shows only the names of each avaliable search field.
+shows only the names of each available search field.
 }
 \description{
-Can be used in conjunction with \code{\link{entrez_search}} to find avaliable
+Can be used in conjunction with \code{\link{entrez_search}} to find available
 search fields to include in the \code{term} argument of that function.
 }
 \examples{

@@ -1,6 +1,6 @@
 #' Search the NCBI databases using EUtils
 #'
-#' Contstructs a query with the given arguments, including a search term, and
+#' Constructs a query with the given arguments, including a search term, and
 #' a database name, then retrieves the XML document created by that query. 
 #' 
 #'@export
@@ -10,7 +10,7 @@
 #'@param retmode character One of json (default) or xml. This will make no
 #' difference in most cases.
 #'@param config vector configuration options passed to httr::GET  
-#'@seealso \code{\link[httr]{config}} for avaliable configs 
+#'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso \code{\link{entrez_db_searchable}} to get a set of search fields that
 #' can be userd in \code{term} for any base
 #'@return ids integer Unique IDS returned by the search
@@ -55,12 +55,8 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", ... ){
 }
 
 
-#
-#@export
 parse_esearch <- function(x) UseMethod("parse_esearch")
    
-#
-#@export
 parse_esearch.XMLInternalDocument <- function(x){
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
                  count    = xpathSApply(x, "/eSearchResult/Count", xmlValue),
@@ -73,8 +69,6 @@ parse_esearch.XMLInternalDocument <- function(x){
     return(res)
 }
 
-#
-#@export
 parse_esearch.list <- function(x){
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querykey", "webenv") ]
     names(res)[c(1,4,5)] <- c("ids", "QueryKey", "WebEnv")

@@ -1,20 +1,20 @@
 #' Get summaries of objects in NCBI datasets from a unique ID 
 #
-#' Contstructs a query from the given arguments, including a database name and
+#' Constructs a query from the given arguments, including a database name and
 #' list of of unique IDs for that database.
 #' 
-#' The NCBI offer two distinct formats for summary docuements.
+#' The NCBI offer two distinct formats for summary documents.
 #' Version 1.0 is a relatively limited summary of a database record based on a 
-#' shared Document Type Definition. Version 1.0 summaries are only avaliable as
-#' XML and are not avaliable for some newer databases
-#' Version 2.0 summaries generally contian more information about a given
+#' shared Document Type Definition. Version 1.0 summaries are only available as
+#' XML and are not available for some newer databases
+#' Version 2.0 summaries generally contain more information about a given
 #' record, but each database has its own distinct format. 2.0 summaries are 
-#' avaliable for records in all databases and as JSON and XML files. 
+#' available for records in all databases and as JSON and XML files. 
 #' As of version 0.4, rentrez fetches version 2.0 summaries by default and
-#' uses JSON as teh exchange format (as JSON object can be more easily converted
-#' into native R types). Existing scripts which relied on the stucture and
-#' naming of the "Version 1.0" summary files updated through new \code{version}
-#' argument.
+#' uses JSON as the exchange format (as JSON object can be more easily converted
+#' into native R types). Existing scripts which relied on the structure and
+#' naming of the "Version 1.0" summary files can be updated by setting the new
+#' \code{version} argument to "1.0".
 #'
 #'@export
 #'@param db character Name of the database to search for
@@ -23,7 +23,7 @@
 #'   containing a cookie created by a previous entrez query).
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
-#'@seealso \code{\link[httr]{config}} for avaliable configs 
+#'@seealso \code{\link[httr]{config}} for available configs 
 #'@return A list of esummary records (if multiple IDs are passed) or a single
 #' record.
 #'@return file XMLInternalDocument xml file resulting from search, parsed with

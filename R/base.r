@@ -1,6 +1,6 @@
 #Create a URL for the EUtils API. 
 #
-# This function is usde by all the API-querying functions in rentrez to build
+# This function is used by all the API-querying functions in rentrez to build
 # the appropriate url. Required arguments for each rentrez are handled in each
 # function. Those arguments that either ID(s) or are WebEnv cookie can be set
 # by passing a string or two argument names to `make_entrez_query`

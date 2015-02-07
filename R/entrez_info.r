@@ -1,19 +1,19 @@
 #' Get infromation about EUtils databases
 #'
-#'Contstructs a query to NCBI's einfo and returns a parsed XML object
+#'Constructs a query to NCBI's einfo and returns a parsed XML object
 #'Note: The most common uses-cases for the einfo util are finding the list of
-#' search fields avalible for a given database or the other NCBI databses to
+#' search fields available for a given database or the other NCBI databases to
 #' which records in a given database might be linked. Both these use cases
-#' are implementd in higher-level functions that return just this information
+#' are implemented in higher-level functions that return just this information
 #' (\code{entrez_db_searchable} and \code{entrez_db_links} respectively).
 #' Consequently most users will not have a reason to use this function (though
 #' it is exported by \code{rentrez} for the sake of completeness.
-#'@param db characater database about which to retreive information (optional,
+#'@param db characater database about which to retrieve information (optional,
 #'@param config config vector passed on to \code{httr::GET}
 #'@return XMLInternalDocument with information describing either all the
-#'databases avaliable in Eutils (if db is not set) or one pariticular database
+#'databases available in Eutils (if db is not set) or one particular database
 #'(set by 'db')
-#'@seealso \code{\link[httr]{config}} for avaliable httr configurations
+#'@seealso \code{\link[httr]{config}} for available httr configurations
 #'@family einfo
 #'@examples
 #'all_the_data <- entrez_info()
@@ -28,10 +28,10 @@ entrez_info <- function(db=NULL, config=NULL){
 
 #' List databases avaliable from the NCBI
 #'
-#' Retreives the names of  databases avaliable through the EUtils API
-#'@param config config vector passedto \code{httr::GET}
+#' Retreives the names of  databases available through the EUtils API
+#'@param config config vector passed to \code{httr::GET}
 #'@family einfo
-#'@return character vector listing avaliable dbs
+#'@return character vector listing available dbs
 #'@export
 #'@examples
 #'\donttest{
@@ -42,17 +42,17 @@ entrez_dbs <- function(config=NULL){
 }
 
 
-#' Retreive summary information about an NCBI database
+#' Retrieve summary information about an NCBI database
 #'
-#'@param config config vector passedto \code{httr::GET}
+#'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database t
 #'@return Character vector with the following data
 #'@return DbName Name of database
 #'@return Description Brief description of the database
-#'@return Count Number of records contained in the databse
+#'@return Count Number of records contained in the database
 #'@return MenuName Name in web-interface to EUtils
-#'@return DbBuild Unique ID for current build of databse
-#'@return LastUpdate Date of most recent update to databse
+#'@return DbBuild Unique ID for current build of database
+#'@return LastUpdate Date of most recent update to database
 #'@family einfo
 #'@examples
 #'entrez_db_summary("pubmed")
@@ -67,15 +67,15 @@ entrez_db_summary <- function(db, config=NULL){
 }
 
 
-# List avaliable links for records from a given NCBI database
+# List available links for records from a given NCBI database
 #'
 #'Can be used in conjunction with \code{\link{entrez_link}} to find
 #' the right name for the \code{db} argument in that function.
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database t
-#'@return An eInfoLink object (subclassed from list) summarising linked-datbases.
+#'@return An eInfoLink object (sub-classed from list) summarising linked-databases.
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
-#' the name of each element (which is the corrent name for \code{entrez_link},
+#' the name of each element (which is the correct name for \code{entrez_link},
 #' and can be used to get (a little) more information about each linked database
 #' (see example below).
 #'@family einfo
@@ -102,15 +102,15 @@ entrez_db_links <- function(db, config=NULL){
 }
 
 
-# List avaliable search fields for a given database
+# List available search fields for a given database
 #
-#' Can be used in conjunction with \code{\link{entrez_search}} to find avaliable
+#' Can be used in conjunction with \code{\link{entrez_search}} to find available
 #' search fields to include in the \code{term} argument of that function.
-#'@param config config vector passedto \code{httr::GET}
+#'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database to get search field from
 #'@return An eInfoSearch object (subclassed from list) summarising linked-datbases. 
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
-#' shows only the names of each avaliable search field. 
+#' shows only the names of each available search field. 
 #'@seealso \code{\link{entrez_search}}
 #'@family einfo
 #'@examples
@@ -138,7 +138,7 @@ entrez_db_searchable <- function(db, config=NULL){
 }
 
 #Because FUNctionals are FUN, a print function factory that makes print methods
-# for similar S3 classes. "result desciption" should briefly describe the result
+# for similar S3 classes. "result description" should briefly describe the result
 # contained in the object
 print_maker <- function(x, result_description){
     function(x, ...){

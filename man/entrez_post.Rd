@@ -36,6 +36,6 @@ second <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
 }
 }
 \seealso{
-\code{\link[httr]{config}} for avaliable configs
+\code{\link[httr]{config}} for available configs
 }
 

@@ -8,13 +8,13 @@ entrez_citmatch(bdata, db = "pubmed", retmode = "xml", config = NULL)
 }
 \arguments{
 \item{bdata}{character, containing citation data.
-Each citation must be represented in a pipe-delimted format
+Each citation must be represented in a pipe-delimited format
  journal_title|year|volume|first_page|author_name|your_key|
-The final field "your_key" is aribitrary, and can used as you see
+The final field "your_key" is arbitrary, and can used as you see
 fit. Fields can be left empty, but be sure to keep 6 pipes.}
 
 \item{db}{character, the database to search. Defaults to pubmed,
-the only database currently avaliabe}
+the only database currently available}
 
 \item{retmode}{character, file format to retrieve. Defaults to xml, as
 per the API documentation, though, note the API only returns plain text}
@@ -35,6 +35,6 @@ entrez_citmatch(ex_sites)
 }
 }
 \seealso{
-\code{\link[httr]{config}} for avaliable config
+\code{\link[httr]{config}} for available configs
 }
 

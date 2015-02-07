@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_global_query.r
 \name{entrez_global_query}
 \alias{entrez_global_query}
-\title{See how many hits there are for a given term across all NCBI Entrez databses}
+\title{See how many hits there are for a given term across all NCBI Entrez databases}
 \usage{
 entrez_global_query(term, config = NULL, ...)
 }
@@ -14,15 +14,15 @@ entrez_global_query(term, config = NULL, ...)
 \item{...}{additional arguments to add to the query}
 }
 \value{
-a named vector with counts for each a datbase
+a named vector with counts for each a database
 }
 \description{
-See how many hits there are for a given term across all NCBI Entrez databses
+See how many hits there are for a given term across all NCBI Entrez databases
 }
 \examples{
 NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
 }
 \seealso{
-\code{\link[httr]{config}} for avaliable configs
+\code{\link[httr]{config}} for available configs
 }
 

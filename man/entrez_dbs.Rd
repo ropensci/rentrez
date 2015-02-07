@@ -7,13 +7,13 @@
 entrez_dbs(config = NULL)
 }
 \arguments{
-\item{config}{config vector passedto \code{httr::GET}}
+\item{config}{config vector passed to \code{httr::GET}}
 }
 \value{
-character vector listing avaliable dbs
+character vector listing available dbs
 }
 \description{
-Retreives the names of  databases avaliable through the EUtils API
+Retreives the names of  databases available through the EUtils API
 }
 \examples{
 \donttest{

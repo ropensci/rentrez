@@ -8,10 +8,10 @@ entrez_link(db, dbfrom, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for links (or use "all" to
-search all dabases avaliable for \code{db}. \code{entrez_db_links} allows you
-to discover datbases that might have linked information (see examples).}
+search all databases available for \code{db}. \code{entrez_db_links} allows you
+to discover databases that might have linked information (see examples).}
 
-\item{dbfrom}{character Name of database from which the Id(s) orginate}
+\item{dbfrom}{character Name of database from which the Id(s) originate}
 
 \item{config}{vector configuration options passed to httr::GET}
 
@@ -25,7 +25,7 @@ file XMLInternalDocument xml file resulting from search, parsed with
 \code{\link{xmlTreeParse}}
 }
 \description{
-Contstructs a query with the given arguments and downloands the XML
+Constructs a query with the given arguments and downlands the XML
 document created by that query.
 }
 \examples{
@@ -38,6 +38,6 @@ document created by that query.
 }
 }
 \seealso{
-\code{\link[httr]{config}} for avaliable configs
+\code{\link[httr]{config}} for available configs
 }
 

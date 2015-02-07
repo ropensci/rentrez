@@ -2,14 +2,14 @@
 % Please edit documentation in R/entrez_info.r
 \name{entrez_db_summary}
 \alias{entrez_db_summary}
-\title{Retreive summary information about an NCBI database}
+\title{Retrieve summary information about an NCBI database}
 \usage{
 entrez_db_summary(db, config = NULL)
 }
 \arguments{
 \item{db}{character, name of database t}
 
-\item{config}{config vector passedto \code{httr::GET}}
+\item{config}{config vector passed to \code{httr::GET}}
 }
 \value{
 Character vector with the following data
@@ -18,16 +18,16 @@ DbName Name of database
 
 Description Brief description of the database
 
-Count Number of records contained in the databse
+Count Number of records contained in the database
 
 MenuName Name in web-interface to EUtils
 
-DbBuild Unique ID for current build of databse
+DbBuild Unique ID for current build of database
 
-LastUpdate Date of most recent update to databse
+LastUpdate Date of most recent update to database
 }
 \description{
-Retreive summary information about an NCBI database
+Retrieve summary information about an NCBI database
 }
 \examples{
 entrez_db_summary("pubmed")

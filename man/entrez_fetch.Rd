@@ -11,14 +11,14 @@ entrez_fetch(db, rettype, retmode = "text", config = NULL, ...)
 
 \item{rettype}{character Format in which to get data (eg, fasta, xml...)}
 
-\item{retmode}{character Mode in which to recieve data, defaults to 'text'}
+\item{retmode}{character Mode in which to receive data, defaults to 'text'}
 
 \item{config}{vector configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request}
 }
 \value{
-chracter string containing the file created
+character string containing the file created
 }
 \description{
 Download data from NCBI databases
@@ -29,6 +29,6 @@ katipo_search <- entrez_search(db="nuccore", term=katipo)
 kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
 }
 \seealso{
-\code{\link[httr]{config}} for avaliable configs
+\code{\link[httr]{config}} for available configs
 }
 

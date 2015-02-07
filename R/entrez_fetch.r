@@ -5,11 +5,11 @@
 #'@export
 #'@param db character Name of the database to use
 #'@param rettype character Format in which to get data (eg, fasta, xml...)
-#'@param retmode character Mode in which to recieve data, defaults to 'text'
+#'@param retmode character Mode in which to receive data, defaults to 'text'
 #'@param \dots character Additional terms to add to the request
 #'@param config vector configuration options passed to httr::GET
-#'@seealso \code{\link[httr]{config}} for avaliable configs
-#'@return chracter string containing the file created
+#'@seealso \code{\link[httr]{config}} for available configs
+#'@return character string containing the file created
 #
 #' @examples
 #' 

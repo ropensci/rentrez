@@ -1,17 +1,17 @@
 #' Get links to datasets related to a unique ID from an NCBI database
 #'
-#' Contstructs a query with the given arguments and downloands the XML
+#' Constructs a query with the given arguments and downlands the XML
 #' document created by that query. 
 #'
 #'@import XML
 #'@export
 #'@param db character Name of the database to search for links (or use "all" to 
-#' search all dabases avaliable for \code{db}. \code{entrez_db_links} allows you
-#' to discover datbases that might have linked information (see examples).
-#'@param dbfrom character Name of database from which the Id(s) orginate
+#' search all databases available for \code{db}. \code{entrez_db_links} allows you
+#' to discover databases that might have linked information (see examples).
+#'@param dbfrom character Name of database from which the Id(s) originate
 #'@param \dots character Additional terms to add to the request
 #'@param config vector configuration options passed to httr::GET  
-#'@seealso \code{\link[httr]{config}} for avaliable configs 
+#'@seealso \code{\link[httr]{config}} for available configs 
 #'@return An elink object containing vectors of unique IDs
 #' the vectors names take the form [db_from]_[db_to]
 #'@return file XMLInternalDocument xml file resulting from search, parsed with

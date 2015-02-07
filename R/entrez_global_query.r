@@ -1,4 +1,4 @@
-#' See how many hits there are for a given term across all NCBI Entrez databses
+#' See how many hits there are for a given term across all NCBI Entrez databases
 #'
 #' 
 #'
@@ -6,8 +6,8 @@
 #'@param term the search term to use
 #'@param config vector configuration options passed to httr::GET  
 #'@param ... additional arguments to add to the query
-#'@seealso \code{\link[httr]{config}} for avaliable configs 
-#'@return a named vector with counts for each a datbase
+#'@seealso \code{\link[httr]{config}} for available configs 
+#'@return a named vector with counts for each a database
 #'
 #'@import XML
 #' @examples
