@@ -17,7 +17,7 @@ opts_knit$set(fig.show = "hold")
 rentrez tutorial
 -------------
 
-`rentrez` is an R package that helps users query the NCBI's databases to download genetic and bibliographic data.`rentrez` is now on CRAN, so can be installed by using `install.packages("rentrez")`. The source code is also avaliablefrom the [ROpenSci github repository](https://github.com/ropensci/rentez).
+`rentrez` is an R package that helps users query the NCBI's databases to download genetic and bibliographic data.`rentrez` is now on CRAN, so can be installed by using `install.packages("rentrez")`. The source code is also avaliablefrom the [ROpenSci github repository](http://github.com/ropensci/rentrez).
 
 
 What rentrez does
