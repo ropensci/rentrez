@@ -12,12 +12,16 @@
 #
 
 
+
+entrez_email <- function() 'david.winter@gmail.com'
+entrez_tool <- function() 'rentrez'
+
 make_entrez_query <- function(util, 
                               require_one_of=NULL,
                               config,
                               interface=".fcgi?",
                               ...){
-    args <- list(..., emails=entrez_email, tool=entrez_tool)
+    args <- list(..., email=entrez_email(), tool=entrez_tool())
     arg_names <- names(args)
     if(length(require_one_of) > 1 ){
         if(!sum(require_one_of %in% arg_names)==1){
@@ -42,6 +46,7 @@ parse_respone <- function(x, type){
     )
     return(res)
 }
+
 
 .last <- function(s){
     len <- nchar(s)
