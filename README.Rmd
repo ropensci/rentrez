@@ -1,9 +1,22 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
 [![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez)
 [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
 
-```{r setup, include=FALSE}
-load_all(quiet=TRUE)
-```
 
 #rentrez
 
@@ -57,6 +70,7 @@ paper in pubmed (the PMID). Annoyingly, many journals don't give PMIDS for their
 papers, but we can use `entrez_search` to find the paper using the doi field:
 
 ```{r doi}
+library(rentrez)
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 (hox_pmid <- hox_paper$ids)
 ```

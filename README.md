@@ -1,6 +1,15 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+
+
 [![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez)
 [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
-
 
 
 #rentrez
@@ -56,12 +65,11 @@ papers, but we can use `entrez_search` to find the paper using the doi field:
 
 
 ```r
+library(rentrez)
+#> Loading required package: XML
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 (hox_pmid <- hox_paper$ids)
-```
-
-```
-## [1] "20203609"
+#> [1] "20203609"
 ```
 
 Now, what sorts of data are avaliable from other NCBI database for this paper?
@@ -70,17 +78,14 @@ Now, what sorts of data are avaliable from other NCBI database for this paper?
 ```r
 hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
 hox_data
-```
-
-```
-## elink result with ids from 13 databases:
-##  [1] pubmed_medgen              pubmed_mesh_major         
-##  [3] pubmed_nuccore             pubmed_nucleotide         
-##  [5] pubmed_pmc_refs            pubmed_protein            
-##  [7] pubmed_pubmed              pubmed_pubmed_citedin     
-##  [9] pubmed_pubmed_combined     pubmed_pubmed_five        
-## [11] pubmed_pubmed_reviews      pubmed_pubmed_reviews_five
-## [13] pubmed_taxonomy_entrez
+#> elink result with ids from 13 databases:
+#>  [1] pubmed_medgen              pubmed_mesh_major         
+#>  [3] pubmed_nuccore             pubmed_nucleotide         
+#>  [5] pubmed_pmc_refs            pubmed_protein            
+#>  [7] pubmed_pubmed              pubmed_pubmed_citedin     
+#>  [9] pubmed_pubmed_combined     pubmed_pubmed_five        
+#> [11] pubmed_pubmed_reviews      pubmed_pubmed_reviews_five
+#> [13] pubmed_taxonomy_entrez
 ```
 
 Each of the character vectors in this object contain unique IDS for records in
@@ -94,10 +99,7 @@ In this case we'll get the protein sequences as genbank files, using '
 
 ```r
 hox_proteins <- entrez_fetch(db="protein", ids=hox_data$pubmed_protein, rettype="gb")
-```
-
-```
-## Error: Function requires either id or WebEnv to be set as arguments
+#> Error: Function requires either id or WebEnv to be set as arguments
 ```
 
 ###Retreiving datasets associated a particular organism.
@@ -115,10 +117,7 @@ phylogenetic or population-level studies, so let's start there.
 library(rentrez)
 katipo_search <- entrez_search(db="popset", term="Latrodectus katipo[Organism]")
 katipo_search$count
-```
-
-```
-## [1] "6"
+#> [1] "6"
 ```
 
 In this search `count` is the total number of hits returned for the search term.
@@ -132,32 +131,23 @@ and we see what each one contains like so:
 ```r
 summaries <- entrez_summary(db="popset", id=katipo_search$ids)
 summaries[[1]]
-```
-
-```
-## esummary result with 16 items:
-##  [1] uid        caption    title      extra      gi         settype   
-##  [7] createdate updatedate flags      taxid      authors    article   
-## [13] journal    statistics properties oslt
-```
-
-```r
+#> esummary result with 16 items:
+#>  [1] uid        caption    title      extra      gi         settype   
+#>  [7] createdate updatedate flags      taxid      authors    article   
+#> [13] journal    statistics properties oslt
 sapply(summaries, "[[", "title")
-```
-
-```
-##                                                                                                                                                                                                                  167843272 
-## "Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
-##                                                                                                                                                                                                                  167843256 
-##                                                                                                                                  "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
-##                                                                                                                                                                                                                  145206810 
-##        "Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
-##                                                                                                                                                                                                                  145206746 
-##                                                                                                                                         "Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
-##                                                                                                                                                                                                                   41350664 
-##                                                                                             "Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial." 
-##                                                                                                                                                                                                                   39980346 
-##                                                                                                                                         "Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial."
+#>                                                                                                                                                                                                                  167843272 
+#> "Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
+#>                                                                                                                                                                                                                  167843256 
+#>                                                                                                                                  "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
+#>                                                                                                                                                                                                                  145206810 
+#>        "Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
+#>                                                                                                                                                                                                                  145206746 
+#>                                                                                                                                         "Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
+#>                                                                                                                                                                                                                   41350664 
+#>                                                                                             "Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial." 
+#>                                                                                                                                                                                                                   39980346 
+#>                                                                                                                                         "Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial."
 ```
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
@@ -254,27 +244,24 @@ First up, `entrez_dbs()` gives you a list of database names
 
 ```r
 entrez_dbs()
-```
-
-```
-##  [1] "pubmed"          "protein"         "nuccore"        
-##  [4] "nucleotide"      "nucgss"          "nucest"         
-##  [7] "structure"       "genome"          "assembly"       
-## [10] "genomeprj"       "bioproject"      "biosample"      
-## [13] "blastdbinfo"     "books"           "cdd"            
-## [16] "clinvar"         "clone"           "gap"            
-## [19] "gapplus"         "grasp"           "dbvar"          
-## [22] "epigenomics"     "gene"            "gds"            
-## [25] "geoprofiles"     "homologene"      "medgen"         
-## [28] "journals"        "mesh"            "ncbisearch"     
-## [31] "nlmcatalog"      "omim"            "orgtrack"       
-## [34] "pmc"             "popset"          "probe"          
-## [37] "proteinclusters" "pcassay"         "biosystems"     
-## [40] "pccompound"      "pcsubstance"     "pubmedhealth"   
-## [43] "seqannot"        "snp"             "sra"            
-## [46] "taxonomy"        "toolkit"         "toolkitall"     
-## [49] "toolkitbook"     "unigene"         "gencoll"        
-## [52] "gtr"
+#>  [1] "pubmed"          "protein"         "nuccore"        
+#>  [4] "nucleotide"      "nucgss"          "nucest"         
+#>  [7] "structure"       "genome"          "assembly"       
+#> [10] "genomeprj"       "bioproject"      "biosample"      
+#> [13] "blastdbinfo"     "books"           "cdd"            
+#> [16] "clinvar"         "clone"           "gap"            
+#> [19] "gapplus"         "grasp"           "dbvar"          
+#> [22] "epigenomics"     "gene"            "gds"            
+#> [25] "geoprofiles"     "homologene"      "medgen"         
+#> [28] "journals"        "mesh"            "ncbisearch"     
+#> [31] "nlmcatalog"      "omim"            "orgtrack"       
+#> [34] "pmc"             "popset"          "probe"          
+#> [37] "proteinclusters" "pcassay"         "biosystems"     
+#> [40] "pccompound"      "pcsubstance"     "pubmedhealth"   
+#> [43] "seqannot"        "snp"             "sra"            
+#> [46] "taxonomy"        "toolkit"         "toolkitall"     
+#> [49] "toolkitbook"     "unigene"         "gencoll"        
+#> [52] "gtr"
 ```
 
 Some of the names are a little opaque, so you can get some more descriptve
@@ -283,15 +270,12 @@ information about each with `entrez_db_summary()`
 
 ```r
 entrez_db_summary("cdd")
-```
-
-```
-##                      DbName                    MenuName 
-##                       "cdd"         "Conserved Domains" 
-##                 Description                     DbBuild 
-## "Conserved Domain Database"        "Build141002-1144.3" 
-##                       Count                  LastUpdate 
-##                     "49955"          "2014/10/06 18:00"
+#>                      DbName                    MenuName 
+#>                       "cdd"         "Conserved Domains" 
+#>                 Description                     DbBuild 
+#> "Conserved Domain Database"        "Build150108-1904.1" 
+#>                       Count                  LastUpdate 
+#>                     "50415"          "2015/01/09 00:28"
 ```
 
 `entrez_db_searchable()` lets you discover the fields avalible for search terms
@@ -303,35 +287,32 @@ use `as.data.frame` to create a dataframe, with one search-field per row):
 ```r
 search_fields <- entrez_db_searchable("pmc")
 search_fields$GRNT
-```
-
-```
-## $Name
-## [1] "GRNT"
-## 
-## $FullName
-## [1] "Grant Number"
-## 
-## $Description
-## [1] "NIH Grant Numbers"
-## 
-## $TermCount
-## [1] "2094173"
-## 
-## $IsDate
-## [1] "N"
-## 
-## $IsNumerical
-## [1] "N"
-## 
-## $SingleToken
-## [1] "Y"
-## 
-## $Hierarchy
-## [1] "N"
-## 
-## $IsHidden
-## [1] "N"
+#> $Name
+#> [1] "GRNT"
+#> 
+#> $FullName
+#> [1] "Grant Number"
+#> 
+#> $Description
+#> [1] "NIH Grant Numbers"
+#> 
+#> $TermCount
+#> [1] "2130238"
+#> 
+#> $IsDate
+#> [1] "N"
+#> 
+#> $IsNumerical
+#> [1] "N"
+#> 
+#> $SingleToken
+#> [1] "Y"
+#> 
+#> $Hierarchy
+#> [1] "N"
+#> 
+#> $IsHidden
+#> [1] "N"
 ```
 
 Finally, `entrez_db_links` takes a database name, and returns a list of other
@@ -340,16 +321,13 @@ NCBI databases which might contain linked-records.
 
 ```r
 entrez_db_links("omim")
-```
-
-```
-## Databases with linked records for database 'omim'
-##  [1] biosample   biosystems  books       clinvar     dbvar      
-##  [6] gene        genetests   geoprofiles gtr         homologene 
-## [11] mapview     medgen      medgen      nuccore     nucest     
-## [16] nucgss      omim        pcassay     pccompound  pcsubstance
-## [21] pmc         protein     pubmed      pubmed      snp        
-## [26] snp         snp         sra         structure   unigene
+#> Databases with linked records for database 'omim'
+#>  [1] biosample   biosystems  books       clinvar     dbvar      
+#>  [6] gene        genetests   geoprofiles gtr         homologene 
+#> [11] mapview     medgen      medgen      nuccore     nucest     
+#> [16] nucgss      omim        pcassay     pccompound  pcsubstance
+#> [21] pmc         protein     pubmed      pubmed      snp        
+#> [26] snp         snp         sra         structure   unigene
 ```
 
 ###Trendy topics in genetics
