@@ -1,34 +1,53 @@
+Version 0.4
+------------------------
+ * entrez_summary now fetches 'version 2.0' esummary records from NCBI
+     * This change may break some scripts. In particular, the names of some
+       elements in esummary records have changed. Broken scripts shold produce a
+       helpful error message, and using entrez_summary(..., version="1.0")
+       should fix it. More details are given in the help to entrez_summary. 
+     * When version 2.0 records are requested entrez_summary fetches the json
+       record.
+ * New helper functions for einfo Eutil
+    * entrez_dbs() lists avaliable databases.
+    * entrez_db_summary() gets summary information about a given database.  
+    * entrez_db_links() lists databases against which a given db's records might
+      be cross referenced.
+    * entrez_db_searchable() lists search terms avaliable for a given database.
+ * Nicer print functions for search and summary objects
+ * New dependancy on jsonlite for handling json records.
+ * Bunch of bugs squashed and typos cleaned up
+
 Version 0.3.1
 ------------------------
-*Squashed a bug in the vignette which wrote to users $HOME
+    * Squashed a bug in the vignette which wrote to users $HOME
 
 Version 0.3
 ------------------------
-*using httr to handle HTTP GETs and some url building
-*parsing for esummary parsing for clinvar database
-*Scott Chamberlain added as contributer for above
-*Pubmed parser handles multi-record files
-*html vignette included
+    * using httr to handle HTTP GETs and some url building
+    * parsing for esummary parsing for clinvar database
+    * Scott Chamberlain added as contributer for above
+    * Pubmed parser handles multi-record files
+    * html vignette included
 
 Version 0.2.4
 -------------------------
-*minor release to fix bug in esummary parsing
+    * minor release to fix bug in esummary parsing
 
 Version 0.2.3
 ---------------------------------
-*Edited license/description to meet CRAN requiremens
-*Added sentence to description to summarise the package
+    * Edited license/description to meet CRAN requiremens
+    * Added sentence to description to summarise the package
 
 
 Version 0.2.2
 --------------------------------
 
-*Parsing of esummary xmls is now much nicer. 
-*S3 items to represent most results
-*Tests to cover all functions
+    * Parsing of esummary xmls is now much nicer. 
+    * S3 items to represent most results
+    * Tests to cover all functions
 
 
 Version 0.1.1
 ---------------------------------
-First release on CRAN + now part of ROpenSci
-Functions cover the whole EUtils API
+    * First release on CRAN + now part of ROpenSci
+    * Functions cover the whole EUtils API
