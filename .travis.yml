@@ -5,6 +5,10 @@ before_script:
 - chmod 755 ./travis-tool.sh
 - "./travis-tool.sh bootstrap"
 - "./travis-tool.sh install_deps - ./travis-tool.sh install_r rjson"
+- "./travis-tool.sh github_package jimhester/covr"
+after_success:
+        - Rscript -e 'library(covr);coveralls()'
+
 notifications:
   slack:
     secure: gsOT9d72jXfBuJgno2xhHKpJoWy6HT0zqF10NIvWz/aZpxmClFCdKO07zAieI+qOS57d5LNN2P2C8kQrk6SleqwzX0dhBiWtYaaC88AN61/ykszftMIbuJ3c0gJvLP9CqnuN1hrORx7awOTVe/OOKs2uHVzkyVMG+ifn57jShD8=
