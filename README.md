@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
+[![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master) [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master)
 
 rentrez
 =======
@@ -221,7 +221,7 @@ search_fields$GRNT
 #> [1] "NIH Grant Numbers"
 #> 
 #> $TermCount
-#> [1] "2130238"
+#> [1] "2130404"
 #> 
 #> $IsDate
 #> [1] "N"
