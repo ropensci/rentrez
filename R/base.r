@@ -1,3 +1,21 @@
+#What's going on under the hood. As far as possibel we are following the best
+#practices for API packages suggested by hadly/httr:
+#
+#  http://cran.r-project.org/web/packages/httr/vignettes/api-packages.html
+#
+#and also conforming tothe NBCI's requirements about rate limiting and 
+#adding identifiers to each request:
+#
+# http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requirements
+#
+
+
+
+
+#As per NCBI's documentation -- we set tool developer's email and tool name:
+entrez_email <- function() 'david.winter@gmail.com'
+entrez_tool <- function() 'rentrez'
+
 #Create a URL for the EUtils API. 
 #
 # This function is used by all the API-querying functions in rentrez to build
@@ -11,10 +29,6 @@
 #                                 rettype="xml")
 #
 
-
-
-entrez_email <- function() 'david.winter@gmail.com'
-entrez_tool <- function() 'rentrez'
 
 make_entrez_query <- function(util, 
                               require_one_of=NULL,
@@ -35,14 +49,26 @@ make_entrez_query <- function(util,
     }
     uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     response <- httr::GET(uri, query=args, config= config)
-    httr::stop_for_status(response)
+    entrez_check(response)
     return(httr::content(response, as="text"))
 }
+
+entrez_check  <- function(req){
+  if (req$status_code < 400) {
+      return(invisible())
+  }
+  message <- httr::content(req)
+  stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
+}
+
+
 
 parse_respone <- function(x, type){
     res <- switch(type, 
             "json" = jsonlite::fromJSON(x),
-            "xml"  = xmlTreeParse(x, useInternalNodes=TRUE)
+            "xml"  = xmlTreeParse(x, useInternalNodes=TRUE),
+            "text" = x, #citmatch uses plain old plain text
+             x #fall-through, if in doubt, return un-parsed response
     )
     return(res)
 }
