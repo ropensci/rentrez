@@ -11,3 +11,9 @@ test_that("The record-linking funcitons work",{
 test_that("Print elink behaves", {
     expect_output(elinks, "elink result with ids from \\d+")
 })
+
+test_that("We detect missing ids from elink results",{
+   expect_warning(
+    entrez_link(dbfrom="pubmed", db="all", id=c(20203609,2020360999999,20203610))
+   )
+})

@@ -26,19 +26,28 @@
 #'}
 #'
 
+get_linked_ids <- function(record, dbname){
+    path <-  paste("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/Id", sep="")
+    return(xpathSApply(record, path, xmlValue))
+}
+
 entrez_link <- function(db, dbfrom, config=NULL, ...){
     response <- make_entrez_query("elink", db=db, dbfrom=dbfrom,
                                   config=config, ..., 
                                   require_one_of=c("id", "WebEnv"))
     record <- xmlTreeParse(response, useInternalNodes=TRUE)
-    db_names <- xpathSApply(record, "//LinkName", xmlValue)
-    get_Ids <- function(dbname){
-        path <-  paste("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/Id", sep="")
-        return(xpathSApply(record, path, xmlValue))
+    search_ids <- XML::xpathSApply(record, "//IdList/Id", 
+                                   function(x) as.numeric(xmlValue(x))
+    )
+    if(-1 %in% search_ids){
+       msg <- paste("Some  IDs not found in", dbfrom)
+       warning(msg)
     }
+    db_names <- xpathSApply(record, "//LinkName", xmlValue)
+
     # Get ID from each database
     # Not simplified so if a single database get a named list (for consistancy)
-    result <- sapply(db_names, get_Ids, simplify=FALSE)
+    result <- sapply(db_names, get_linked_ids, record=record, simplify=FALSE)
     result$file <- record
     class(result) <- c("elink", class(result))
     #NCBI limits requests to three per second
