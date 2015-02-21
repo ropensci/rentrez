@@ -1,14 +1,15 @@
 context("fetching-records")
-test_that("Functions to fetch records & summaries work", {
-          #setup
-          pop_ids = c("307082412", "307075396", "307075338", "307075274")
-          pop_summ_xml <- entrez_summary(db="popset", 
-                                         id=pop_ids, version="1.0")
-          pop_summ_json <- entrez_summary(db="popset", 
-                                          id=pop_ids, version="2.0")
-          coi <- entrez_fetch(db = "popset", id = pop_ids[1], 
-                              rettype = "fasta")
 
+
+pop_ids = c("307082412", "307075396", "307075338", "307075274")
+pop_summ_xml <- entrez_summary(db="popset", 
+                               id=pop_ids, version="1.0")
+pop_summ_json <- entrez_summary(db="popset", 
+                                id=pop_ids, version="2.0")
+coi <- entrez_fetch(db = "popset", id = pop_ids[1], 
+                    rettype = "fasta")
+
+test_that("Functions to fetch summaries work", {
           #tests
           expect_that(pop_summ_xml, is_a("list"))
           expect_that(pop_summ_json, is_a("list"))
@@ -18,7 +19,9 @@ test_that("Functions to fetch records & summaries work", {
           sapply(pop_summ_json, function(x)
                  expect_that(x[["title"]], matches("Muraenidae"))
           )         
-            
+})  
+
+test_that("Fetching sequences works", {
           expect_that(length(strsplit(coi, ">")[[1]]), 
                          equals(30))
           
