@@ -148,7 +148,7 @@ parse_esumm_list <- function(node){
     if(is.null(res)){
         msg <- paste0("Esummary object '", deparse(substitute(x)), "' has no object",
                      " named '", name, "' \b.\nIf you were expecting values from a ",
-                     " 'versoin 1.0' esummary record, try setting 'version' to ",
+                     " 'version 1.0' esummary record, try setting 'version' to ",
                      " '1.0' in entrez_summary (see documentation for more)\n")
         warning(msg)
      }
@@ -192,8 +192,6 @@ parse_esumm_list <- function(node){
     }
     res
 }
-
-
 
 
 
