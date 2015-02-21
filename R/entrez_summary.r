@@ -201,7 +201,3 @@ print.esummary <- function(x, ...){
     cat(paste("esummary result with", len - 1, "items:\n"))
     print(names(x)[-len], quote=FALSE)
 }
-
-
-
-

@@ -53,7 +53,7 @@ parse_one_pubmed <- function(paper){
 
 
 #' @export
-print.pubmed_record  <- function(x, ...){
+print.pubmed_record  <- function(x, first_line=TRUE, ...){
  if(length(x$authors) == 1){
   display.author <- x$authors[1]
  }
@@ -63,13 +63,20 @@ print.pubmed_record  <- function(x, ...){
  else
    display.author <- paste(x$authors[1], "et al")
    
- display <- with(x, sprintf("%s. (%s). %s %s. %s: %s",
-                      display.author, year, title, journal, volume, pages))
- cat(display)
- cat("\n")
+ display <- with(x, sprintf(" %s. (%s).  %s. %s:%s",
+                      display.author, year, journal, volume, pages))
+ if(first_line){
+     cat("Pubmed record", "\n")
+ }
+ cat(display, "\n")
 }
 
 #' @export
 print.multi_pubmed_record <- function(x, ...){
-    cat(paste( "list of ", length(x), "pubmed records\n"))
+    nrecs <- length(x)
+    cat("List of", nrecs, "pubmed records\n")
+    if( nrecs > 3){
+        sapply(x[1:3], print, first_line=FALSE)
+        cat(".\n.\n.\n")
+    } else sapply(x[1:3], print, first_line=FALSE)
 }

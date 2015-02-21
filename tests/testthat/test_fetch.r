@@ -57,8 +57,10 @@ test_that("Suggestions when slicing verion 2.0 records ", {
            expect_warning(x['Journal']))
 })
     
-         
-
+test_that("We can print summary records", {
+      expect_output(pop_summ_json[[1]], "esummary result with \\d+ items")        
+       expect_output(pop_summ_xml[[1]], "esummary result with \\d+ items")        
+})
 
                          
           
