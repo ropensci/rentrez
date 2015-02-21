@@ -1,8 +1,9 @@
 context("entrez_post")
 
+prot_ids = c(15718680,157427902)
+ret <- entrez_post(id=prot_ids, db="protein")
+
 test_that("we can post ids", {
-    prot_ids = c(15718680,157427902)
-    ret <- entrez_post(id=prot_ids, db="protein")
     qk <- ret$QueryKey
     expect_that(as.integer(qk), is_a("integer"))
     expect_false(is.na(as.integer(qk)))
