@@ -22,11 +22,16 @@ test_that("Functions to fetch summaries work", {
 })  
 
 test_that("Fetching sequences works", {
-          expect_that(length(strsplit(coi, ">")[[1]]), 
-                         equals(30))
+          expect_that(length(strsplit(coi, ">")[[1]]), equals(30))
           
 })
 
+test_that("List elements in XML are parsable", {
+         rec <- entrez_summary(db="pubmed", id=25696867, version="1.0")
+         expect_named(rec$History)
+         expect_more_than(length(rec$History), 0)
+})
+         
 
 test_that("JSON and XML objects are similar", {
           #It would be nice to test whether the xml and json records
