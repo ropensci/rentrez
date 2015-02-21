@@ -22,7 +22,7 @@ test_that("Functions to fetch summaries work", {
 })  
 
 test_that("Fetching sequences works", {
-          expect_that(length(strsplit(coi, ">")[[1]]), equals(30))
+     expect_that(length(strsplit(coi, ">")[[1]]), equals(30))
           
 })
 
