@@ -29,10 +29,10 @@ so_many_snails <- entrez_search(db="nuccore",
                       "Gastropoda[Organism] AND COI[Gene]", retmax=200)
 upload <- entrez_post(db="nuccore", id=so_many_snails$ids)
 cookie <- upload$WebEnv
-first <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
-                      query_key=upload$QueryKey, retend=10)
+first <- entrez_fetch(db="nuccore", rettype="fasta", WebEnv=cookie,
+                      query_key=upload$QueryKey, retmax=10)
 second <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
-                       query_key=upload$QueryKey, retstart=10)
+                       query_key=upload$QueryKey, retstart=10, retmax=10)
 }
 }
 \seealso{
