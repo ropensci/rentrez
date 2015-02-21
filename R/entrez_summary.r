@@ -63,10 +63,19 @@ reclass <- function(x){
     x
 }
 
+check_json_errs <- function(rec){
+    if("error" %in% names(rec)){
+        msg <- paste0("ID ", rec$uid, " produced error '", rec$error, "'")
+        warning(msg, call.=FALSE)
+    }
+    invisible()
+}
+
 
 parse_esummary.list <- function(x){
-    #already parsed by jsonlite, just add class info to each one
+    #already parsed by jsonlite, just add check for errors, then re-class
     res <- x$result[2: length(x$result)]
+    sapply(res, check_json_errs)
     res <- lapply(res, reclass)
     if(length(res)==1){
         return(res[[1]])
@@ -85,6 +94,12 @@ parse_esummary.list <- function(x){
 #
 #@export
 parse_esummary.XMLInternalDocument  <- function(x){
+    errs <- x["//ERROR"]
+    if( length(errs) > 0){
+        for(e in errs){
+            warning(XML::xmlValue(e))
+        }
+    }
     recs <- x["//DocSum"]
     if(length(recs)==0){
        stop("Esummary document contains no DocSums, try 'version=2.0'?)")
