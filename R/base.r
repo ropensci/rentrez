@@ -63,7 +63,7 @@ entrez_check  <- function(req){
 
 
 
-parse_respone <- function(x, type){
+parse_response <- function(x, type=NULL){
     res <- switch(type, 
             "json" = jsonlite::fromJSON(x),
             "xml"  = xmlTreeParse(x, useInternalNodes=TRUE),

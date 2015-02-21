@@ -22,8 +22,8 @@
 #'@export
 
 entrez_info <- function(db=NULL, config=NULL){
-    response <- make_entrez_query("einfo", db=db, config=config)
-    return(xmlTreeParse(response, useInternalNodes=TRUE))
+    req <- make_entrez_query("einfo", db=db, config=config)
+    parse_response(req, "xml")
 }
 
 #' List databases avaliable from the NCBI

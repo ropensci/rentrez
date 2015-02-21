@@ -51,7 +51,7 @@ entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
     response  <- make_entrez_query("esummary", db=db, config=config,
                                    retmode=retmode, version=v,
                                    require_one_of=c("id", "WebEnv"), ...)
-    whole_record <- parse_respone(response, retmode)
+    whole_record <- parse_response(response, retmode)
     parse_esummary(whole_record)
 }
 

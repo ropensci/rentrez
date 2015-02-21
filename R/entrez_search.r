@@ -50,7 +50,7 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", ... ){
                                   config=config,
                                   retmode=retmode, 
                                   ...)
-    parsed <- parse_respone(response, retmode)
+    parsed <- parse_response(response, retmode)
     parse_esearch(parsed)
 }
 
