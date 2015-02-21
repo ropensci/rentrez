@@ -53,6 +53,8 @@ test_that("Suggestions when slicing verion 2.0 records ", {
            expect_warning(x$Journal, "has no object named 'Journal'"))
     sapply(pop_summ_json,  function(x) 
            expect_warning(x[['Journal']], "has no object named 'Journal'"))
+    sapply(pop_summ_json,  function(x) 
+           expect_warning(x['Journal']))
 })
     
          
