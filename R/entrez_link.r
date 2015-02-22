@@ -26,10 +26,6 @@
 #'}
 #'
 
-get_linked_ids <- function(record, dbname){
-    path <-  paste("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/Id", sep="")
-    return(xpathSApply(record, path, xmlValue))
-}
 
 entrez_link <- function(db, dbfrom, config=NULL, ...){
     response <- make_entrez_query("elink", db=db, dbfrom=dbfrom,
@@ -61,4 +57,9 @@ print.elink <- function(x, ...){
    len <- length(x)
    cat(paste("elink result with ids from", len - 1, "databases:\n"))
    print (names(x)[-len], quote=FALSE)
+}
+
+get_linked_ids <- function(record, dbname){
+    path <-  paste("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/Id", sep="")
+    return(xpathSApply(record, path, xmlValue))
 }
