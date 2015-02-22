@@ -9,9 +9,10 @@ output:
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
+  comment = "#>"
 )
+knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)  
+
 ```
 
 [![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez)
@@ -263,11 +264,11 @@ find the total number of papers published in each year:
 
 
 ```r
-years <- 1990:2013
-total_papers <- papers_by_year(years, "")
+years <- 1990:2014
+total_papers <- as.numeric(papers_by_year(years, ""))
 omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))
-trend_props <- trend_data/total_papers
+trend_props <- as.numeric(trend_data)/total_papers
 ```
 
 That's the data, let's plot it:

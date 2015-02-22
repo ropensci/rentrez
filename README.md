@@ -37,7 +37,6 @@ Let's say I've just read a paper on the evolution of Hox genes, [Di-Poi *et al*.
 
 ``` r
 library(rentrez)
-#> Loading required package: XML
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 (hox_pmid <- hox_paper$ids)
 #> [1] "20203609"
@@ -198,12 +197,12 @@ Some of the names are a little opaque, so you can get some more descriptve infor
 
 ``` r
 entrez_db_summary("cdd")
-#>                      DbName                    MenuName 
-#>                       "cdd"         "Conserved Domains" 
-#>                 Description                     DbBuild 
-#> "Conserved Domain Database"        "Build150108-1904.1" 
-#>                       Count                  LastUpdate 
-#>                     "50415"          "2015/01/09 00:21"
+#>  DbName: cdd
+#>  MenuName: Conserved Domains
+#>  Description: Conserved Domain Database
+#>  DbBuild: Build150108-1904.1
+#>  Count: 50415
+#>  LastUpdate: 2015/01/09 00:21
 ```
 
 `entrez_db_searchable()` lets you discover the fields avalible for search terms for a given database. You get back a named-list, with names are fields. Each element has additional information about each named search field (you can also use `as.data.frame` to create a dataframe, with one search-field per row):
@@ -211,32 +210,15 @@ entrez_db_summary("cdd")
 ``` r
 search_fields <- entrez_db_searchable("pmc")
 search_fields$GRNT
-#> $Name
-#> [1] "GRNT"
-#> 
-#> $FullName
-#> [1] "Grant Number"
-#> 
-#> $Description
-#> [1] "NIH Grant Numbers"
-#> 
-#> $TermCount
-#> [1] "2130404"
-#> 
-#> $IsDate
-#> [1] "N"
-#> 
-#> $IsNumerical
-#> [1] "N"
-#> 
-#> $SingleToken
-#> [1] "Y"
-#> 
-#> $Hierarchy
-#> [1] "N"
-#> 
-#> $IsHidden
-#> [1] "N"
+#>  Name: GRNT
+#>  FullName: Grant Number
+#>  Description: NIH Grant Numbers
+#>  TermCount: 2135694
+#>  IsDate: N
+#>  IsNumerical: N
+#>  SingleToken: Y
+#>  Hierarchy: N
+#>  IsHidden: N
 ```
 
 Finally, `entrez_db_links` takes a database name, and returns a list of other NCBI databases which might contain linked-records.
@@ -268,11 +250,11 @@ papers_by_year <- function(years, search_term){
 With that we can fetch the data for earch term and, by searching with no term, find the total number of papers published in each year:
 
 ``` r
-years <- 1990:2013
-total_papers <- papers_by_year(years, "")
+years <- 1990:2014
+total_papers <- as.numeric(papers_by_year(years, ""))
 omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))
-trend_props <- trend_data/total_papers
+trend_props <- as.numeric(trend_data)/total_papers
 ```
 
 That's the data, let's plot it:
