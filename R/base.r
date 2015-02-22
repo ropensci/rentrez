@@ -61,6 +61,15 @@ entrez_check  <- function(req){
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
 
+check_xml_errors <- function(x){
+    errs <- x["//ERROR"]
+    if( length(errs) > 0){
+        for(e in errs){
+            warning(XML::xmlValue(e))
+        }
+    }
+    invisible()
+}
 
 
 parse_response <- function(x, type=NULL){
@@ -73,6 +82,10 @@ parse_response <- function(x, type=NULL){
     return(res)
 }
 
+add_class <- function(x, new_class){
+    class(x) <- c(new_class, class(x))
+    x
+}
 
 .last <- function(s){
     len <- nchar(s)

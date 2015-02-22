@@ -23,7 +23,9 @@
 
 entrez_info <- function(db=NULL, config=NULL){
     req <- make_entrez_query("einfo", db=db, config=config)
-    parse_response(req, "xml")
+    res <- parse_response(req, "xml")
+    check_xml_errors(res)
+    res
 }
 
 #' List databases avaliable from the NCBI
@@ -63,6 +65,7 @@ entrez_db_summary <- function(db, config=NULL){
     unparsed <- xpathApply( rec, "//DbInfo/*[not(self::LinkList or self::FieldList)]")
     res <- sapply(unparsed, xmlValue)
     names(res) <- sapply(unparsed, xmlName)
+    class(res) <- c("eInfoEntry", class(res))
     res
 }
 
@@ -95,10 +98,11 @@ entrez_db_links <- function(db, config=NULL){
     rec <- entrez_info(db, config)
     unparsed <- xpathApply(rec, "//Link", xmlChildren)
     res <- lapply(unparsed, lapply, xmlValue)
+    res <- lapply(res, add_class, new_class='eInfoEntry')
     names(res) <- sapply(res, "[[", "DbTo")
     class(res) <- c("eInfoLink", "eInfoList", "list")
     attr(res, 'db') <- xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
-    return(res)
+    res
 }
 
 
@@ -131,6 +135,7 @@ entrez_db_searchable <- function(db, config=NULL){
                            "/eInfoResult/DbInfo/FieldList/Field",
                            xmlChildren)
     res <- lapply(unparsed, lapply, xmlValue)
+    res <- lapply(res, add_class, new_class="eInfoEntry")
     names(res) <- sapply(res, "[[", "Name")
     class(res) <- c("eInfoSearch", "eInfoList", "list")
     attr(res, 'db') <- xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
@@ -156,4 +161,9 @@ print.eInfoLink <-  print_maker(x, "Databases with linked records")
 #'@export
 as.data.frame.eInfoList <- function(x, ...){
     data.frame(do.call("rbind", x), row.names=NULL)
+}
+
+#'@export
+print.eInfoEntry <- function(x, ...){
+    cat(paste0(" ", names(x), ": ", unlist(x), collapse="\n"), "\n")
 }

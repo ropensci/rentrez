@@ -58,10 +58,6 @@ entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
 
 parse_esummary <- function(x) UseMethod("parse_esummary")
 
-reclass <- function(x){
-    class(x) <- c("esummary", "list")
-    x
-}
 
 check_json_errs <- function(rec){
     if("error" %in% names(rec)){
@@ -76,7 +72,7 @@ parse_esummary.list <- function(x){
     #already parsed by jsonlite, just add check for errors, then re-class
     res <- x$result[2: length(x$result)]
     sapply(res, check_json_errs)
-    res <- lapply(res, reclass)
+    res <- lapply(res, add_class, new_class="esummary")
     if(length(res)==1){
         return(res[[1]])
     }
@@ -94,12 +90,7 @@ parse_esummary.list <- function(x){
 #
 #@export
 parse_esummary.XMLInternalDocument  <- function(x){
-    errs <- x["//ERROR"]
-    if( length(errs) > 0){
-        for(e in errs){
-            warning(XML::xmlValue(e))
-        }
-    }
+    check_xml_errors(x)
     recs <- x["//DocSum"]
     if(length(recs)==0){
        stop("Esummary document contains no DocSums, try 'version=2.0'?)")
