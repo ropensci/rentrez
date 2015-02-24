@@ -8,10 +8,10 @@ Authors@R: c(person("David", "Winter", role=c("aut", "cre"),
     email = "myrmecocystus@gmail.com"))
 Depends:
     R (>= 2.6.0),
-    XML
 Imports:
     httr,
-    jsonlite
+    jsonlite,
+    XML
 Suggests:
     testthat,
     knitr

@@ -61,6 +61,10 @@ entrez_check  <- function(req){
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
 
+
+
+#Does  a parsed-xml object caontain ERRORs as reported by NCBI
+#(i.e. <ERROR> entry's in a valid XML):
 check_xml_errors <- function(x){
     errs <- x["//ERROR"]
     if( length(errs) > 0){
@@ -75,7 +79,7 @@ check_xml_errors <- function(x){
 parse_response <- function(x, type=NULL){
     res <- switch(type, 
             "json" = jsonlite::fromJSON(x),
-            "xml"  = xmlTreeParse(x, useInternalNodes=TRUE),
+            "xml"  = XML::xmlTreeParse(x, useInternalNodes=TRUE),
             "text" = x, #citmatch uses plain old plain text
              x #fall-through, if in doubt, return un-parsed response
     )

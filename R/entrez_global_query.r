@@ -19,11 +19,11 @@ entrez_global_query <- function(term, config=NULL, ...){
                                     term=gsub(" ", "+", term), 
                                     config=config,
                                     ...)
-    record <- xmlTreeParse(response, useInternalNodes=TRUE)
-    db_names <- xpathSApply(record, "//ResultItem/DbName", xmlValue)
+    record <- XML::xmlTreeParse(response, useInternalNodes=TRUE)
+    db_names <- XML::xpathSApply(record, "//ResultItem/DbName", XML::xmlValue)
     get_Ids <- function(dbname){
         path <-  paste("//ResultItem/DbName[text()='", dbname, "']/../Count", sep="")
-        res <- as.numeric(xpathSApply(record, path, xmlValue))
+        res <- as.numeric(XML::xpathSApply(record, path, XML::xmlValue))
     }
     #NCBI limits requests to three per second
     Sys.sleep(0.33)

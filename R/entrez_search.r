@@ -58,11 +58,11 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", ... ){
 parse_esearch <- function(x) UseMethod("parse_esearch")
    
 parse_esearch.XMLInternalDocument <- function(x){
-    res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
-                 count    = xpathSApply(x, "/eSearchResult/Count", xmlValue),
-                 retmax   = xpathSApply(x, "/eSearchResult/RetMax", xmlValue),
-                 QueryKey = xpathSApply(x, "/eSearchResult/QueryKey", xmlValue),
-                 WebEnv   = xpathSApply(x, "/eSearchResult/WebEnv", xmlValue),
+    res <- list( ids      = XML::xpathSApply(x, "//IdList/Id", XML::xmlValue),
+                 count    = XML::xpathSApply(x, "/eSearchResult/Count", XML::xmlValue),
+                 retmax   = XML::xpathSApply(x, "/eSearchResult/RetMax", XML::xmlValue),
+                 QueryKey = XML::xpathSApply(x, "/eSearchResult/QueryKey", XML::xmlValue),
+                 WebEnv   = XML::xpathSApply(x, "/eSearchResult/WebEnv", XML::xmlValue),
                  file     = x)
     res <- Filter(function(x) length(x) > 0, res)
     class(res) <- c("esearch", "list")

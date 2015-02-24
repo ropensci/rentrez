@@ -96,38 +96,39 @@ parse_esummary.XMLInternalDocument  <- function(x){
        stop("Esummary document contains no DocSums, try 'version=2.0'?)")
     }
     per_rec <- function(r){
-        res <- xpathApply(r, "Item", parse_node)
-        names(res) <- xpathApply(r, "Item", xmlGetAttr, "Name")
+        res <- XML::xpathApply(r, "Item", parse_node)
+        names(res) <- XML::xpathApply(r, "Item", XML::xmlGetAttr, "Name")
         res <- c(res, file=x)
         class(res) <- c("esummary", class(res))
         return(res)
-    }
+    } 
     if(length(recs) == 1){
         res <- per_rec(recs[[1]])
     } else{
         res <- lapply(recs, per_rec)
-        names(res) <-  xpathSApply(x, "//DocSum/Id", xmlValue)
+        names(res) <-  XML::xpathSApply(x, "//DocSum/Id", XML::xmlValue)
     }
     return(res)
 
 }
 
 parse_node <- function(node) {
-    node_type <- xmlGetAttr(node, "Type")
+    node_type <- XML::xmlGetAttr(node, "Type")
+
     node_fxn <- switch(node_type, 
                        "Integer" = parse_esumm_int,
                        "List" = parse_esumm_list,
                        "Structure" = parse_esumm_list,
-                       xmlValue) #unnamed arguments to switch = default val.
+                       XML::xmlValue) #unnamed arguments to switch = default val.
     return(node_fxn(node))
 
 }
 
-parse_esumm_int <- function(node) as.integer(xmlValue(node))
+parse_esumm_int <- function(node) as.integer(XML::xmlValue(node))
 
 parse_esumm_list <- function(node){
     res <- lapply(node["Item"], parse_node)
-    names(res) <- lapply(node["Item"], xmlGetAttr, "Name")
+    names(res) <- lapply(node["Item"], XML::xmlGetAttr, "Name")
     return(res)
 }
 

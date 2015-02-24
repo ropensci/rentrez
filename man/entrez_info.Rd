@@ -28,7 +28,7 @@ it is exported by \code{rentrez} for the sake of completeness.
 }
 \examples{
 all_the_data <- entrez_info()
-xpathSApply(all_the_data, "//DbName", xmlValue)
+XML::xpathSApply(all_the_data, "//DbName", XML::xmlValue)
 entrez_dbs()
 }
 \seealso{

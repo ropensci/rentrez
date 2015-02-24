@@ -6,7 +6,7 @@
 #'@import XML
 #'@export
 #'@param db character Name of the database to search for links (or use "all" to 
-#' search all databases available for \code{db}. \code{entrez_db_links} allows you
+#' search all databases available for \code{db. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
 #'@param dbfrom character Name of database from which the Id(s) originate
 #'@param \dots character Additional terms to add to the request
@@ -31,15 +31,15 @@ entrez_link <- function(db, dbfrom, config=NULL, ...){
     response <- make_entrez_query("elink", db=db, dbfrom=dbfrom,
                                   config=config, ..., 
                                   require_one_of=c("id", "WebEnv"))
-    record <- xmlTreeParse(response, useInternalNodes=TRUE)
+    record <- XML::xmlTreeParse(response, useInternalNodes=TRUE)
     search_ids <- XML::xpathSApply(record, "//IdList/Id", 
-                                   function(x) as.numeric(xmlValue(x))
+                                   function(x) as.numeric(XML::xmlValue(x))
     )
     if(-1 %in% search_ids){
        msg <- paste("Some  IDs not found in", dbfrom)
        warning(msg)
     }
-    db_names <- xpathSApply(record, "//LinkName", xmlValue)
+    db_names <- XML::xpathSApply(record, "//LinkName", XML::xmlValue)
 
     # Get ID from each database
     # Not simplified so if a single database get a named list (for consistancy)
@@ -61,5 +61,5 @@ print.elink <- function(x, ...){
 
 get_linked_ids <- function(record, dbname){
     path <-  paste("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/Id", sep="")
-    return(xpathSApply(record, path, xmlValue))
+    return(XML::xpathSApply(record, path, XML::xmlValue))
 }

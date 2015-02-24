@@ -26,8 +26,8 @@
 
 entrez_post <- function(db, id, config=NULL, ...){
     response  <- make_entrez_query("epost", db=db,id=id, config=config, ...)
-    record <- xmlTreeParse(response, useInternalNodes=TRUE)
-    result <- xpathApply(record, "/ePostResult/*", xmlValue)
+    record <- XML::xmlTreeParse(response, useInternalNodes=TRUE)
+    result <- XML::xpathApply(record, "/ePostResult/*", XML::xmlValue)
     names(result) <- c("QueryKey", "WebEnv")
     result$file <- record
     #NCBI limits requests to three per second
