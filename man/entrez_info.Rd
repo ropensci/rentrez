@@ -7,7 +7,7 @@
 entrez_info(db = NULL, config = NULL)
 }
 \arguments{
-\item{db}{characater database about which to retrieve information (optional,}
+\item{db}{characater database about which to retrieve information (optional)}
 
 \item{config}{config vector passed on to \code{httr::GET}}
 }
@@ -27,9 +27,11 @@ Consequently most users will not have a reason to use this function (though
 it is exported by \code{rentrez} for the sake of completeness.
 }
 \examples{
+\dontrun{
 all_the_data <- entrez_info()
 XML::xpathSApply(all_the_data, "//DbName", XML::xmlValue)
 entrez_dbs()
+}
 }
 \seealso{
 \code{\link[httr]{config}} for available httr configurations

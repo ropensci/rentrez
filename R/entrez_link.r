@@ -6,7 +6,7 @@
 #'@import XML
 #'@export
 #'@param db character Name of the database to search for links (or use "all" to 
-#' search all databases available for \code{db. \code{entrez_db_links} allows you
+#' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
 #'@param dbfrom character Name of database from which the Id(s) originate
 #'@param \dots character Additional terms to add to the request

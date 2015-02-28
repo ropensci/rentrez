@@ -8,7 +8,7 @@
 #' (\code{entrez_db_searchable} and \code{entrez_db_links} respectively).
 #' Consequently most users will not have a reason to use this function (though
 #' it is exported by \code{rentrez} for the sake of completeness.
-#'@param db characater database about which to retrieve information (optional,
+#'@param db characater database about which to retrieve information (optional)
 #'@param config config vector passed on to \code{httr::GET}
 #'@return XMLInternalDocument with information describing either all the
 #'databases available in Eutils (if db is not set) or one particular database
@@ -49,7 +49,7 @@ entrez_dbs <- function(config=NULL){
 #' Retrieve summary information about an NCBI database
 #'
 #'@param config config vector passed to \code{httr::GET}
-#'@param db character, name of database t
+#'@param db character, name of database to summarise
 #'@return Character vector with the following data
 #'@return DbName Name of database
 #'@return Description Brief description of the database
@@ -72,12 +72,12 @@ entrez_db_summary <- function(db, config=NULL){
 }
 
 
-# List available links for records from a given NCBI database
+#' List available links for records from a given NCBI database
 #'
 #'Can be used in conjunction with \code{\link{entrez_link}} to find
 #' the right name for the \code{db} argument in that function.
 #'@param config config vector passed to \code{httr::GET}
-#'@param db character, name of database t
+#'@param db character, name of database to search
 #'@return An eInfoLink object (sub-classed from list) summarising linked-databases.
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
 #' the name of each element (which is the correct name for \code{entrez_link},
@@ -108,8 +108,8 @@ entrez_db_links <- function(db, config=NULL){
 }
 
 
-# List available search fields for a given database
-#
+#' List available search fields for a given database
+#'
 #' Can be used in conjunction with \code{\link{entrez_search}} to find available
 #' search fields to include in the \code{term} argument of that function.
 #'@param config config vector passed to \code{httr::GET}
@@ -144,25 +144,25 @@ entrez_db_searchable <- function(db, config=NULL){
     res
 }
 
-#Because FUNctionals are FUN, a print function factory that makes print methods
-# for similar S3 classes. "result description" should briefly describe the result
-# contained in the object
-print_maker <- function(x, result_description){
+#'@export
+print.eInfoLink<- function(x, ...){
     function(x, ...){
-        cat(result_description, " for database '", attr(x, "db"), "'\n", sep="")
+        cat("Databases with linked records for database '", attr(x, "db"), "'\n", sep="")
         print(names(x), quote=FALSE)
     }
 }
 
 #'@export
-print.eInfoSearch <- print_maker(x, "Searchable fields")
-
-#'@export
-print.eInfoLink <-  print_maker(x, "Databases with linked records")
-
-#'@export
 as.data.frame.eInfoList <- function(x, ...){
     data.frame(do.call("rbind", x), row.names=NULL)
+}
+
+#'@export
+print.eInfoSearch <- function(x, ...){
+    cat("Searchable fields for database '", attr(x, "db"), "'\n", sep="")
+    for (term in x){
+        cat(" ", term$Name, "\t", term$Description, "\n")  
+    }
 }
 
 #'@export

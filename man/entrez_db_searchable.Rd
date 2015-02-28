@@ -2,8 +2,7 @@
 % Please edit documentation in R/entrez_info.r
 \name{entrez_db_searchable}
 \alias{entrez_db_searchable}
-\title{Can be used in conjunction with \code{\link{entrez_search}} to find available
-search fields to include in the \code{term} argument of that function.}
+\title{List available search fields for a given database}
 \usage{
 entrez_db_searchable(db, config = NULL)
 }

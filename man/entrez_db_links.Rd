@@ -2,13 +2,12 @@
 % Please edit documentation in R/entrez_info.r
 \name{entrez_db_links}
 \alias{entrez_db_links}
-\title{Can be used in conjunction with \code{\link{entrez_link}} to find
-the right name for the \code{db} argument in that function.}
+\title{List available links for records from a given NCBI database}
 \usage{
 entrez_db_links(db, config = NULL)
 }
 \arguments{
-\item{db}{character, name of database t}
+\item{db}{character, name of database to search}
 
 \item{config}{config vector passed to \code{httr::GET}}
 }
