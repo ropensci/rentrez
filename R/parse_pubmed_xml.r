@@ -3,7 +3,7 @@
 #'
 #'@import XML
 #'@export
-#'@param raw_XML::xml character the record to be parsed (as a character, 
+#'@param raw_xml character the record to be parsed (as a character, 
 #' expected to come from \code{\link{entrez_fetch}})
 #'@return Either a single pubmed_record object, or a list of several 
 #'@examples
@@ -12,8 +12,8 @@
 #' hox_rel <- entrez_link(db="pubmed", dbfrom="pubmed", id=hox_paper$ids)
 #' recs <- entrez_fetch(db="pubmed", 
 #'                        id=hox_rel$pubmed_pubmed[1:3], 
-#'                        rettype="XML::xml")
-#' parse_pubmed_XML::xml(recs)
+#'                        rettype="xml")
+#' parse_pubmed_xml(recs)
 #'
 
 parse_pubmed_xml<- function(raw_xml){
@@ -28,7 +28,7 @@ parse_pubmed_xml<- function(raw_xml){
     return(res)
 }
 
-#The work-horse function - get information from a single XML::xml rec
+#The work-horse function - get information from a single xml rec
 parse_one_pubmed <- function(paper){
     get_value <- function(path){
         return(XML::xpathSApply(paper, path, XML::xmlValue))
