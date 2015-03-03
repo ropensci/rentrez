@@ -31,7 +31,7 @@ Fetch pubmed ids from specially formatted citation strings
 \donttest{
 ex_cites <- c("proc natl acad sci u s a|1991|88|3248|mann bj|test1|",
               "science|1987|235|182|palmenberg ac|test2|")
-entrez_citmatch(ex_sites)
+entrez_citmatch(ex_cites)
 }
 }
 \seealso{
