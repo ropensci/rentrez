@@ -1,3 +1,9 @@
+
+Version 0.4.1
+---------------------
+* Bug fix: The example for entrez_summary contained a typo which made it fail
+  (being wrapped in dontest this hadn't previously shown up).
+
 Version 0.4
 ------------------------
  * entrez_summary now fetches 'version 2.0' esummary records from NCBI
