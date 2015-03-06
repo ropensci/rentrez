@@ -203,7 +203,7 @@ To cite `rentrez` in publications use:
 
 <br>
 
-> David Winter (2014). rentrez: Entrez in R. R package version 0.4
+> David Winter (2014). rentrez: Entrez in R. R package version 0.4.1
 
 <section id="license_bugs">
 
