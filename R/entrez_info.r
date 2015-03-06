@@ -146,10 +146,8 @@ entrez_db_searchable <- function(db, config=NULL){
 
 #'@export
 print.eInfoLink<- function(x, ...){
-    function(x, ...){
         cat("Databases with linked records for database '", attr(x, "db"), "'\n", sep="")
         print(names(x), quote=FALSE)
-    }
 }
 
 #'@export
