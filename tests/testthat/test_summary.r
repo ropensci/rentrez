@@ -1,4 +1,4 @@
-context("fetching-records")
+context("fetching and parsing summary recs")
 
 
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
