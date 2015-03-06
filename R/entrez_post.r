@@ -29,8 +29,14 @@ entrez_post <- function(db, id, config=NULL, ...){
     record <- XML::xmlTreeParse(response, useInternalNodes=TRUE)
     result <- XML::xpathApply(record, "/ePostResult/*", XML::xmlValue)
     names(result) <- c("QueryKey", "WebEnv")
-    result$file <- record
+    class(result) <- c("Epost", "list")
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
     return(result)
+}
+
+#'@export
+print.Epost <- function(x, ...){
+    cat("Entrez post result (QueryKey = ", upload$QueryKey,
+        ", WebEnv = ", substr(x$WebEnv, 1, 12), "...", ")\n",sep="")    
 }

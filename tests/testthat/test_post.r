@@ -28,4 +28,8 @@ test_that("Example works", {
      nrecs <-  length(gregexpr(">", first)[[1]])
      expect_equal(nrecs, 4)
 })
-     
+
+test_that("We can print a post result", {
+    expect_output(ret,
+     "Entrez post result \\(QueryKey = \\d+, WebEnv = [A-Z0-9_]+\\.\\.\\.\\)") 
+})
