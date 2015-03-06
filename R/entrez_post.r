@@ -37,6 +37,6 @@ entrez_post <- function(db, id, config=NULL, ...){
 
 #'@export
 print.Epost <- function(x, ...){
-    cat("Entrez post result (QueryKey = ", upload$QueryKey,
+    cat("Entrez post result (QueryKey = ", x$QueryKey,
         ", WebEnv = ", substr(x$WebEnv, 1, 12), "...", ")\n",sep="")    
 }
