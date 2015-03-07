@@ -7,7 +7,7 @@ Authors@R: c(person("David", "Winter", role=c("aut", "cre"),
     person("Scott", "Chamberlain", role="ctb",
     email = "myrmecocystus@gmail.com"))
 Depends:
-    R (>= 2.6.0),
+    R (>= 2.6.0)
 Imports:
     httr,
     jsonlite,
