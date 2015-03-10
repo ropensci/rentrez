@@ -14,7 +14,7 @@ test_that("Fetching sequences works", {
 
 test_that("Entrez_fetch record parsing works", {
      expect_that(raw_rec, is_a("character"))
-     expect_that(rec, is_a("XMLInternalDocument"))
+     expect_that(xml_rec, is_a("XMLInternalDocument"))
      expect_error( 
        entrez_fetch(db="popset", id="307082412", rettype="fasta", parsed=TRUE), 
        "Can't parse records of type fasta"
