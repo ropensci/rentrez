@@ -1,15 +1,19 @@
 context("result-parsers")
 
 
-one_rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml")
-four_recs <- entrez_fetch(db="pubmed", 
+raw_rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml")
+xml_rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml", parsed=TRUE)
+multi_rec <- entrez_fetch(db="pubmed", 
                            id=c(22883857, 25042335, 20203609,11959827),
-                           rettype="xml")
-parsed_rec <- parse_pubmed_xml(one_rec)
-parsed_multi <- parse_pubmed_xml(four_recs)
+                           rettype="xml", parsed=TRUE)
+parsed_raw <- parse_pubmed_xml(raw_rec)
+parsed_rec <- parse_pubmed_xml(xml_rec)
+parsed_multi <- parse_pubmed_xml(multi_rec)
 
 test_that("pubmed file parsers work",{
+    expect_that(raw_rec, is_a("character"))
 
+    expect_that(parsed_raw, is_a("pubmed_record"))
     expect_that(parsed_rec, is_a("pubmed_record"))
     expect_that(names(parsed_rec), is_a("character"))
     expect_that(parsed_rec$pmid, is_identical_to("20674752"))

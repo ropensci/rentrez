@@ -4,11 +4,11 @@
 \alias{parse_pubmed_xml}
 \title{Summarise an XML record from pubmed.}
 \usage{
-parse_pubmed_xml(raw_xml)
+parse_pubmed_xml(record)
 }
 \arguments{
-\item{raw_xml}{character the record to be parsed (as a character,
-expected to come from \code{\link{entrez_fetch}})}
+\item{record}{Either and XMLInternalDocument or character the record to be
+parsed ( expected to come from \code{\link{entrez_fetch}})}
 }
 \value{
 Either a single pubmed_record object, or a list of several

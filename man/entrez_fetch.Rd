@@ -4,7 +4,8 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, rettype, retmode = "text", config = NULL, ...)
+entrez_fetch(db, rettype, retmode = "text", parsed = FALSE, config = NULL,
+  ...)
 }
 \arguments{
 \item{db}{character Name of the database to use}
@@ -12,6 +13,9 @@ entrez_fetch(db, rettype, retmode = "text", config = NULL, ...)
 \item{rettype}{character Format in which to get data (eg, fasta, xml...)}
 
 \item{retmode}{character Mode in which to receive data, defaults to 'text'}
+
+\item{parsed}{boolean should entrez_fetch attempt to parse the resulting
+file. Only works with rettype="xml" at present}
 
 \item{config}{vector configuration options passed to httr::GET}
 

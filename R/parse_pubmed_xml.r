@@ -3,8 +3,8 @@
 #'
 #'@import XML
 #'@export
-#'@param raw_xml character the record to be parsed (as a character, 
-#' expected to come from \code{\link{entrez_fetch}})
+#'@param record Either and XMLInternalDocument or character the record to be
+#'parsed ( expected to come from \code{\link{entrez_fetch}})
 #'@return Either a single pubmed_record object, or a list of several 
 #'@examples
 #' 
@@ -16,9 +16,11 @@
 #' parse_pubmed_xml(recs)
 #'
 
-parse_pubmed_xml<- function(raw_xml){
-    parsed <- XML::xmlTreeParse(raw_xml, useInternalNodes=TRUE)
-    res <- XML::xpathApply(parsed, 
+parse_pubmed_xml<- function(record){
+    if(typeof(record) == "character"){
+        record <- XML::xmlTreeParse(record, useInternalNodes=TRUE)
+    }
+    res <- XML::xpathApply(record, 
                       "/PubmedArticleSet/PubmedArticle", 
                       parse_one_pubmed)
     if(length(res)==1){
