@@ -23,7 +23,7 @@
 entrez_fetch <- function(db, rettype, retmode="text", parsed=FALSE,
                          config=NULL, ...){
     if(parsed){
-        if(retmode != "text"){
+        if(rettype != "xml"){            
           msg <- paste("Can't parse records of type", rettype)
           stop(msg)
         }
