@@ -18,6 +18,7 @@
 #'@return retmax integer Maximum number of hits returned by the search
 #'@return QueryKey integer identifier for specific query in webhistory
 #'@return WebEnv character identifier for session key to use with history
+#'@return QueryTranslation character, search term as the NCBI interpreted it
 #'@import  XML
 #'@return file either and XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
@@ -63,6 +64,7 @@ parse_esearch.XMLInternalDocument <- function(x){
                  retmax   = XML::xpathSApply(x, "/eSearchResult/RetMax", XML::xmlValue),
                  QueryKey = XML::xpathSApply(x, "/eSearchResult/QueryKey", XML::xmlValue),
                  WebEnv   = XML::xpathSApply(x, "/eSearchResult/WebEnv", XML::xmlValue),
+                 QueryTranslation   = XML::xpathSApply(x, "/eSearchResult/QueryTranslation",XML::xmlValue),
                  file     = x)
     res <- Filter(function(x) length(x) > 0, res)
     class(res) <- c("esearch", "list")
@@ -70,8 +72,8 @@ parse_esearch.XMLInternalDocument <- function(x){
 }
 
 parse_esearch.list <- function(x){
-    res <- x$esearchresult[ c("idlist", "count", "retmax", "querykey", "webenv") ]
-    names(res)[c(1,4,5)] <- c("ids", "QueryKey", "WebEnv")
+    res <- x$esearchresult[ c("idlist", "count", "retmax", "querykey", "webenv", "querytranslation") ]
+    names(res)[c(1,4:6)] <- c("ids", "QueryKey", "WebEnv", "QueryTranslation")
     res <- Filter(function(x) !is.null(x), res)
     res$file <- x
     class(res) <- c("esearch", "list")
@@ -80,13 +82,13 @@ parse_esearch.list <- function(x){
 
 #'@export
 print.esearch <- function(x, ...){
-    msg<- paste("Entrez search result with", x$count, 
-                "hits (object contains", length(x$ids), "IDs")
-    if("WebEnv" %in% names(x)){
-        cat(msg, "and a cookie)\n")
-    }
-    else{
-        cat(msg, "and no cookie)\n")
-    }
+    display_term <- if(nchar(x$QueryTranslation) > 50){
+        paste(substr(x$QueryTranslation, 1, 50), "...")
+    } else x$QueryTranslation
+    cookie_word <- if("WebEnv" %in% seq_ambr$ids) "a" else "no"
+    msg<- paste("Entrez search result with", x$count, "hits (object contains",
+                length(x$ids), "IDs and", cookie_word, 
+                "cookie)\n Search term (as translated): "  , display_term, "\n")
+    cat(msg)
 }
-
+ 

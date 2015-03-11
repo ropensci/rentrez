@@ -29,6 +29,8 @@ QueryKey integer identifier for specific query in webhistory
 
 WebEnv character identifier for session key to use with history
 
+QueryTranslation character, search term as the NCBI interpreted it
+
 file either and XMLInternalDocument xml file resulting from search, parsed with
 \code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
 resulting from the returned JSON file being parsed with
