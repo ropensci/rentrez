@@ -1,4 +1,4 @@
-#' Get infromation about EUtils databases
+#' Get information about EUtils databases
 #'
 #'Constructs a query to NCBI's einfo and returns a parsed XML object
 #'Note: The most common uses-cases for the einfo util are finding the list of
@@ -8,7 +8,7 @@
 #' (\code{entrez_db_searchable} and \code{entrez_db_links} respectively).
 #' Consequently most users will not have a reason to use this function (though
 #' it is exported by \code{rentrez} for the sake of completeness.
-#'@param db characater database about which to retrieve information (optional)
+#'@param db character database about which to retrieve information (optional)
 #'@param config config vector passed on to \code{httr::GET}
 #'@return XMLInternalDocument with information describing either all the
 #'databases available in Eutils (if db is not set) or one particular database
@@ -32,7 +32,7 @@ entrez_info <- function(db=NULL, config=NULL){
 
 #' List databases avaliable from the NCBI
 #'
-#' Retreives the names of  databases available through the EUtils API
+#' Retrieves the names of  databases available through the EUtils API
 #'@param config config vector passed to \code{httr::GET}
 #'@family einfo
 #'@return character vector listing available dbs
@@ -49,7 +49,7 @@ entrez_dbs <- function(config=NULL){
 #' Retrieve summary information about an NCBI database
 #'
 #'@param config config vector passed to \code{httr::GET}
-#'@param db character, name of database to summarise
+#'@param db character, name of database to summaries
 #'@return Character vector with the following data
 #'@return DbName Name of database
 #'@return Description Brief description of the database
@@ -78,7 +78,7 @@ entrez_db_summary <- function(db, config=NULL){
 #' the right name for the \code{db} argument in that function.
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database to search
-#'@return An eInfoLink object (sub-classed from list) summarising linked-databases.
+#'@return An eInfoLink object (sub-classed from list) summarizing linked-databases.
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
 #' the name of each element (which is the correct name for \code{entrez_link},
 #' and can be used to get (a little) more information about each linked database
@@ -114,7 +114,7 @@ entrez_db_links <- function(db, config=NULL){
 #' search fields to include in the \code{term} argument of that function.
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database to get search field from
-#'@return An eInfoSearch object (subclassed from list) summarising linked-datbases. 
+#'@return An eInfoSearch object (subclassed from list) summarizing linked-databases. 
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
 #' shows only the names of each available search field. 
 #'@seealso \code{\link{entrez_search}}

@@ -12,7 +12,7 @@
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso \code{\link{entrez_db_searchable}} to get a set of search fields that
-#' can be userd in \code{term} for any base
+#' can be used in \code{term} for any base
 #'@return ids integer Unique IDS returned by the search
 #'@return count integer Total number of hits for the search
 #'@return retmax integer Maximum number of hits returned by the search
@@ -37,7 +37,7 @@
 #' 
 #' fly_id <- entrez_search(db="taxonomy", term="Drosophila")
 #' #Oh, right. There is a genus and a subgenus name Drosophila...
-#' #how can we limit this seach
+#' #how can we limit this search
 #' (tax_fields <- entrez_db_searchable("taxonomy"))
 #' #"RANK" loots promising
 #' tax_fields$RANK
