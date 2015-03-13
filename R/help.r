@@ -1,7 +1,7 @@
 #' rentrez
 #'
 #' rentrez provides functions to search for, discover and download data from
-#' the NCBI's databeses using their EUtils function. 
+#' the NCBI's databases using their EUtils function. 
 #'
 #' Users are expected to know a little bit about the EUtils API, which is well
 #' documented: \url{http://www.ncbi.nlm.nih.gov/books/NBK25500/}

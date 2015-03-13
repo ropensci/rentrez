@@ -1,6 +1,6 @@
 #' Get links to datasets related to a unique ID from an NCBI database
 #'
-#' Constructs a query with the given arguments and downlands the XML
+#' Constructs a query with the given arguments and downloads the XML
 #' document created by that query. 
 #'
 #'@import XML

@@ -1,9 +1,9 @@
-#What's going on under the hood. As far as possibel we are following the best
+#What's going on under the hood. As far as possible we are following the best
 #practices for API packages suggested by hadly/httr:
 #
 #  http://cran.r-project.org/web/packages/httr/vignettes/api-packages.html
 #
-#and also conforming tothe NBCI's requirements about rate limiting and 
+#and also conforming to the NBCI's requirements about rate limiting and 
 #adding identifiers to each request:
 #
 # http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requirements
@@ -63,7 +63,7 @@ entrez_check  <- function(req){
 
 
 
-#Does  a parsed-xml object caontain ERRORs as reported by NCBI
+#Does  a parsed-xml object contains ERRORs as reported by NCBI
 #(i.e. <ERROR> entry's in a valid XML):
 check_xml_errors <- function(x){
     errs <- x["//ERROR"]

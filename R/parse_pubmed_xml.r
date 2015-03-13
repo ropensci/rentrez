@@ -1,4 +1,4 @@
-#' Summarise an XML record from pubmed.
+#' Summarize an XML record from pubmed.
 #'
 #'
 #'@import XML
