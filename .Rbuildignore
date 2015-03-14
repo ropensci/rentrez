@@ -6,6 +6,6 @@
 ^README\.rmd$
 ^\.travis\.yml$
 ^appveyor\.yml$
-
+^CONTRIBUTING\.md$
 ^README\.Rmd$
 ^README-*\.png$
