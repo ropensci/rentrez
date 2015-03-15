@@ -64,6 +64,7 @@ parse_elink <- function(x, cmd){
            "neighbor"         = parse_neighbors(x),
            "neighbor_score"   = parse_neighbors(x),
            "neighbor_history" = parse_history(x),
+           "ncheck"           = parse_ncheck(x),
            x)
 }
 
@@ -84,6 +85,15 @@ parse_history <- function(x){
     attr(res, "content") <- "web history information"
     res
 }
+
+parse_ncheck <- function(x){
+    res <- structure(names= XML::xpathSApply(x, "//Id", XML::xmlValue),
+                     x["//Id/@HasNeighbor"] == "Y")
+    attr(res, "content") <- "link checks"
+    class(res) <- c("elink", class(res))
+    res
+}
+
     
 
 parse_linkouts <- function(x){
