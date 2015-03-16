@@ -78,6 +78,7 @@ source so I'll set `db` to "all":
 ```{r entrez_link, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
 NCBI_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
 NCBI_data
+NCBI_data$links
 ```
 
 ## Fetch a summary of a record
@@ -99,7 +100,7 @@ can get summaries for each popset ID, check out the first record to see what
 kind of information they contain then extract the Title from each record:
 
 ```{r entrez_summary, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-data_summaries <- entrez_summary(db = "popset", id = NCBI_data$pubmed_popset)
+data_summaries <- entrez_summary(db = "popset", id = NCBI_data$links$pubmed_popset)
 data_summaries[[1]]
 sapply(data_summaries, "[[", "title")
 ```
@@ -108,8 +109,8 @@ sapply(data_summaries, "[[", "title")
 Ok, since we might expect nuclear and mitochondrial genes to hav different histories, let's get sequences from each genome (the the COI and RAG1 datasets) using `entrez_fetch`. By specifying `rettype="fasta"` we will get characater vectors in the fasta format:
 
 ```{r entrez_fetch, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-coi <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[1])
-rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$pubmed_popset[3])
+coi <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$links$pubmed_popset[1])
+rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$links$pubmed_popset[3])
 ```
 
 So I've got the data on hand - that's all the I need `rentrez` for, but I might as well align these sequences and make gene trees for each. I'll just do a quick and diry neighbor-joining tree using `ape` and we can clean up the long OTU names with the help of `stingr`. (I put the fussy work of cleaning the names and rooting the trees into a function `clean_and_root`):
