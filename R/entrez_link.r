@@ -60,20 +60,20 @@ entrez_link <- function(db, dbfrom, cmd='neighbor', config=NULL, ...){
 
 parse_elink <- function(x, cmd){
     check_xml_errors(x)
-    switch(cmd,
-           "neighbor"         = parse_neighbors(x),
-           "neighbor_score"   = parse_neighbors(x, scores=TRUE),
-           "neighbor_history" = parse_history(x),
-           "acheck"           = parse_acheck(x),
-           "ncheck"           = parse_ncheck(x),
-           "lcheck"           = parse_ncheck(x),
-           "llinkslib"        = parse_linkouts(x),
-           "llinks"           = parse_linkouts(x),
-           "prlinks"          = parse_linkouts(x),
-           parse_default(x, cmd)
+    res <- switch(cmd,
+                  "neighbor"         = parse_neighbors(x),
+                  "neighbor_score"   = parse_neighbors(x, scores=TRUE),
+                  "neighbor_history" = parse_history(x),
+                  "acheck"           = parse_acheck(x),
+                  "ncheck"           = parse_ncheck(x),
+                  "lcheck"           = parse_ncheck(x),
+                  "llinkslib"        = parse_linkouts(x),
+                  "llinks"           = parse_linkouts(x),
+                  "prlinks"          = parse_linkouts(x),
+                  parse_default(x, cmd)
     )
-#    class(x) <- c("elink", "list")
-    
+    class(res) <- c("elink", "list")
+    res
 }
 
 parse_default <- function(x, cmd){
@@ -101,7 +101,7 @@ parse_history <- function(x){
 }
 
 parse_acheck <- function(x){
-    res <- XML::xpathApply(rec, "//LinkInfo", XML::xmlToList)
+    res <- XML::xpathApply(x, "//LinkInfo", XML::xmlToList)
     names(res) <-  sapply(res, "[[","LinkName")
     attr(res, "content") <- "Information about databases with linked records"
     res    
@@ -120,16 +120,15 @@ parse_linkouts <- function(x){
     names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) XML::xmlValue(x[["Id"]])))
     res <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
     res <- lapply(res, lapply, add_class, "linkout")
-    attr("res", "linkouts")
+    attr(res, "content") <- "Links to external websites"
     res
 }
 
 
 #' @export
 print.elink <- function(x, ...){
-   len <- length(x)
-   cat(paste("elink result with ids from", len - 1, "databases:\n"))
-   print (names(x)[-len], quote=FALSE)
+    payload <- attr(x, "content")
+    cat("Elink object with contents", payload, "\n")
 }
 
 
