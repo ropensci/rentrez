@@ -57,24 +57,38 @@ entrez_link <- function(db, dbfrom, cmd='neighbor', config=NULL, ...){
 #    return(result)
 #}
 
-#' @export
 
 parse_elink <- function(x, cmd){
+    check_xml_errors(x)
     switch(cmd,
            "neighbor"         = parse_neighbors(x),
-           "neighbor_score"   = parse_neighbors(x),
+           "neighbor_score"   = parse_neighbors(x, scores=TRUE),
            "neighbor_history" = parse_history(x),
+           "acheck"           = parse_acheck(x),
            "ncheck"           = parse_ncheck(x),
-           x)
+           "lcheck"           = parse_ncheck(x),
+           "llinkslib"        = parse_linkouts(x),
+           "llinks"           = parse_linkouts(x),
+           "prlinks"          = parse_linkouts(x),
+           parse_default(x, cmd)
+    )
+#    class(x) <- c("elink", "list")
+    
 }
 
-parse_neighbors <- function(x){
+parse_default <- function(x, cmd){
+    warning(paste("Don't know how to deal with cmd", cmd, "returning xml file"))
+    x
+}
+
+parse_neighbors <- function(x, scores=FALSE){
     db_names <- XML::xpathSApply(x, "//LinkName", XML::xmlValue)
-    result <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
-    attr(result, "scores") <- sapply(db_names, get_linked_elements, record=x, element="Score", simplify=FALSE)
-    attr(result, "content") <- "linked IDs"
-    class(result) <- c("elink", class(result))
-    result
+    res <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
+    if(scores){
+        attr(res, "scores") <- sapply(db_names, get_linked_elements, record=x, element="Score", simplify=FALSE)
+    }
+    attr(res, "content") <- "linked IDs"
+    res
 }
 
 parse_history <- function(x){
@@ -86,17 +100,28 @@ parse_history <- function(x){
     res
 }
 
+parse_acheck <- function(x){
+    res <- XML::xpathApply(rec, "//LinkInfo", XML::xmlToList)
+    names(res) <-  sapply(res, "[[","LinkName")
+    attr(res, "content") <- "Information about databases with linked records"
+    res    
+}
+
 parse_ncheck <- function(x){
     res <- structure(names= XML::xpathSApply(x, "//Id", XML::xmlValue),
                      x["//Id/@HasNeighbor"] == "Y")
     attr(res, "content") <- "link checks"
-    class(res) <- c("elink", class(res))
     res
 }
 
-    
-
 parse_linkouts <- function(x){
+    per_id <- x["//IdUrlList/IdUrlSet"]
+    list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], XML::xmlToList))
+    names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) XML::xmlValue(x[["Id"]])))
+    res <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
+    res <- lapply(res, lapply, add_class, "linkout")
+    attr("res", "linkouts")
+    res
 }
 
 
@@ -106,6 +131,13 @@ print.elink <- function(x, ...){
    cat(paste("elink result with ids from", len - 1, "databases:\n"))
    print (names(x)[-len], quote=FALSE)
 }
+
+
+#' @export
+print.linkout <- function(x,...){
+    cat("Linkout from", x$Provider$Name, "\n $Url:", substr(x$Url, 1, 26), "...\n")
+}
+    
 
 get_linked_elements <- function(record, dbname, element){
     path <-  paste0("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
