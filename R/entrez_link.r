@@ -1,29 +1,45 @@
-#' Get links to datasets related to a unique ID from an NCBI database
+#' Get links to datasets related to records from an NCBI database
 #'
-#' Constructs a query with the given arguments and downlands the XML
-#' document created by that query. 
+#' entrez_link can discover records related to a set of unique identifiers from
+#' a NCBI database. The object returned by this function depends on the value
+#' set for the \code{cmd} argument. Printing the returned object lists the names
+#' , and provides a brief description, of the elements included in the object.
 #'
-#'@import XML
 #'@export
 #'@param db character Name of the database to search for links (or use "all" to 
 #' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
 #'@param dbfrom character Name of database from which the Id(s) originate
-#'@param cmd link function to use
+#'@param cmd link function to use. Allowled values include
+#' \itemize{
+#'   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
+#'   input IDs in \code{dbfrom}.
+#'   \item neighbor_score. As 'neighbor', but additionally returns similarity scores.
+#'   \item neighbor_history. As 'neighbor', but returns web history objects.
+#'   \item acheck. Returns a list of linked databases available from NCBI for a set of IDs.
+#'   \item ncheck. Checks for the existance of links within a single database.
+#'   \item lcheck. Checks for external (i.e. outside NCBI) links.
+#'   \item llinks. Returns a list of external links for each ID, excluding links
+#'   provided by libraries.
+#'   \item llinkslib. As 'llinks' but additionally includes links provided by
+#'   libraries.
+#'   \item prlinks. As 'llinks' but returns only the primary external link for
+#'   each ID.
+#'}
 #'@param \dots character Additional terms to add to the request
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
-#'@return An elink object containing vectors of unique IDs
-#' the vectors names take the form [db_from]_[db_to]
+#'@return An elink object containing the data defined by the \code{cmd} argument
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
+#'@references http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_
 #' @examples
 #' \donttest{
 #'  (pubmed_search <- entrez_search(db = "pubmed", term ="10.1016/j.ympev.2010.07.013[doi]"))
 #'  (linked_dbs <- entrez_db_links("pubmed"))
 #'  nucleotide_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db ="nuccore")
-#'  #All the links
-#'  entrez_link(dbfrom="pubmed", db="all", id=pubmed_search$ids)
+#'  #Sources for the full text of the paper 
+#'  res <- entrez_link(dbfrom="pubmed", db="", cmd="llinks", id=pubmed_search$ids)
 #'}
 #'
 
@@ -37,22 +53,6 @@ entrez_link <- function(db, dbfrom, cmd='neighbor', config=NULL, ...){
     Sys.sleep(0.33)
     parse_elink(record, cmd=cmd)
 }
-
-    if(-1 %in% search_ids){
-       warning("Some  IDs not found")
-    }
-    db_names <- XML::xpathSApply(record, "//LinkName", XML::xmlValue)
-#
-#    # Get ID from each database
-#    # Not simplified so if a single database get a named list (for consistancy)
-#    result <- sapply(db_names, get_linked_ids, record=record, simplify=FALSE)
-#    result$file <- record
-#    class(result) <- c("elink", class(result))
-#    #NCBI limits requests to three per second
-#    Sys.sleep(0.33)
-#    return(result)
-#}
-
 
 parse_elink <- function(x, cmd){
     check_xml_errors(x)
@@ -80,7 +80,6 @@ parse_default <- function(x, cmd){
 parse_neighbors <- function(x, scores=FALSE){
     content <- ""
     search_ids <- XML::xpathSApply(record, "//IdList/Id", XML::xmlValue(x))
-    )
     if("-1" %in% search_ids){
        warning(warning("Some IDs not found"))
     }

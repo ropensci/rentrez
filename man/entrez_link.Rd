@@ -2,9 +2,9 @@
 % Please edit documentation in R/entrez_link.r
 \name{entrez_link}
 \alias{entrez_link}
-\title{Get links to datasets related to a unique ID from an NCBI database}
+\title{Get links to datasets related to records from an NCBI database}
 \usage{
-entrez_link(db, dbfrom, config = NULL, ...)
+entrez_link(db, dbfrom, cmd = "neighbor", config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for links (or use "all" to
@@ -13,29 +13,50 @@ to discover databases that might have linked information (see examples).}
 
 \item{dbfrom}{character Name of database from which the Id(s) originate}
 
+\item{cmd}{link function to use. Allowled values include
+\itemize{
+  \item neighbor (default). Returns a set of IDs in \code{db} linked to the
+  input IDs in \code{dbfrom}.
+  \item neighbor_score. As 'neighbor', but additionally returns similarity scores.
+  \item neighbor_history. As 'neighbor', but returns web history objects.
+  \item acheck. Returns a list of linked databases available from NCBI for a set of IDs.
+  \item ncheck. Checks for the existance of links within a single database.
+  \item lcheck. Checks for external (i.e. outside NCBI) links.
+  \item llinks. Returns a list of external links for each ID, excluding links
+  provided by libraries.
+  \item llinkslib. As 'llinks' but additionally includes links provided by
+  libraries.
+  \item prlinks. As 'llinks' but returns only the primary external link for
+  each ID.
+}}
+
 \item{config}{vector configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request}
 }
 \value{
-An elink object containing vectors of unique IDs
-the vectors names take the form [db_from]_[db_to]
+An elink object containing the data defined by the \code{cmd} argument
 
 file XMLInternalDocument xml file resulting from search, parsed with
 \code{\link{xmlTreeParse}}
 }
 \description{
-Constructs a query with the given arguments and downlands the XML
-document created by that query.
+entrez_link can discover records related to a set of unique identifiers from
+a NCBI database. The object returned by this function depends on the value
+set for the \code{cmd} argument. Printing the returned object lists the names
+, and provides a brief description, of the elements included in the object.
 }
 \examples{
 \donttest{
  (pubmed_search <- entrez_search(db = "pubmed", term ="10.1016/j.ympev.2010.07.013[doi]"))
  (linked_dbs <- entrez_db_links("pubmed"))
  nucleotide_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db ="nuccore")
- #All the links
- entrez_link(dbfrom="pubmed", db="all", id=pubmed_search$ids)
+ #Sources for the full text of the paper
+ res <- entrez_link(dbfrom="pubmed", db="", cmd="llinks", id=pubmed_search$ids)
 }
+}
+\references{
+http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_
 }
 \seealso{
 \code{\link[httr]{config}} for available configs
