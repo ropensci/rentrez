@@ -54,6 +54,16 @@ entrez_link <- function(db, dbfrom, cmd='neighbor', config=NULL, ...){
     parse_elink(record, cmd=cmd)
 }
 
+#
+# Parising Elink is.... fun. The XML files returned by the different 'cmd'
+# args are very differnt, so we can't hope for a one-size-fits all solution. 
+# Instead, we can break of a few similar cases and write parsing functions, 
+# whih we dispatch via a big switch statement
+#
+# Each parising function should return a list with elements corresponding to the
+# data n XML, and set the attribute "content" to a brief description of what
+# each element in the record contains, to be used by the print fxn.
+
 parse_elink <- function(x, cmd){
     check_xml_errors(x)
     res <- switch(cmd,
@@ -79,19 +89,19 @@ parse_default <- function(x, cmd){
 
 parse_neighbors <- function(x, scores=FALSE){
     content <- ""
-    search_ids <- XML::xpathSApply(record, "//IdList/Id", XML::xmlValue(x))
-    if("-1" %in% search_ids){
+    if("-1" %in% XML::xpathSApply(x, "//IdList/Id", XML::xmlValue)){
        warning(warning("Some IDs not found"))
     }
     db_names <- XML::xpathSApply(x, "//LinkName", XML::xmlValue)
     links <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
     class(links) <- c("elink_classic", "list")
+    res <- list(links = links, file=x)
     if(scores){
-        scores <- sapply(db_names, get_linked_elements, record=x, element="Score", simplify=FALSE)
-        class(scores) <- c("elink_classic", "list")
+        nscores <- sapply(db_names, get_linked_elements, record=x, element="Score", simplify=FALSE)
+        class(nscores) <- c("elink_classic", "list")
         content <- " $scores: weighted neighbouring scores for each hit in links\n"
+        res$scores <- nscores
     }
-    res <- list(links=links, scores=scores)
     attr(res, "content") <- paste(" $links: IDs for linked records from NCBI\n",
                                  content)
     res
@@ -140,7 +150,7 @@ parse_linkouts <- function(x){
 #' @export
 print.elink <- function(x, ...){
     payload <- attr(x, "content")
-    cat("elink object with contents\n", payload, "\n",sep="")
+    cat("elink object with contents:\n", payload, "\n",sep="")
 }
 
 
