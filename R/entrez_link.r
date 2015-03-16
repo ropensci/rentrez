@@ -34,18 +34,14 @@ entrez_link <- function(db, dbfrom, cmd='neighbor', config=NULL, ...){
                                   config=config, ..., 
                                   require_one_of=c("id", "WebEnv"))
     record <- parse_response(response, 'xml')
-    search_ids <- XML::xpathSApply(record, "//IdList/Id", 
-                                   function(x) as.numeric(XML::xmlValue(x))
-    )
     Sys.sleep(0.33)
     parse_elink(record, cmd=cmd)
 }
 
-#    if(-1 %in% search_ids){
-#       msg <- paste("Some  IDs not found in", dbfrom)
-#       warning(msg)
-#    }
-#    db_names <- XML::xpathSApply(record, "//LinkName", XML::xmlValue)
+    if(-1 %in% search_ids){
+       warning("Some  IDs not found")
+    }
+    db_names <- XML::xpathSApply(record, "//LinkName", XML::xmlValue)
 #
 #    # Get ID from each database
 #    # Not simplified so if a single database get a named list (for consistancy)
@@ -83,6 +79,11 @@ parse_default <- function(x, cmd){
 
 parse_neighbors <- function(x, scores=FALSE){
     content <- ""
+    search_ids <- XML::xpathSApply(record, "//IdList/Id", XML::xmlValue(x))
+    )
+    if("-1" %in% search_ids){
+       warning(warning("Some IDs not found"))
+    }
     db_names <- XML::xpathSApply(x, "//LinkName", XML::xmlValue)
     links <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
     class(links) <- c("elink_classic", "list")
@@ -148,11 +149,12 @@ print.elink <- function(x, ...){
 print.linkout <- function(x,...){
     cat("Linkout from", x$Provider$Name, "\n $Url:", substr(x$Url, 1, 26), "...\n")
 }
-    
+
+#' @export
 print.elink_classic <- function(x, ...){
    len <- length(x)
-   cat(paste("elink result with information from", len - 1, "databases:\n"))
-   print (names(x)[-len], quote=FALSE)
+   cat(paste("elink result with information from", len , "databases:\n"))
+   print (names(x), quote=FALSE)
 }
 get_linked_elements <- function(record, dbname, element){
     path <-  paste0("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
