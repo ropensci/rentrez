@@ -142,7 +142,7 @@ parse_linkouts <- function(x){
     list_o_lists <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
     list_o_lists <- lapply(list_o_lists, lapply, add_class, "linkout")
     res <- list( linkouts = list_o_lists)
-    attr(res, "content") <- " $linkouts links to external websites"
+    attr(res, "content") <- " $linkouts: links to external websites"
     res
 }
 
