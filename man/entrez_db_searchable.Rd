@@ -12,7 +12,7 @@ entrez_db_searchable(db, config = NULL)
 \item{config}{config vector passed to \code{httr::GET}}
 }
 \value{
-An eInfoSearch object (subclassed from list) summarising linked-datbases.
+An eInfoSearch object (subclassed from list) summarizing linked-databases.
 Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
 shows only the names of each available search field.
 }

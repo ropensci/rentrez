@@ -12,7 +12,7 @@ entrez_db_links(db, config = NULL)
 \item{config}{config vector passed to \code{httr::GET}}
 }
 \value{
-An eInfoLink object (sub-classed from list) summarising linked-databases.
+An eInfoLink object (sub-classed from list) summarizing linked-databases.
 Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
 the name of each element (which is the correct name for \code{entrez_link},
 and can be used to get (a little) more information about each linked database

@@ -13,7 +13,7 @@ entrez_dbs(config = NULL)
 character vector listing available dbs
 }
 \description{
-Retreives the names of  databases available through the EUtils API
+Retrieves the names of  databases available through the EUtils API
 }
 \examples{
 \donttest{

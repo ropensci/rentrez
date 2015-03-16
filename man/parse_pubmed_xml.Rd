@@ -2,7 +2,7 @@
 % Please edit documentation in R/parse_pubmed_xml.r
 \name{parse_pubmed_xml}
 \alias{parse_pubmed_xml}
-\title{Summarise an XML record from pubmed.}
+\title{Summarize an XML record from pubmed.}
 \usage{
 parse_pubmed_xml(record)
 }
@@ -14,7 +14,7 @@ parsed ( expected to come from \code{\link{entrez_fetch}})}
 Either a single pubmed_record object, or a list of several
 }
 \description{
-Summarise an XML record from pubmed.
+Summarize an XML record from pubmed.
 }
 \examples{
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")

@@ -2,12 +2,12 @@
 % Please edit documentation in R/entrez_info.r
 \name{entrez_info}
 \alias{entrez_info}
-\title{Get infromation about EUtils databases}
+\title{Get information about EUtils databases}
 \usage{
 entrez_info(db = NULL, config = NULL)
 }
 \arguments{
-\item{db}{characater database about which to retrieve information (optional)}
+\item{db}{character database about which to retrieve information (optional)}
 
 \item{config}{config vector passed on to \code{httr::GET}}
 }

@@ -7,7 +7,7 @@
 entrez_db_summary(db, config = NULL)
 }
 \arguments{
-\item{db}{character, name of database to summarise}
+\item{db}{character, name of database to summaries}
 
 \item{config}{config vector passed to \code{httr::GET}}
 }

@@ -25,7 +25,7 @@ file XMLInternalDocument xml file resulting from search, parsed with
 \code{\link{xmlTreeParse}}
 }
 \description{
-Constructs a query with the given arguments and downlands the XML
+Constructs a query with the given arguments and downloads the XML
 document created by that query.
 }
 \examples{
