@@ -65,8 +65,8 @@ parse_elink <- function(x, cmd){
                   "neighbor_score"   = parse_neighbors(x, scores=TRUE),
                   "neighbor_history" = parse_history(x),
                   "acheck"           = parse_acheck(x),
-                  "ncheck"           = parse_ncheck(x),
-                  "lcheck"           = parse_ncheck(x),
+                  "ncheck"           = parse_check(x, "HasNeighbor"),
+                  "lcheck"           = parse_check(x, "HasLinkOut"),
                   "llinkslib"        = parse_linkouts(x),
                   "llinks"           = parse_linkouts(x),
                   "prlinks"          = parse_linkouts(x),
@@ -82,35 +82,46 @@ parse_default <- function(x, cmd){
 }
 
 parse_neighbors <- function(x, scores=FALSE){
+    content <- ""
     db_names <- XML::xpathSApply(x, "//LinkName", XML::xmlValue)
-    res <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
+    links <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
+    class(links) <- c("elink_classic", "list")
     if(scores){
-        attr(res, "scores") <- sapply(db_names, get_linked_elements, record=x, element="Score", simplify=FALSE)
+        scores <- sapply(db_names, get_linked_elements, record=x, element="Score", simplify=FALSE)
+        class(scores) <- c("elink_classic", "list")
+        content <- " $scores: weighted neighbouring scores for each hit in links\n"
     }
-    attr(res, "content") <- "linked IDs"
+    res <- list(links=links, scores=scores)
+    attr(res, "content") <- paste(" $links: IDs for linked records from NCBI\n",
+                                 content)
     res
 }
 
 parse_history <- function(x){
-    qks <-    XML::xpathSApply(x, "//LinkSetDbHistory/QueryKey", XML::xmlValue)
-    names(qks) <-    XML::xpathApply(x, "//LinkSetDbHistory/LinkName", XML::xmlValue)
+    qks <-    XML::xpathSApply(x, "//LinkSetDbHistory/QueryKey", XML::xmlValue, simplify=FALSE)
+    names(qks) <-    XML::xpathSApply(x, "//LinkSetDbHistory/LinkName", XML::xmlValue)
     cookie <- XML::xmlValue(x[["//WebEnv"]])
-    res <- list(cookie = cookie, QueryKeys=qks)
-    attr(res, "content") <- "web history information"
+    res <- list(WebEnv = cookie, QueryKeys=qks)
+    attr(res, "content") <- paste0(" $WebEnv: A WebEnv (cookie) value \n",
+                                   " $QueryKeys: A list of QUeryKeys for each included database")
     res
 }
 
 parse_acheck <- function(x){
-    res <- XML::xpathApply(x, "//LinkInfo", XML::xmlToList)
-    names(res) <-  sapply(res, "[[","LinkName")
-    attr(res, "content") <- "Information about databases with linked records"
+    db_info <- XML::xpathApply(x, "//LinkInfo", XML::xmlToList)
+    names(db_info) <-  sapply(db_info, "[[","LinkName")
+    class(db_info)  <-  "elink_classic"
+    res <- list(linked_databses = db_info)
+    attr(res, "content") <- " $linked_databases: a list of summary data from each databse with linked records"
     res    
 }
 
-parse_ncheck <- function(x){
-    res <- structure(names= XML::xpathSApply(x, "//Id", XML::xmlValue),
-                     x["//Id/@HasNeighbor"] == "Y")
-    attr(res, "content") <- "link checks"
+parse_check <- function(x, attr){
+    path <- paste0("//Id/@", attr)
+    is_it_y <- structure(names= XML::xpathSApply(x, "//Id", XML::xmlValue),
+                     x[path] == "Y")
+    res <- list(check = is_it_y)
+    attr(res, "content") <- " $check: TRUE/FALSE for wether each ID has links"
     res
 }
 
@@ -118,9 +129,10 @@ parse_linkouts <- function(x){
     per_id <- x["//IdUrlList/IdUrlSet"]
     list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], XML::xmlToList))
     names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) XML::xmlValue(x[["Id"]])))
-    res <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
-    res <- lapply(res, lapply, add_class, "linkout")
-    attr(res, "content") <- "Links to external websites"
+    list_o_lists <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
+    list_o_lists <- lapply(list_o_lists, lapply, add_class, "linkout")
+    res <- list( linkouts = list_o_lists)
+    attr(res, "content") <- " $linkouts links to external websites"
     res
 }
 
@@ -128,7 +140,7 @@ parse_linkouts <- function(x){
 #' @export
 print.elink <- function(x, ...){
     payload <- attr(x, "content")
-    cat("Elink object with contents", payload, "\n")
+    cat("elink object with contents\n", payload, "\n",sep="")
 }
 
 
@@ -137,7 +149,11 @@ print.linkout <- function(x,...){
     cat("Linkout from", x$Provider$Name, "\n $Url:", substr(x$Url, 1, 26), "...\n")
 }
     
-
+print.elink_classic <- function(x, ...){
+   len <- length(x)
+   cat(paste("elink result with information from", len - 1, "databases:\n"))
+   print (names(x)[-len], quote=FALSE)
+}
 get_linked_elements <- function(record, dbname, element){
     path <-  paste0("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
     return(XML::xpathSApply(record, path, XML::xmlValue))
