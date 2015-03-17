@@ -14,203 +14,96 @@ opts_knit$set(fig.show = "hold")
 ```
  
 
-rentrez tutorial
--------------
+Rentrez tutorial
+================
 
-`rentrez` is an R package that helps users query the NCBI's databases to download genetic and bibliographic data.`rentrez` is now on CRAN, so can be installed by using `install.packages("rentrez")`. The source code is also avaliablefrom the [ROpenSci github repository](http://github.com/ropensci/rentrez).
+rentrez, entrez and the NCBI
+----------------------------
 
-
-What rentrez does
------------------
-`rentrez` provides a low-level R wrapper to the NCBI's EUtils API.
-The core functions take a set of arguments provided by a user, produce the URL
-needed to query the NCBI's API and then fetches the resulting data. In most
-cases the functions return lists that contain the parts of the resulting file
-that are most likely to be useful as items. 
-
-`rentrez` presumes you already know your way around the Eutils' API, [which is well documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Make sure you read the documentation, and in particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times.
-
-Examples
---------
-
-Lately, I've been working on a little meta-analysis of phylogenies. In particualr, we're interested in why sometimes different genes tell different stories about the relationships between species from which the come. In terms of being able to get the individual gene trees I need to do these analyses there are good, rather less good and quite bad papers out there. In the best cases I can just download the trees as nice, parsable newick files from [TreeBase](treebase.org), which has already been [wrapped by ROpenSci](http://github.com/ropensci/treebase). Sometimes I need to print out the trees from a paper and work with pencil and paper, which I can handle. In a few cases people haven't actually published their individual gene trees, if I want to included these papers I need to replicate their work by downloading the gene sequences, aligning them and making new trees.
-
-So, here's an example of how I've been using `rentrez` to automate some of that process. I'm going to use a slightly convaluted process to get all the data, but that's just so I can walk though a bunch of the `rentrez` functions. Let's get started.
-
-<section id="installation">
-
-## Installation
+`rentrez` allows you to acess the [NCBI's Entrez Utilities API](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
+, and thus the tens of millions of records in databases like GenBank and Pubmed,
+from  the comfort of an R session. Specifically, this packages provies functions
+that search the NCBI's databases, discover cross-referenced records, and fetch 
+records from the NCBI. 
 
 
-```{r install, eval=FALSE}
-install.packages("rentrez")
+Getting started with the rentrez
+--------------------------------
+
+`rentrez` gives you a few tools that help you to get to know your way around the
+NCBI's databases. First, you can use `entrez_dbs()` to find out just what
+databases are avaliable:
+
+```{r, dbs}
+library(rentrez)
+entrez_dbs()
 ```
 
-<section id="usage">
+You can find out a bit more about each of those database using a set of
+functions with names starting `entrez_db_`:
 
-## Usage
+| Function name            | Return                                               |
+|--------------------------|------------------------------------------------------|
+| `entrez_db_summary()`    | Brief description of what the database is            |
+| `entrez_db_searchable()` | Set of search terms that can used with this database |
+| `entrez_db_links() `     | Set of databases that might contain linked records   |
 
+For instance, we can find out a little more about the cryptically named
+database 'cdd'...
 
-## Finding papers in Pubmed
-
-Reece et al (2010, [doi:10.1016/j.ympev.2010.07.013](http://dx.doi.org/10.1016/j.ympev.2010.07.013)) presented a phylogeny of moray eels using four different genes, but didn't publish the gene trees. I want to get the sequences underlying their analyses, which will be in the NCBI's databases, so I can reproduce their results. To get data associated with this paper from the NCBI I need the PMID (pubmed ID), which I can find using the `rentrez` function `entrez_search` to query the pubmed database with the paper's doi:
-
-```{r load, message=FALSE, warning=FALSE}
-library("rentrez")
-library("XML")
+```{r, cdd}
+entrez_db_summary("cdd")
 ```
 
-```{r pubmed_search, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-pubmed_search <- entrez_search(db = "pubmed", term = "10.1016/j.ympev.2010.07.013[doi]")
-pubmed_search$ids
+... or fin
+d out which search terms can be used with the Short Read Archive (SRA)
+sequencing database:
+
+```{r, sra_eg}
+entrez_db_searchable("sra")
 ```
 
-All the functions in `rentrez` create a URL to get data from the NCBI, then fetch the resulting document, usually as an XML file. In most cases the functions will parse the most relevant sections of the XML file out and present them to you as items in a list (`ids` being one item of the `pubmed_search` list in this case).
+Searching databases: `entrez_search`
+------------------------------------
 
-## Find data related to a particular record in an NCBI database
+The function  `entrez_search()` to discover records in each available database.
+You provide a database name (`db`) and a search term(`term`). If you print the
+returned object you get a summary of what it contains, and the way the NCBI's
+servers translated your query:
 
-OK, now we have the PMID, what data does NCBI have for this paper? The
-`entrez_link` function lets us find out. In this case the `db` argument can be
-used to limit the number of data sources to check ( a list of avaliable
-linked-databases can be found via `entrez_db_links()`. In this case, I want to see every data
-source so I'll set `db` to "all":
+```{r eg_search}
+r_search <- entrez_search(db="pubmed", term="R Language")
+r_search
+```
+There are a few things to note here. First, the NCBI's server has worked out
+that we meant R as a programming language, and so inlcuded the 
+['MeSh' term](http://www.ncbi.nlm.nih.gov/mesh). We'll worry about these and
+other search terms in a second. Second, there are many more 'hits' for this search than there
+are unique IDs contained in this object. That's because the optional argument
+`retmax`, which controls the maximum number of returned values has a default
+value of 20. We can acess those 20 IDs like this:
 
-```{r entrez_link, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-NCBI_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db = "all")
-NCBI_data
-NCBI_data$links
+
+```{r search_ids}
+r_search$ids
 ```
 
-## Fetch a summary of a record
+And get more IDs by increasing the `ret_max` argument. 
 
-The most relevant data here is the from the [popset](ncbi.nlm.nih.gov/popset)
-database, which containts population and phylogenetic datasets. We can find out
-a little bit more about this datbase with `entrez_db_summary()`
-
-```{r summ}
-entrez_db_summary("popset")
+```{r searchids_2}
+another_r_search <- entrez_search(db="pubmed", term="R Language", retmax=40)
+another_r_search
 ```
 
-If I want to see
-what each of the four popset datasets associated with this paper are about I can
-use `entrez_summary` to have a look. This function collects summaries of
-database records, and returns a list of parsed records with each element of a
-given record represented as the most natural base `R` type. In this case we 
-can get summaries for each popset ID, check out the first record to see what
-kind of information they contain then extract the Title from each record:
-
-```{r entrez_summary, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-data_summaries <- entrez_summary(db = "popset", id = NCBI_data$links$pubmed_popset)
-data_summaries[[1]]
-sapply(data_summaries, "[[", "title")
-```
-
-## Fetch data
-Ok, since we might expect nuclear and mitochondrial genes to hav different histories, let's get sequences from each genome (the the COI and RAG1 datasets) using `entrez_fetch`. By specifying `rettype="fasta"` we will get characater vectors in the fasta format:
-
-```{r entrez_fetch, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-coi <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$links$pubmed_popset[1])
-rag1 <- entrez_fetch(db = "popset", rettype = 'fasta', id = NCBI_data$links$pubmed_popset[3])
-```
-
-So I've got the data on hand - that's all the I need `rentrez` for, but I might as well align these sequences and make gene trees for each. I'll just do a quick and diry neighbor-joining tree using `ape` and we can clean up the long OTU names with the help of `stingr`. (I put the fussy work of cleaning the names and rooting the trees into a function `clean_and_root`):
-
-_Note: This code block requires the user have have `muscle` installed on their `$PATH`,
-since many users won't hae this executable installed this code is not executed
-as part of the vignette_
-
-```{r muscle, eval=FALSE}
-library(ape)
-library(stringr)
-clean_and_root <- function(tr, outgroup, resolved = TRUE) {
-
-    tr$tip.label <- sapply(str_split(tr$tip.label, " "), function(x) paste(x[2:3],
-        collapse = "_"))
-    return(root(tr, outgroup, resolve.root = resolved))
-}
-write(coi, "~/moray_coi_raw.fasta")
-write(rag1, "~/moray_rag1_raw.fasta")
-
-par(mfrow = c(1, 2))
-
-coi_ali <- muscle(read.dna("~/moray_coi_raw.fasta", "fasta"))
-coi_tr <- nj(dist.dna(coi_ali, "k81"))
-clean_coi_tr <- clean_and_root(coi_tr, "Uropterygius_macrocephalus")
-plot(clean_coi_tr, direction = "rightwards", cex = 1)
-
-rag_ali <- muscle(read.dna("~/moray_rag1_raw.fasta", "fasta"))
-rag_tr <- nj(dist.dna(rag_ali, "k81"))
-clean_rag_tr <- clean_and_root(rag_tr, "Uropterygius_macrocephalus")
-plot(clean_rag_tr, direction = "leftward", cex = 1)
-```
-<p style="text-align:center">
-<img src='data:image/png;base64,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n4wEvYY+eeZVcux1Se/1MDdtEi9bH3lv8Qpv4F8e6tuN+2DzPcdu0WWdkWVvb+w/Wdgq4Psov6dyaP2b5ROFnaLbKGJAzWvnm4cMdwi2wQJemH+B98K/Sy2FGVevMkWoyayyX+3yDlf6JyNBr6FPsVtpLQAABFpJREFUrnmVvGWk0E3gaJpxSvA6F3l42dvnteh47T+ZLutUPHbsyfckhK3iTqXx/J4v+n5n9AVPCSlFt1FEnTmV5iHDHYJtsIAX5l+gBPHvUkthxtWrTBFqEavpXTry+ln+yUjQa+iTa15tKmlVWtq+zrWE/OOUKLwZ2NM2rSEpzJb6/YwdKN8WtGIjtxUBaXqdk0FE4c3AygvSHJRmy0dtPjt4Y3B1vZHbigBfr3M0iCi8GXjoxjQHpdmSmND6uIkZ/m+FWWjktiLA1+scDSIKL4EWCi+BlpiFt8fLgnPDuwMiQnzfebVf/vErebzPEMM7YYbgtPDugIgQpzuv9oyJH+bxPkMMr4R+bSgOCvE6U3gJK1B4CbRQeB1yGl/TZFY12lIi0kHhFeQ2vqbJzJsY9j0UmIDmWnZXLZPWp8xBCi/LdXwNU8fB2NHG14Ap5FNVpMgCZ8dWnVl6a1LfFi+CmmvZXbVMWp8yBym8LOfxNeo4iDza+BowhdKoKkJkgbPdeq5d22aFvi1eBDXXZle6b3r4NNCNv/c8wS/lk4EXhOMU3tzH13jHwdjRxte4k4H8qooQWeDsvuabGRs+V596Ey8CmmvCVYO3Nfh7xrQwJfiZnwyDlrrHYxnezgOD8OMcx9eo42DsaONrwBTy+S1SZIGzK/vyA0OeN6bexIqA5hqrWAdva/g0MIw/JfiZnwy8oDw+YWBFAZ5j6OENSI7ja9RxMHa08TVgCvn8FimywNnZwxjb1n6nPvUmXgQ012rLEvC2hk8Dw/hTgp/5ycALFvKtH7Xw5ji+Rh0HY0cbXwOmUKqqAiILnB3TftX686fo2wr9zO0S1FxbNsB9W8OngWH8KcHP/GTgBQv51o9aeHMcX6OOg7GjxtfUu6ZQiqoCIguc7Vx9fMX0pL6t0E/cLkHNtWmT3Lc1fBoYxp8S/MxPBl6wkG/9yIXXg4b4NIWg5tqIanccGHwaGMafEvzMTwZesJBv/aiGl4b4EA0S1fDSEB+iQaIaXoJoEAovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+BFgovgRYKL4EWCi+Blv8PgWq0Bz+sCnUAAAAASUVORK5CYII='>
-
-</p>
-
-Working with WebEnvs
---------------------
-
-The NCBI provides search history features, which can be useful for dealing with
-a large lists of IDs (which will not fit in a single URL) or repeated searches. 
-As an example, we will go searching for COI sequences from all the snail 
-(Gastrppod) species we can find in the nucleotide database. 
-
-`entrez_db_searchable` helps us find fields that can make part of a search term. 
+If we want to get IDs for all of those thousands of records that match this
+search, we can use the NCBI's web history feature (DESCRIBED IN LINK). When
+the argument `use_history` to `'y'` the object returned by entrez_search
+contains `
 
 
-```{r fields}
-search_fields <- entrez_db_searchable("nuccore")
-search_fields
-search_fields$ORGN
-```
-We can then use those terms in a call to `entrez_search`:
-
-```{r webenvs1, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-snail_search <- entrez_search(db = "nuccore", "Gastropoda[ORGN] AND COI[Gene]", usehistory = "y")
-```
-
-Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the hundreds of ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
-
-```{r webenvs2, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
-cookie <- snail_search$WebEnv
-qk <- snail_search$QueryKey
-snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk, rettype = "fasta", retmax = 10)
-```
-
-In that case we used `retmax` to limit the number of queries we downloaded.
-There are actually thousands of records. If we wanted to download all of them it
-would probably be a good idea to downlaod them in batches (both to give the
-NCBI's severs a break and to make sure a corrupted download doesn't ruin your
-whole process. Using a for loop in conjunction with the terms `restart` and
-`retmax` we can download the sequences 50 at a time. (This code is not run as
-part of this vignette so save you time and the NCBI some server-load):
-
-```r
-for (start_rec in seq(0, 200, 50)) {
-    fname <- paste("snail_coi_", start_rec, ".fasta", sep = "")
-    recs <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk, rettype = "fasta", retstart = start_rec, retmax = 50)
-    write(recs, fname)
-    print(paste("wrote records to ", fname, sep = ""))
-}
-```
 
 
-<section id="citing">
 
-## Citing
 
-To cite `rentrez` in publications use:
+```{r
 
-<br>
-
-> David Winter (2014). rentrez: Entrez in R. R package version 0.4.1
-
-<section id="license_bugs">
-
-## License and bugs
-
-* License: [MIT](http://opensource.org/licenses/MIT)
-* Report bugs at [our Github repo for rentrez](https://github.com/ropensci/rentrez/issues?state=open)
-rentrez tutorial
----
