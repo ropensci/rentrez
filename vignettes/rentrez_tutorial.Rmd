@@ -14,11 +14,9 @@ opts_knit$set(fig.show = "hold")
 ```
  
 
-Rentrez tutorial
-================
+# Rentrez tutorial
 
-rentrez, entrez and the NCBI
-----------------------------
+## rentrez, entrez and the NCBI
 
 `rentrez` allows you to acess the [NCBI's Entrez Utilities API](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
 , and thus the tens of millions of records in databases like GenBank and Pubmed,
@@ -27,8 +25,7 @@ that search the NCBI's databases, discover cross-referenced records, and fetch
 records from the NCBI. 
 
 
-Getting started with the rentrez
---------------------------------
+## Getting started with the rentrez
 
 `rentrez` gives you a few tools that help you to get to know your way around the
 NCBI's databases. First, you can use `entrez_dbs()` to find out just what
@@ -63,8 +60,7 @@ sequencing database:
 entrez_db_searchable("sra")
 ```
 
-Searching databases: `entrez_search`
-------------------------------------
+# Searching databases: `entrez_search`
 
 The function  `entrez_search()` to discover records in each available database.
 You provide a database name (`db`) and a search term(`term`). If you print the
@@ -98,12 +94,19 @@ another_r_search
 If we want to get IDs for all of those thousands of records that match this
 search, we can use the NCBI's web history feature (DESCRIBED IN LINK). When
 the argument `use_history` to `'y'` the object returned by entrez_search
-contains `
+contains an element called `WebEnv` which is a long chracater string that we can 
+use to reference all of these matching IDs in another call to the NCBI:
 
 
 
+```{r, searc_ids3}
+yet_another_r_search <- entrez_search(db="pubmed", 
+                                      term="R Language", 
+                                      retmax=0,
+                                      usehistory="y")
+yet_another_r_search$WebEnv
+```
 
+We'll learn how to use these web history features in SECTION NUMBER.
 
-
-```{r
 
