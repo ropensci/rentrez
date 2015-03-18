@@ -1,9 +1,14 @@
+---
+title: Rentrez Tutorial
+author: "David winter"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
 
-
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{rentrez tutorial}
--->
  
 ```{r, eval=TRUE, echo=FALSE}
 library(knitr)
@@ -12,10 +17,6 @@ opts_knit$set(fig.keep = "last")
 opts_knit$set(fig.show = "hold")
 
 ```
- 
-
-# Rentrez tutorial
-
 ## rentrez, entrez and the NCBI
 
 `rentrez` allows you to acess the [NCBI's Entrez Utilities API](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
@@ -94,19 +95,53 @@ another_r_search
 If we want to get IDs for all of those thousands of records that match this
 search, we can use the NCBI's web history feature (DESCRIBED IN LINK). When
 the argument `use_history` to `'y'` the object returned by entrez_search
-contains an element called `WebEnv` which is a long chracater string that we can 
-use to reference all of these matching IDs in another call to the NCBI:
+contains web history information: 
 
 
-
-```{r, searc_ids3}
+```{r, search_ids3}
 yet_another_r_search <- entrez_search(db="pubmed", 
                                       term="R Language", 
                                       retmax=0,
                                       usehistory="y")
+yet_another_r_search
 yet_another_r_search$WebEnv
 ```
 
 We'll learn how to use these web history features in SECTION NUMBER.
 
+### Building search terms
 
+The EUtils api uses a special syntax to build search queries. You can search
+against a specific term using the format `query[SEARCH TERM]`, and combine
+seaches using the operators `AND`, `OR` and `NOT`.
+
+For instance, we can find next generation sequence datasets for the (amazing...) cilliate
+_Tetrahymena thermophila_ by using the organism ('ORGN') search field:
+
+
+```{r, Tt}
+entrez_search(db="sra", 
+              term="Tetrahymena thermophila[ORGN]",
+              retmax=0)
+```
+
+Find only those records that have been added recently:
+
+```{r, Tt2}
+entrez_search(db="sra", 
+              term="Tetrahymena thermophila[ORGN] AND 2013:2015[PDAT]",
+              retmax=0)
+```
+
+Or recently records for either _T. thermophila_ or it's close relative _T.
+borealis_:
+
+```{r, Tt3}
+entrez_search(db="sra", 
+              term="(Tetrahymena thermophila[ORGN] OR Tetrahymena borealis[ORGN]) AND 2013:2015[PDAT]",
+              retmax=0)
+```
+
+### Advanced counting
+
+## Getting summary data: `entrez_summary()`
