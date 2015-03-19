@@ -43,7 +43,7 @@
 #'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
 #'  sapply(cv, "[[", "gene_sort") # gene_sort
 
-entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
+entrez_summary <- function(db, version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
     v <-match.arg(version)
     if(v == "2.0"){
         retmode <- "json"
@@ -52,11 +52,12 @@ entrez_summary <- function(db, version=c("2.0", "1.0"), config=NULL, ...){
                                    retmode=retmode, version=v,
                                    require_one_of=c("id", "WebEnv"), ...)
     whole_record <- parse_response(response, retmode)
-    parse_esummary(whole_record)
+    parse_esummary(whole_record, always_return_list)
 }
 
 
-parse_esummary <- function(x) UseMethod("parse_esummary")
+
+parse_esummary <- function(x, always_return_list) UseMethod("parse_esummary")
 
 
 check_json_errs <- function(rec){
@@ -68,15 +69,15 @@ check_json_errs <- function(rec){
 }
 
 
-parse_esummary.list <- function(x){
+parse_esummary.list <- function(x, always_return_list){
     #already parsed by jsonlite, just add check for errors, then re-class
     res <- x$result[2: length(x$result)]
     sapply(res, check_json_errs)
     res <- lapply(res, add_class, new_class="esummary")
-    if(length(res)==1){
+    if(length(res)==1 & !always_return_list){
         return(res[[1]])
     }
-    return(res)
+    res
 }
 
 # Prase a sumamry XML 
@@ -89,7 +90,7 @@ parse_esummary.list <- function(x){
 
 #
 #@export
-parse_esummary.XMLInternalDocument  <- function(x){
+parse_esummary.XMLInternalDocument  <- function(x, always_return_list){
     check_xml_errors(x)
     recs <- x["//DocSum"]
     if(length(recs)==0){
@@ -102,14 +103,12 @@ parse_esummary.XMLInternalDocument  <- function(x){
         class(res) <- c("esummary", class(res))
         return(res)
     } 
-    if(length(recs) == 1){
-        res <- per_rec(recs[[1]])
-    } else{
-        res <- lapply(recs, per_rec)
-        names(res) <-  XML::xpathSApply(x, "//DocSum/Id", XML::xmlValue)
-    }
-    return(res)
-
+    if(length(recs)==1 & !always_return_list){
+        return(per_rec(recs[[1]]))
+    } 
+    res <- lapply(recs, per_rec)
+    names(res) <-  XML::xpathSApply(x, "//DocSum/Id", XML::xmlValue)
+    res
 }
 
 parse_node <- function(node) {
@@ -133,21 +132,6 @@ parse_esumm_list <- function(node){
 }
 
 
-#parse_esummary_clinvar <- function(record){
-#  easynodes <- c('obj_type','accession','accession_version','title','supporting_submissions',
-#    'gene_sort','chr_sort','location_sort','variation_set_name')
-#  res <- sapply(easynodes, function(x) xpathApply(record, x, xmlValue))
-#  res$clinical_significance <- xpathApply(record, 'clinical_significance', xmlToList)[[1]]
-#  variation_set <- xpathApply(record, 'variation_set', xmlToList)[[1]]$variation
-#  variation_set$variation$aliases <- unlist(variation_set$variation$aliases, use.names = FALSE)
-#  trait_set <- xpathApply(record, 'trait_set', xmlToList)[[1]]$trait
-#  trait_set$trait$trait_xrefs <- unname(trait_set$trait$trait_xrefs)
-#  res$variation_set <- variation_set
-#  res$trait_set <- trait_set
-#  res <- c(res, file=record)
-#  class(res) <- c("esummary", class(res))
-#  return(res)
-#}
 
 #' @export
 `[[.esummary` <- function(x, name, ...){
