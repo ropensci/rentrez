@@ -77,6 +77,7 @@ parse_esummary.list <- function(x, always_return_list){
     if(length(res)==1 & !always_return_list){
         return(res[[1]])
     }
+    class(res) <- c("esummary_list", "list")
     res
 }
 
@@ -108,6 +109,7 @@ parse_esummary.XMLInternalDocument  <- function(x, always_return_list){
     } 
     res <- lapply(recs, per_rec)
     names(res) <-  XML::xpathSApply(x, "//DocSum/Id", XML::xmlValue)
+    class(res) <- c("esummary_list", "list")
     res
 }
 
@@ -192,3 +194,11 @@ print.esummary <- function(x, ...){
     cat(paste("esummary result with", len - 1, "items:\n"))
     print(names(x)[-len], quote=FALSE)
 }
+
+#' @export
+print.esummary_list <- function(x, ...){
+    len <- length(x)
+    cat("List of ", len, "esummary records. First record:\n\n ")
+    print(x[1])
+}
+    
