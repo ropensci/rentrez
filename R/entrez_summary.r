@@ -186,7 +186,15 @@ parse_esumm_list <- function(node){
     res
 }
 
-
+#' Extract elements from a list of esumarrry records
+#'@export
+#'@param esummaries A list of esummary objects
+#'@param elements the names of the element to extract
+#'@param logical, if possible return a vector
+extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
+    fxn <- if (simplify & length(elements) == 1) "[[" else "["
+    sapply(esummaries, fxn, elements, simplify=simplify)
+}
 
 #' @export 
 print.esummary <- function(x, ...){
