@@ -6,7 +6,8 @@
 Constructs a query from the given arguments, including a database name and
 list of of unique IDs for that database.}
 \usage{
-entrez_summary(db, version = c("2.0", "1.0"), config = NULL, ...)
+entrez_summary(db, version = c("2.0", "1.0"), always_return_list = FALSE,
+  config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
