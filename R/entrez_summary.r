@@ -23,25 +23,29 @@
 #'   containing a cookie created by a previous entrez query).
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
+#'@param always_return_list, logical. If set to TRUE, return a list of 
+#' esummary record even if onle a single ID is used (useful if you are calling
+#' this function in a function or loop with a variable number of IDs)
 #'@seealso \code{\link[httr]{config}} for available configs 
-#'@return A list of esummary records (if multiple IDs are passed) or a single
-#' record.
-#'@return file XMLInternalDocument xml file resulting from search, parsed with
-#'\code{\link{xmlTreeParse}}
+#'@seealso \code{\link{extract_from_esummaries}}, a helper function used to get
+#' the same element from each result in an esummary list. 
+#'@return A list of esummary records (if multiple IDs are passed, or
+#'\code{always_return_false} is set to TRUE) or a single
+#' record. The contents of each record will depend on the database from which
+#' they come.
 #'@import XML
 #' @examples
 #'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
-#'  sapply(pop_summ, "[[", "title")
 #'  
 #'  # clinvar example
 #'  res <- entrez_search(db = "clinvar", term = "BRCA1", retmax=10)
 #'  cv <- entrez_summary(db="clinvar", id=res$ids)
 #'  cv[[1]] # get the names of the list for each result
-#'  sapply(cv, "[[", "title") # titles
-#'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
-#'  sapply(cv, "[[", "gene_sort") # gene_sort
+#'  extract_from_esummary(cv, titles)
+#'  extract_from_esummary(cv, trait_set)
+#'  extract_from_esummary(cv, gene_sort)
 
 entrez_summary <- function(db, version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
     v <-match.arg(version)
@@ -53,6 +57,23 @@ entrez_summary <- function(db, version=c("2.0", "1.0"), always_return_list = FAL
                                    require_one_of=c("id", "WebEnv"), ...)
     whole_record <- parse_response(response, retmode)
     parse_esummary(whole_record, always_return_list)
+}
+
+#' Extract elements from a list of esumarry records
+#'@export
+#'@param esummaries A list of esummary objects (as returned by entrez_summary)
+#'@param elements, character containing the name(s) for elements to extract from
+#'the records
+#'@param logical, logical if TRUE this function will return a vector or matrix is possible, if
+#'FALSE always return a list. 
+#'
+#'@seealso \code{\link{sapply}} which this function wraps, an to which the
+#'simplify argument is passed
+#'@seealso \code{\link{entrez_summary}} for examples
+
+extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
+    fxn <- if (simplify & length(elements) == 1) "[[" else "["
+    sapply(esummaries, fxn, elements, simplify=simplify)
 }
 
 
@@ -186,15 +207,6 @@ parse_esumm_list <- function(node){
     res
 }
 
-#' Extract elements from a list of esumarrry records
-#'@export
-#'@param esummaries A list of esummary objects
-#'@param elements the names of the element to extract
-#'@param logical, if possible return a vector
-extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
-    fxn <- if (simplify & length(elements) == 1) "[[" else "["
-    sapply(esummaries, fxn, elements, simplify=simplify)
-}
 
 #' @export 
 print.esummary <- function(x, ...){

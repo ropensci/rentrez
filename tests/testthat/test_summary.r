@@ -6,7 +6,8 @@ pop_summ_xml <- entrez_summary(db="popset",
                                id=pop_ids, version="1.0")
 pop_summ_json <- entrez_summary(db="popset", 
                                 id=pop_ids, version="2.0")
-
+pop_summ_one_list <- entrez_summary(db="popset",
+                         id=pop_ids, version="2.0", always_return_list=TRUE)
 
 test_that("Functions to fetch summaries work", {
           #tests
@@ -15,9 +16,6 @@ test_that("Functions to fetch summaries work", {
 
           expect_that(pop_summ_xml[[4]], is_a("esummary"))
           expect_that(pop_summ_json[[4]], is_a("esummary"))
-          sapply(pop_summ_json, function(x)
-                 expect_that(x[["title"]], matches("Muraenidae"))
-          )         
 })  
 
 
@@ -67,4 +65,19 @@ test_that("We can detect errors in esummary records", {
     )
 })
                          
-test_that
+test_that("We get 'list of one' when we ask for it",{
+    expect_that(pop_summ_one_list, is_a('esummary_list'))
+    expect_that(pop_summ_one_list[[1]], is_a('esummary'))
+
+})
+
+test_that("Extracting elements form esummaries works",{
+   expect_that( 
+     extract_from_esummary(pop_summ_json,  c("authors","taxid"), simplify=FALSE),
+     is_a('list')
+    )
+   mat <- extract_from_esummary(pop_summ_json,  c("authors","taxid"))
+   expect_that(mat, is_a('matrix'))
+   expect_equal(dim(mat), c(2,4))
+})
+
