@@ -182,8 +182,6 @@ parse_esumm_list <- function(node){
     res
 }
 
-
-
 #' @export
 `$.esummary` <- function(x, name){
     suppressWarnings(
@@ -217,8 +215,7 @@ print.esummary <- function(x, ...){
 
 #' @export
 print.esummary_list <- function(x, ...){
-    len <- length(x)
-    cat("List of ", len, "esummary records. First record:\n\n ")
-    print(x[1])
+    cat("List of ", length(x), " esummary records. First record(id =", names(x)[1], "):\n\n", sep="")
+    print(x[[1]])
 }
     
