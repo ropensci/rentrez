@@ -52,9 +52,9 @@ pop_ids = c("307082412", "307075396", "307075338", "307075274")
  res <- entrez_search(db = "clinvar", term = "BRCA1", retmax=10)
  cv <- entrez_summary(db="clinvar", id=res$ids)
  cv[[1]] # get the names of the list for each result
- extract_from_esummary(cv, titles)
- extract_from_esummary(cv, trait_set)
- extract_from_esummary(cv, gene_sort)
+ extract_from_esummary(cv, 'titles')
+ extract_from_esummary(cv, 'trait_set')
+ extract_from_esummary(cv, 'gene_sort')
 }
 \seealso{
 \code{\link[httr]{config}} for available configs
