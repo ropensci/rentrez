@@ -93,9 +93,10 @@ another_r_search
 ```
 
 If we want to get IDs for all of those thousands of records that match this
-search, we can use the NCBI's web history feature (DESCRIBED IN LINK). When
-the argument `use_history` to `'y'` the object returned by entrez_search
-contains web history information: 
+search, we can use the NCBI's web history feature. We'll learn how to make the
+most of these features in (SECTION), for now let's just fetch some web history
+information. To do that we set the argument `use_history` to `y`. The returned 
+object tells you in contains a cookie for the web history methods:
 
 
 ```{r, search_ids3}
@@ -107,15 +108,13 @@ yet_another_r_search
 yet_another_r_search$WebEnv
 ```
 
-We'll learn how to use these web history features in SECTION NUMBER.
-
 ### Building search terms
 
-The EUtils api uses a special syntax to build search queries. You can search
-against a specific term using the format `query[SEARCH TERM]`, and combine
-seaches using the operators `AND`, `OR` and `NOT`.
+The EUtils api uses a special syntax to build search queries. You can search a
+database against a specific term using the format `query[SEARCH TERM]`, and 
+combine multiple such seaches using the operators `AND`, `OR` and `NOT`.
 
-For instance, we can find next generation sequence datasets for the (amazing...) cilliate
+For instance, we can find next generation sequence datasets for the (amazing...) ciliate
 _Tetrahymena thermophila_ by using the organism ('ORGN') search field:
 
 
@@ -125,7 +124,8 @@ entrez_search(db="sra",
               retmax=0)
 ```
 
-Find only those records that have been added recently:
+Find only those records that have been added recently (using the colon to
+sepcify a range of values):
 
 ```{r, Tt2}
 entrez_search(db="sra", 
@@ -134,7 +134,7 @@ entrez_search(db="sra",
 ```
 
 Or recently records for either _T. thermophila_ or it's close relative _T.
-borealis_:
+borealis_ (using parentheses to make ANDs and ORs explicit).
 
 ```{r, Tt3}
 entrez_search(db="sra", 
@@ -142,6 +142,14 @@ entrez_search(db="sra",
               retmax=0)
 ```
 
+Remember, you can use `entrez_db_searchable()` to get a list and brief
+description of a databases' available search terms. 
+
 ### Advanced counting
+
+The combination of the boolean operators and search terms desribed above, and
+the fact the `entrez_search` the number of matching records in the `count`
+attribute means you 
+
 
 ## Getting summary data: `entrez_summary()`
