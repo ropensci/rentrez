@@ -147,9 +147,19 @@ description of a databases' available search terms.
 
 ### Advanced counting
 
-The combination of the boolean operators and search terms desribed above, and
-the fact the `entrez_search` the number of matching records in the `count`
-attribute means you 
+As you can see above, the  object returned by `entrez_search()` includes the the 
+number of records matching a given search. This means you can learn a little
+about the composition of, or trends in, the records stored in the NCBI's
+databases using only the search utility. For instance, let's track the raise of
+the buzzword "connectome"in pubmed, programatically creating  search terms for
+the `PDAT` field:
 
+```{r, connectome}
+eras <- c("1960:2008", "2009:2012", "2013", "2014")
+sapply(eras, function(x) 
+  entrez_search(db="pubmed", term=paste("Connectome AND", x, "[PDAT]"), retmax=0)$count
+)
+
+```
 
 ## Getting summary data: `entrez_summary()`
