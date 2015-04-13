@@ -85,7 +85,7 @@ print.esearch <- function(x, ...){
     display_term <- if(nchar(x$QueryTranslation) > 50){
         paste(substr(x$QueryTranslation, 1, 50), "...")
     } else x$QueryTranslation
-    cookie_word <- if("WebEnv" %in% x$ids) "a" else "no"
+    cookie_word <- if("WebEnv" %in% names(x)) "a" else "no"
     msg<- paste("Entrez search result with", x$count, "hits (object contains",
                 length(x$ids), "IDs and", cookie_word, 
                 "cookie)\n Search term (as translated): "  , display_term, "\n")

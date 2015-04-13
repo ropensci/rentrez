@@ -2,18 +2,26 @@
 % Please edit documentation in R/entrez_summary.r
 \name{extract_from_esummary}
 \alias{extract_from_esummary}
-\title{Extract elements from a list of esumarrry records}
+\title{Extract elements from a list of esumarry records}
 \usage{
 extract_from_esummary(esummaries, elements, simplify = TRUE)
 }
 \arguments{
-\item{esummaries}{A list of esummary objects}
+\item{esummaries}{A list of esummary objects (as returned by entrez_summary)}
 
-\item{elements}{the names of the element to extract}
+\item{elements,}{character containing the name(s) for elements to extract from
+the records}
 
-\item{logical,}{if possible return a vector}
+\item{simplify}{logical, logical if TRUE this function will return a vector
+or matrix is possible, if FALSE always return a list.}
 }
 \description{
-Extract elements from a list of esumarrry records
+Extract elements from a list of esumarry records
+}
+\seealso{
+\code{\link{sapply}} which this function wraps, an to which the
+simplify argument is passed
+
+\code{\link{entrez_summary}} for examples
 }
 
