@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master) [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master)
+[![Build Status](https://travis-ci.org/ropensci/rentrez.png?branch=master)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master) [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master)
 
 rentrez
 =======
@@ -13,6 +13,12 @@ Install
 
     library(devtools)
     install_github("ropensci/rentrez")
+
+_Note_ (April 2015): Please note that `rentrez` is working towards a new
+release, which changes some of the behaviour described below. At present, this
+file describes the version of `rentrez` available from CRAN, and not the code in
+this repository. As we get closer to the new release this document will be
+updated.
 
 Get help
 --------
