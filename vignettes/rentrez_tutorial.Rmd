@@ -163,3 +163,46 @@ sapply(eras, function(x)
 ```
 
 ## Getting summary data: `entrez_summary()`
+
+`entrez_search` helps you discover
+
+
+```{r, Summ_1}
+Tt_search <- entrez_search(db="pubmed", 
+                           term="Tetrahymena thermophila[ORGN]", 
+                           retmax=10)
+Tt_search$ids
+```
+
+```{r, Summ_2}
+pmed_summ <- entrez_summary(db="pubmed", id=Tt_search$ids[1])
+pmed_summ
+```
+
+```{r, Summ_3}
+pmed_summ$articleids
+```
+
+
+```{r, multi_summ}
+summs <- entrez_summary(db="pubmed", id=Tt_search$ids)
+extract_from_esummary(summs, "fulljournalname")
+```
+
+```{r, multi_summ2}
+extract_from_esummary(summs, c("pubdate", "fulljournalname"))
+```
+
+[Need description of version/always list args]
+
+
+
+
+
+
+
+
+
+
+
+
