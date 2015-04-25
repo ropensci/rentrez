@@ -5,6 +5,7 @@ r_packages:
     - jsonlite
 r_github_packages:
     - jimhester/covr
+    - jimhester/robustr
  
 after_success:
         - Rscript -e 'library(covr);coveralls()'
