@@ -4,9 +4,9 @@ r_packages:
     - XML
     - jsonlite
 r_github_packages:
-    - jimhester/covr
     - jimhester/robustr
- 
+    - jimhester/covr
+
 after_success:
         - Rscript -e 'library(covr);coveralls()'
 notifications:
