@@ -2,29 +2,44 @@
 title: Rentrez Tutorial
 author: "David winter"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  html_document:
+    toc: true
+    theme: spacelab
+    figwidth: 3
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
- 
-```{r, eval=TRUE, echo=FALSE}
-library(knitr)
-opts_knit$set(upload.fun = image_uri)
-opts_knit$set(fig.keep = "last")
-opts_knit$set(fig.show = "hold")
-
+```{r, count_recs, echo=FALSE}
+count_recs <- function(db, denom) {
+    round(as.integer(entrez_db_summary(db)["Count"])/denom, 1)
+}
+    
 ```
-## rentrez, entrez and the NCBI
 
-`rentrez` allows you to acess the [NCBI's Entrez Utilities API](http://www.ncbi.nlm.nih.gov/books/NBK25500/) 
-, and thus the tens of millions of records in databases like GenBank and Pubmed,
-from  the comfort of an R session. Specifically, this packages provies functions
-that search the NCBI's databases, discover cross-referenced records, and fetch 
-records from the NCBI. 
+ 
+## Introduction: The NCBI, entrez and `rentrez`.
 
+The NCBI stores a _lot_ of data. At the time this document was compiled, there
+were `r count_recs("pubmed",1e6)` million papers in [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/), 
+including `r count_recs("pmc", 1e6)` million full-text records avaliable in [pubmed-central](http://www.ncbi.nlm.nih.gov/pubmed/). 
+[The NCBI Nucleotide Database](http://www.ncbi.nlm.nih.gov/nuccore) (also known as GenBank) has data for `r count_recs("nuccore", 1e6)`
+million different sequences, and [dbSNP](http://www.ncbi.nlm.nih.gov/snp/) describes
+`r count_recs("snp", 1e6)` million different genetic variants. All of these
+records can be cross-referenced with the  `r floor(as.integer(entrez_search(db="taxonomy", term='species[RANK]')$count)/1000)` thousand
+species in the [NCBI taxonomy](www.ncbi.nlm.nih.gov/taxonomy) or `r count_recs("omim", 1e3)` thousand diseases
+described in [OMIM]('http://www.ncbi.nlm.nih.gov/omim').
+
+
+The NCBI makes this data avaliable through a [web interface](http://www.ncbi.nlm.nih.gov/), 
+an [FTP server](ftp://ftp.ncbi.nlm.nih.gov/) and through a REST API called the
+[Entrez Utilities](http://www.ncbi.nlm.nih.gov/books/NBK25500/) (`Eutils` for
+short). This package provides functions to wrap that API, allowing users to
+gather and combine data from multiple NCBI databases in the confort of a R
+session or script.
 
 ## Getting started with the rentrez
 
@@ -40,6 +55,8 @@ entrez_dbs()
 You can find out a bit more about each of those database using a set of
 functions with names starting `entrez_db_`:
 
+**Functions that help you learn about NCBI databases**
+
 | Function name            | Return                                               |
 |--------------------------|------------------------------------------------------|
 | `entrez_db_summary()`    | Brief description of what the database is            |
@@ -53,29 +70,32 @@ database 'cdd'...
 entrez_db_summary("cdd")
 ```
 
-... or fin
-d out which search terms can be used with the Short Read Archive (SRA)
+... or find out which search terms can be used with the Short Read Archive (SRA)
 sequencing database:
 
 ```{r, sra_eg}
 entrez_db_searchable("sra")
 ```
 
-# Searching databases: `entrez_search`
+Just how these 'helper' functions might help you will become clearer once
+you've started using the EUtils api, so let's get started.
 
-The function  `entrez_search()` to discover records in each available database.
-You provide a database name (`db`) and a search term(`term`). If you print the
-returned object you get a summary of what it contains, and the way the NCBI's
-servers translated your query:
+## Searching databases: `entrez_search`
+
+The function `entrez_search()` lets you search for records in a given NCBI
+database.  In the simplest case you just need to provide a database name (`db`) 
+and a search term(`term`).If you print the returned object you get a summary of what it contains, an
+d the way the NCBI's servers translated your query:
 
 ```{r eg_search}
 r_search <- entrez_search(db="pubmed", term="R Language")
 r_search
 ```
+
 There are a few things to note here. First, the NCBI's server has worked out
 that we meant R as a programming language, and so inlcuded the 
 ['MeSh' term](http://www.ncbi.nlm.nih.gov/mesh). We'll worry about these and
-other search terms in a second. Second, there are many more 'hits' for this search than there
+other special search terms in a second. Second, there are many more 'hits' for this search than there
 are unique IDs contained in this object. That's because the optional argument
 `retmax`, which controls the maximum number of returned values has a default
 value of 20. We can acess those 20 IDs like this:
@@ -93,20 +113,9 @@ another_r_search
 ```
 
 If we want to get IDs for all of those thousands of records that match this
-search, we can use the NCBI's web history feature. We'll learn how to make the
-most of these features in (SECTION), for now let's just fetch some web history
-information. To do that we set the argument `use_history` to `y`. The returned 
-object tells you in contains a cookie for the web history methods:
+search, we can use the NCBI's web history feature, DESCRIBED LATER IN THE
+TUTORIAL
 
-
-```{r, search_ids3}
-yet_another_r_search <- entrez_search(db="pubmed", 
-                                      term="R Language", 
-                                      retmax=0,
-                                      usehistory="y")
-yet_another_r_search
-yet_another_r_search$WebEnv
-```
 
 ### Building search terms
 
@@ -127,6 +136,7 @@ entrez_search(db="sra",
 Find only those records that have been added recently (using the colon to
 sepcify a range of values):
 
+
 ```{r, Tt2}
 entrez_search(db="sra", 
               term="Tetrahymena thermophila[ORGN] AND 2013:2015[PDAT]",
@@ -136,14 +146,39 @@ entrez_search(db="sra",
 Or recently records for either _T. thermophila_ or it's close relative _T.
 borealis_ (using parentheses to make ANDs and ORs explicit).
 
+
 ```{r, Tt3}
 entrez_search(db="sra", 
               term="(Tetrahymena thermophila[ORGN] OR Tetrahymena borealis[ORGN]) AND 2013:2015[PDAT]",
               retmax=0)
 ```
 
-Remember, you can use `entrez_db_searchable()` to get a list and brief
-description of a databases' available search terms. 
+The set of search terms avalaliable varies between databases. You can get a list
+of avaliable terms or any given data base with `entrez_db_searchable()`
+
+```{r, sra_searchable}
+entrez_db_searchable("sra")
+```
+
+###Precise queries using MeSH terms
+
+In addition to the seach terms described above, the NCBI allows searches using
+[Medical Subject Heading (MeSH)](http://www.ncbi.nlm.nih.gov/mesh) terms. These
+terms create a 'controled vocubulary',  and allow users to make very finely
+controlled queries of databases. 
+
+For instance, if you were interested in reviewing studies on how a class of 
+anti-malarial drugs called Folic Acid Antagonists work against _Plasmodium vivax_ (a
+particular species of malarial parasite), you could use this search:
+
+```{r, mesh}
+entrez_search(db   = "pubmed",
+              term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
+```
+
+The complete database of mesh terms is avaliable in EUtils, so you can search
+for specific terms with `entrez_search(db='mesh, term =...)` and learn about the
+terms you search finds with the tools described below.
 
 ### Advanced counting
 
@@ -151,50 +186,91 @@ As you can see above, the  object returned by `entrez_search()` includes the the
 number of records matching a given search. This means you can learn a little
 about the composition of, or trends in, the records stored in the NCBI's
 databases using only the search utility. For instance, let's track the raise of
-the buzzword "connectome"in pubmed, programatically creating  search terms for
+the buzzword "connectome" in pubmed, programatically creating  search terms for
 the `PDAT` field:
 
 ```{r, connectome}
-eras <- c("1960:2008", "2009:2012", "2013", "2014")
-sapply(eras, function(x) 
-  entrez_search(db="pubmed", term=paste("Connectome AND", x, "[PDAT]"), retmax=0)$count
+year <- c(2008:2014)
+papers <- sapply(year, 
+  function(x) entrez_search(db="pubmed", term=paste("Connectome AND", x, "[PDAT]"), retmax=0)$count, 
+  USE.NAMES=FALSE
 )
 
+plot(year, as.numeric(papers), type='b', main="The Rise of the Connectome")
 ```
+
+## Finding cross-references and external links: `entrez_link()`:
+
+###Cross-linked data
+###External links
 
 ## Getting summary data: `entrez_summary()`
 
-`entrez_search` helps you discover
+Having foundt the unique IDs for some records via`entrez_search`, you are
+probably going to want to learn something about them. The `Eutils` API has two
+ways to get information about a record. `entrez_fetch()` returns 'full' records
+in varying formats and `entrez_summary()` returns less information but in
+relatively simple format. Very often the summary records have the information
+you are afer, so `rentrez` provides functions to parse and summarise summary
+recods. 
+
+
+###The summary record
+
+`entrez_summary()` takes a vector of unique IDs for the samples you want to get
+summary information from. Let's start by finding out something about the paper
+describing [Taxize](https://github.com/ropensci/taxize), using its pubmed ID:
 
 
 ```{r, Summ_1}
-Tt_search <- entrez_search(db="pubmed", 
-                           term="Tetrahymena thermophila[ORGN]", 
-                           retmax=10)
-Tt_search$ids
+taxize_summ <- entrez_summary(db="pubmed", id=24555091)
+taxize_summ
 ```
+
+The object returned by `entrez_summary` behaves like a list, so you can extract
+elements using `$`. For instance, we could covert our pubmed ID to another
+article ID...
 
 ```{r, Summ_2}
-pmed_summ <- entrez_summary(db="pubmed", id=Tt_search$ids[1])
-pmed_summ
+taxize_summ$articleids
 ```
+...or see how many times the article has been cited in pubmed-central papers
 
 ```{r, Summ_3}
-pmed_summ$articleids
+taxize_summ$pmcrefcount
 ```
 
+###Dealing with many records
+
+If you give `entrez_summary()` a vector with more than one ID you'll get a a
+list of summary records back. Let's get those _Plasmodium vivax_ papers we found
+in the `entrez_search()` section back, and fetch some summary data on each paper:
 
 ```{r, multi_summ}
-summs <- entrez_summary(db="pubmed", id=Tt_search$ids)
-extract_from_esummary(summs, "fulljournalname")
+vivax_search <- entrez_search(db   = "pubmed",
+   term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
+multi_summs <- entrez_summary(db="pubmed", id=vivax_search$ids)
 ```
+
+`rentrez` provides a helper function, `extract_from_esummary()` that takes one
+or more elements from every summary record in one of these lists. Here is is
+working with one...
 
 ```{r, multi_summ2}
-extract_from_esummary(summs, c("pubdate", "fulljournalname"))
+extract_from_esummary(summs, "fulljournalname")
 ```
+... and several elements:
 
-[Need description of version/always list args]
+```{r, multi_summ3}
+date_and_cite <- extract_from_esummary(multi_summs, c("title", "pubdate", "pmcrefcount"))
+knitr::kable(head(t(date_and_cite)), row.names=FALSE)
+```
+###Version 1.0 summary records: entrez_fetch()
 
+
+##Fetching full records
+
+##Using NCBI's Web History features
 
 
 
