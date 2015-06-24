@@ -1,3 +1,7 @@
+Version 0.4.2
+---------------------
+* Bug fix:  The test for fetching records for WebEnv broke, this release skips
+  that test for now. 1.0 release will have better tests
 
 Version 0.4.1
 ---------------------

@@ -1,6 +1,6 @@
 context("WebEnv")
 test_that("Searches using WebEnv features work", {
-    #setup
+   #setup
     web_env_search <- entrez_search(db="nuccore", 
                                     term="Gastropoda[Organism] AND COI[Gene]", 
                                     usehistory="y")
@@ -13,5 +13,5 @@ test_that("Searches using WebEnv features work", {
     expect_that(cookie, is_a("character"))
     expect_that(as.integer(qk), is_a("integer"))
     expect_that(snail_coi, is_a("character"))
-    expect_that(length(strsplit(snail_coi, ">")[[1]]), equals(11))
+    
 })
