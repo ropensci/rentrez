@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
-    theme: spacelab
+    theme: readable
     figwidth: 3
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -190,16 +190,18 @@ the buzzword "connectome" in pubmed, programatically creating  search terms for
 the `PDAT` field:
 
 ```{r, connectome}
-year <- c(2008:2014)
-papers <- sapply(year, 
-  function(x) entrez_search(db="pubmed", term=paste("Connectome AND", x, "[PDAT]"), retmax=0)$count, 
-  USE.NAMES=FALSE
-)
+search_year <- function(year, term){
+    query <- paste(term, "AND (", year, "[PDAT])")
+    entrez_search(db="pubmed", term=query, retmax=0)$count
+}
+
+year <- 2008:2014
+papers <- sapply(year, search_year, term="Connectome", USE.NAMES=FALSE)
 
 plot(year, as.numeric(papers), type='b', main="The Rise of the Connectome")
 ```
 
-## Finding cross-references and external links: `entrez_link()`:
+## Finding cross-references : `entrez_link()`:
 
 ###Cross-linked data
 ###External links
@@ -247,8 +249,8 @@ list of summary records back. Let's get those _Plasmodium vivax_ papers we found
 in the `entrez_search()` section back, and fetch some summary data on each paper:
 
 ```{r, multi_summ}
-vivax_search <- entrez_search(db   = "pubmed",
-   term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
+vivax_search <- entrez_search(db = "pubmed",
+                              term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
 multi_summs <- entrez_summary(db="pubmed", id=vivax_search$ids)
 ```
 
@@ -257,20 +259,19 @@ or more elements from every summary record in one of these lists. Here is is
 working with one...
 
 ```{r, multi_summ2}
-extract_from_esummary(summs, "fulljournalname")
+extract_from_esummary(multi_summs, "fulljournalname")
 ```
 ... and several elements:
 
 ```{r, multi_summ3}
-date_and_cite <- extract_from_esummary(multi_summs, c("title", "pubdate", "pmcrefcount"))
+date_and_cite <- extract_from_esummary(multi_summs, c("pubdate", "pmcrefcount",  "title"))
 knitr::kable(head(t(date_and_cite)), row.names=FALSE)
 ```
-###Version 1.0 summary records: entrez_fetch()
-
-
 ##Fetching full records
 
 ##Using NCBI's Web History features
+
+
 
 
 
