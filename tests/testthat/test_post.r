@@ -18,7 +18,7 @@ test_that("we can add to WebEnv", {
     expect_that(second, is_a("esummary")) 
 })
 
-test_that("Example works", { 
+test_that("Example works", {
      so_many_snails <- entrez_search(db="nuccore", 
                            "Gastropoda[Organism] AND COI[Gene]", retmax=200)
      upload <- entrez_post(db="nuccore", id=so_many_snails$ids)
