@@ -209,43 +209,88 @@ One of the strengths of the NCBI databases is the degree to which records of one
 type are connected to  other records within the NCBI or to external data
 sources. The function `entrez_link()` allows users to uncover these links
 
-###Finding transcript sequences of a given gene
+###My god, it's full of links
 
-Here is an example illustrating how to get the transcripts sequences
+To get an idea of the degree to whih records in the NCBI are cross-linked we can
+find all of the other records in NCBI which are linked to the record describing
+one gene. To do this we use the `entrez_link` function, providing a gene ID and
+specifying that ID comes from the `gene` database by setting `dbfrom` to 'gene'.
+To get links from all other databses we set `db` to 'all':
+
+```{r elink0}
+all_the_links <- entrez_link(dbfrom='gene', id=351, db='all')
+all_the_links
+all_the_links$links
+```
+
+The resultling list of links takes a format
+`[source_database]_[linked_database]` and element in that list is a vector of
+IDS. So, to find open-acess papers discussion this gene we could look at links
+in PMC:
+
+```{r, elink_pmc}
+all_the_links$links$gene_pmc[1:10]
+```
+
+Or if were intrested in this genes role in diseases we could find links to OMIM:
+
+```{r, elink_omim}
+all_the_links$links$gene_omim
+
+```
+
+###Narrowing our focus
+
+If you know beforehand what sort of links you are looking for, it's a good idea
+to use the `db` argument to narrow the focus of your search. Here is an example 
+illustrating how to get the transcripts sequences
 of corresponding genes with entrez gene id. In NCBI, gene entrez
 IDs are stored in the gene database(`dbfrom = gene`) while gene transcript information
 is stored in  the nucleotide database(`db = nuccore`), but the good
 news is that entries in these two databases are linked, thus, we can
 firstly use `entrez_link()` to 'convert' entrez gene id to refseq transcirpt
-id. With the transcript ids, `entrez_fetch()` can be used to fetch the
-sequence data on the fly.
+ID. 
 
-```{r, eval = F}
-library(rentrez)
-gene_IDs <- c('11647', '351')
-s
-fa.list <- list() ##use a list to store the fasta sequences
-for( gid in entrenzID) {
-    ez_link <- entrez_link(dbfrom = 'gene',
-                           id = id,
-                           db = 'nuccore')
-    refRNAid <- ez_link$gene_nuccore_refseqrna ##here we got refseq ids corresponding to gid gene
-    for(rnai in refRNAid) {
-        fa <- entrez_fetch(db = 'nuccore',
-                           id = rnai,
-                           rettype = 'fasta')
-        fa.list[[length(fa.list) + 1]] <- fa
-    }
-}
-##fa.list now contrains the sequence data of genes of interest
-str(fa.list)
+```{r, elink1}
+nuc_links <- entrez_link(dbfrom='gene', id=351, db='nuccore')
+nuc_links
+nuc_links$links
 ```
+The object we get back contains links to the nucleotide database generally, but
+also to special subsets of that database like [refseq](http://www.ncbi.nlm.nih.gov/refseq/). 
+We can take advantage of this narrower set of links to find IDs that match unique
+transcripts from our gene of interest.
+
+```{r, elinik_refseqs}
+links$links$gene_nuccore_refseqrna
+```
+We can use these ids in calls to `entrez_fetch() or `entrez_summary()` to learm
+more about the transcripts they represent. 
 
 ###External links
 
+In addition to finding data within the NCBI, `entrez_link` can turn up
+connections to external databases. Perhaps the most interesting example is
+finding links to the full text of papers in pubmed. For example, when I wrote
+this document the first paper linked to our gene of interest above had a pmid of
+`25500142`. We can find links to the full text of that paper with `entrez_link` 
+by setting the `cmd` argument to 'llinks':
+
+```{r, outlinks}
+paper_links <- entrez_link(db='', dbfrom="pubmed", id=25500142, cmd="llinks")
+paper_links
+```
+
+Instead of a `links` elements, the object returned has a list of `linkouts`.
+Each element in that list contains a Url for information aout this paper:
+
+```{r, urls}
+paper_links$linkouts
+
+```
 ## Getting summary data: `entrez_summary()`
 
-Having foundt the unique IDs for some records via`entrez_search`, you are
+Having foundt the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
 probably going to want to learn something about them. The `Eutils` API has two
 ways to get information about a record. `entrez_fetch()` returns 'full' records
 in varying formats and `entrez_summary()` returns less information but in
