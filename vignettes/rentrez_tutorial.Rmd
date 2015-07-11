@@ -48,7 +48,6 @@ NCBI's databases. First, you can use `entrez_dbs()` to find out just what
 databases are avaliable:
 
 ```{r, dbs}
-library(rentrez)
 entrez_dbs()
 ```
 
@@ -262,7 +261,7 @@ We can take advantage of this narrower set of links to find IDs that match uniqu
 transcripts from our gene of interest.
 
 ```{r, elinik_refseqs}
-links$links$gene_nuccore_refseqrna
+nuc_links$links$gene_nuccore_refseqrna
 ```
 We can use these ids in calls to `entrez_fetch() or `entrez_summary()` to learn
 more about the transcripts they represent. 
@@ -348,6 +347,7 @@ extract_from_esummary(multi_summs, "fulljournalname")
 date_and_cite <- extract_from_esummary(multi_summs, c("pubdate", "pmcrefcount",  "title"))
 knitr::kable(head(t(date_and_cite)), row.names=FALSE)
 ```
+
 ##Fetching full records
 
 ```{r, eval = F}
