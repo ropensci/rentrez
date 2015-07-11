@@ -264,7 +264,7 @@ transcripts from our gene of interest.
 ```{r, elinik_refseqs}
 links$links$gene_nuccore_refseqrna
 ```
-We can use these ids in calls to `entrez_fetch() or `entrez_summary()` to learm
+We can use these ids in calls to `entrez_fetch() or `entrez_summary()` to learn
 more about the transcripts they represent. 
 
 ###External links
@@ -286,7 +286,6 @@ Each element in that list contains a Url for information aout this paper:
 
 ```{r, urls}
 paper_links$linkouts
-
 ```
 ## Getting summary data: `entrez_summary()`
 
@@ -350,6 +349,26 @@ date_and_cite <- extract_from_esummary(multi_summs, c("pubdate", "pmcrefcount", 
 knitr::kable(head(t(date_and_cite)), row.names=FALSE)
 ```
 ##Fetching full records
+
+```{r, eval = F}
+library(rentrez)
+entrenzID <- c('11647', '351')
+fa.list <- list() ##use a list to store the fasta sequences
+for( gid in entrenzID) {
+    ez_link <- entrez_link(dbfrom = 'gene',
+                           id = id,
+                           db = 'nuccore')
+    refRNAid <- ez_link$gene_nuccore_refseqrna ##here we got refseq ids corresponding to gid gene
+    for(rnai in refRNAid) {
+        fa <- entrez_fetch(db = 'nuccore',
+                           id = rnai,
+                           rettype = 'fasta')
+        fa.list[[length(fa.list) + 1]] <- fa
+    }
+}
+##fa.list now contrains the sequence data of genes of interest
+str(fa.list)
+```
 
 ##Using NCBI's Web History features
 
