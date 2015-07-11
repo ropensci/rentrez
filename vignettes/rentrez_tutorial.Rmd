@@ -17,15 +17,15 @@ vignette: >
 count_recs <- function(db, denom) {
     round(as.integer(entrez_db_summary(db)["Count"])/denom, 1)
 }
-    
+
 ```
 
- 
+
 ## Introduction: The NCBI, entrez and `rentrez`.
 
 The NCBI stores a _lot_ of data. At the time this document was compiled, there
-were `r count_recs("pubmed",1e6)` million papers in [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/), 
-including `r count_recs("pmc", 1e6)` million full-text records avaliable in [pubmed-central](http://www.ncbi.nlm.nih.gov/pubmed/). 
+were `r count_recs("pubmed",1e6)` million papers in [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/),
+including `r count_recs("pmc", 1e6)` million full-text records avaliable in [pubmed-central](http://www.ncbi.nlm.nih.gov/pubmed/).
 [The NCBI Nucleotide Database](http://www.ncbi.nlm.nih.gov/nuccore) (also known as GenBank) has data for `r count_recs("nuccore", 1e6)`
 million different sequences, and [dbSNP](http://www.ncbi.nlm.nih.gov/snp/) describes
 `r count_recs("snp", 1e6)` million different genetic variants. All of these
@@ -34,7 +34,7 @@ species in the [NCBI taxonomy](www.ncbi.nlm.nih.gov/taxonomy) or `r count_recs("
 described in [OMIM]('http://www.ncbi.nlm.nih.gov/omim').
 
 
-The NCBI makes this data avaliable through a [web interface](http://www.ncbi.nlm.nih.gov/), 
+The NCBI makes this data avaliable through a [web interface](http://www.ncbi.nlm.nih.gov/),
 an [FTP server](ftp://ftp.ncbi.nlm.nih.gov/) and through a REST API called the
 [Entrez Utilities](http://www.ncbi.nlm.nih.gov/books/NBK25500/) (`Eutils` for
 short). This package provides functions to wrap that API, allowing users to
@@ -83,7 +83,7 @@ you've started using the EUtils api, so let's get started.
 ## Searching databases: `entrez_search`
 
 The function `entrez_search()` lets you search for records in a given NCBI
-database.  In the simplest case you just need to provide a database name (`db`) 
+database.  In the simplest case you just need to provide a database name (`db`)
 and a search term(`term`).If you print the returned object you get a summary of what it contains, an
 d the way the NCBI's servers translated your query:
 
@@ -93,7 +93,7 @@ r_search
 ```
 
 There are a few things to note here. First, the NCBI's server has worked out
-that we meant R as a programming language, and so inlcuded the 
+that we meant R as a programming language, and so inlcuded the
 ['MeSh' term](http://www.ncbi.nlm.nih.gov/mesh). We'll worry about these and
 other special search terms in a second. Second, there are many more 'hits' for this search than there
 are unique IDs contained in this object. That's because the optional argument
@@ -105,7 +105,7 @@ value of 20. We can acess those 20 IDs like this:
 r_search$ids
 ```
 
-And get more IDs by increasing the `ret_max` argument. 
+And get more IDs by increasing the `ret_max` argument.
 
 ```{r searchids_2}
 another_r_search <- entrez_search(db="pubmed", term="R Language", retmax=40)
@@ -120,7 +120,7 @@ TUTORIAL
 ### Building search terms
 
 The EUtils api uses a special syntax to build search queries. You can search a
-database against a specific term using the format `query[SEARCH TERM]`, and 
+database against a specific term using the format `query[SEARCH TERM]`, and
 combine multiple such seaches using the operators `AND`, `OR` and `NOT`.
 
 For instance, we can find next generation sequence datasets for the (amazing...) ciliate
@@ -128,7 +128,7 @@ _Tetrahymena thermophila_ by using the organism ('ORGN') search field:
 
 
 ```{r, Tt}
-entrez_search(db="sra", 
+entrez_search(db="sra",
               term="Tetrahymena thermophila[ORGN]",
               retmax=0)
 ```
@@ -138,7 +138,7 @@ sepcify a range of values):
 
 
 ```{r, Tt2}
-entrez_search(db="sra", 
+entrez_search(db="sra",
               term="Tetrahymena thermophila[ORGN] AND 2013:2015[PDAT]",
               retmax=0)
 ```
@@ -148,7 +148,7 @@ borealis_ (using parentheses to make ANDs and ORs explicit).
 
 
 ```{r, Tt3}
-entrez_search(db="sra", 
+entrez_search(db="sra",
               term="(Tetrahymena thermophila[ORGN] OR Tetrahymena borealis[ORGN]) AND 2013:2015[PDAT]",
               retmax=0)
 ```
@@ -165,9 +165,9 @@ entrez_db_searchable("sra")
 In addition to the seach terms described above, the NCBI allows searches using
 [Medical Subject Heading (MeSH)](http://www.ncbi.nlm.nih.gov/mesh) terms. These
 terms create a 'controled vocubulary',  and allow users to make very finely
-controlled queries of databases. 
+controlled queries of databases.
 
-For instance, if you were interested in reviewing studies on how a class of 
+For instance, if you were interested in reviewing studies on how a class of
 anti-malarial drugs called Folic Acid Antagonists work against _Plasmodium vivax_ (a
 particular species of malarial parasite), you could use this search:
 
@@ -182,7 +182,7 @@ terms you search finds with the tools described below.
 
 ### Advanced counting
 
-As you can see above, the  object returned by `entrez_search()` includes the the 
+As you can see above, the  object returned by `entrez_search()` includes the the
 number of records matching a given search. This means you can learn a little
 about the composition of, or trends in, the records stored in the NCBI's
 databases using only the search utility. For instance, let's track the raise of
@@ -204,6 +204,43 @@ plot(year, as.numeric(papers), type='b', main="The Rise of the Connectome")
 ## Finding cross-references : `entrez_link()`:
 
 ###Cross-linked data
+
+One of the strengths of the NCBI databases is the degree to which records of one
+type are connected to  other records within the NCBI or to external data
+sources. The function `entrez_link()` allows users to uncover these links
+
+###Finding transcript sequences of a given gene
+
+Here is an example illustrating how to get the transcripts sequences
+of corresponding genes with entrez gene id. In NCBI, gene entrez
+IDs are stored in the gene database(`dbfrom = gene`) while gene transcript information
+is stored in  the nucleotide database(`db = nuccore`), but the good
+news is that entries in these two databases are linked, thus, we can
+firstly use `entrez_link()` to 'convert' entrez gene id to refseq transcirpt
+id. With the transcript ids, `entrez_fetch()` can be used to fetch the
+sequence data on the fly.
+
+```{r, eval = F}
+library(rentrez)
+gene_IDs <- c('11647', '351')
+s
+fa.list <- list() ##use a list to store the fasta sequences
+for( gid in entrenzID) {
+    ez_link <- entrez_link(dbfrom = 'gene',
+                           id = id,
+                           db = 'nuccore')
+    refRNAid <- ez_link$gene_nuccore_refseqrna ##here we got refseq ids corresponding to gid gene
+    for(rnai in refRNAid) {
+        fa <- entrez_fetch(db = 'nuccore',
+                           id = rnai,
+                           rettype = 'fasta')
+        fa.list[[length(fa.list) + 1]] <- fa
+    }
+}
+##fa.list now contrains the sequence data of genes of interest
+str(fa.list)
+```
+
 ###External links
 
 ## Getting summary data: `entrez_summary()`
@@ -214,7 +251,7 @@ ways to get information about a record. `entrez_fetch()` returns 'full' records
 in varying formats and `entrez_summary()` returns less information but in
 relatively simple format. Very often the summary records have the information
 you are afer, so `rentrez` provides functions to parse and summarise summary
-recods. 
+recods.
 
 
 ###The summary record
