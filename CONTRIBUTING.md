@@ -25,6 +25,13 @@ packages, or form the basis of new ones.
 * Push up to your account
 * Submit a pull request to home base at `ropensci/rentrez`
 
-### Questions? Get in touch: [david.winter@gmail.com](mailto:david.winter@gmail.com)
+### Questions? 
 
-### Thanks for contibuting!
+Get in touch: [david.winter@gmail.com](mailto:david.winter@gmail.com).
+
+Please note that this project is released with a [Contributor Code of
+Conduct](CONDUCT.md). By participating in this project you agree to abide by its
+terms.
+
+ Thanks for contibuting!
+
