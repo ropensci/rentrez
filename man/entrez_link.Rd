@@ -4,14 +4,15 @@
 \alias{entrez_link}
 \title{Get links to datasets related to records from an NCBI database}
 \usage{
-entrez_link(db, dbfrom, cmd = "neighbor", config = NULL, ...)
+entrez_link(dbfrom, id = NULL, db = NULL, WebEnv = NULL,
+  query_key = NULL, cmd = "neighbor", config = NULL, ...)
 }
 \arguments{
+\item{dbfrom}{character Name of database from which the Id(s) originate}
+
 \item{db}{character Name of the database to search for links (or use "all" to
 search all databases available for \code{db}. \code{entrez_db_links} allows you
 to discover databases that might have linked information (see examples).}
-
-\item{dbfrom}{character Name of database from which the Id(s) originate}
 
 \item{cmd}{link function to use. Allowled values include
 \itemize{
