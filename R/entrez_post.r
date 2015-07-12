@@ -10,10 +10,7 @@
 #'@param \dots character Additional terms to add to the request 
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
-#'@return QueryKey integer identifier for specific query in webhistory
-#'@return WebEnv character identifier for session key to use with history
-#'@import XML
-#'
+#'@importFrom XML xmlTreeParse
 #' @examples
 #'\dontrun{  
 #' so_many_snails <- entrez_search(db="nuccore", 
@@ -33,8 +30,8 @@ entrez_post <- function(db, id=NULL, web_history=NULL, config=NULL, ...){
         args$web_history <- NULL
     }
     response  <- do.call(make_entrez_query, args)
-    record <- XML::xmlTreeParse(response, useInternalNodes=TRUE)
-    result <- XML::xpathApply(record, "/ePostResult/*", XML::xmlValue)
+    record <- xmlTreeParse(response, useInternalNodes=TRUE)
+    result <- xpathApply(record, "/ePostResult/*", XML::xmlValue)
     names(result) <- c("QueryKey", "WebEnv")
     class(result) <- c("web_history", "list")
     #NCBI limits requests to three per second

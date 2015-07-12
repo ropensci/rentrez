@@ -29,7 +29,7 @@ it is exported by \code{rentrez} for the sake of completeness.
 \examples{
 \dontrun{
 all_the_data <- entrez_info()
-XML::xpathSApply(all_the_data, "//DbName", XML::xmlValue)
+xpathSApply(all_the_data, "//DbName", xmlValue)
 entrez_dbs()
 }
 }

@@ -1,7 +1,6 @@
 #' Summarize an XML record from pubmed.
 #'
 #'
-#'@import XML
 #'@export
 #'@param record Either and XMLInternalDocument or character the record to be
 #'parsed ( expected to come from \code{\link{entrez_fetch}})
@@ -18,9 +17,9 @@
 
 parse_pubmed_xml<- function(record){
     if(typeof(record) == "character"){
-        record <- XML::xmlTreeParse(record, useInternalNodes=TRUE)
+        record <- xmlTreeParse(record, useInternalNodes=TRUE)
     }
-    res <- XML::xpathApply(record, 
+    res <- xpathApply(record, 
                       "/PubmedArticleSet/PubmedArticle", 
                       parse_one_pubmed)
     if(length(res)==1){
@@ -33,7 +32,7 @@ parse_pubmed_xml<- function(record){
 #The work-horse function - get information from a single xml rec
 parse_one_pubmed <- function(paper){
     get_value <- function(path){
-        return(XML::xpathSApply(paper, path, XML::xmlValue))
+        return(xpathSApply(paper, path, xmlValue))
     }
     res  <- list()
     res$title <- get_value(".//ArticleTitle")

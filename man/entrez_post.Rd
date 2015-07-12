@@ -18,11 +18,6 @@ identifiers to an existing web environment on the NCBI}
 
 \item{\dots}{character Additional terms to add to the request}
 }
-\value{
-QueryKey integer identifier for specific query in webhistory
-
-WebEnv character identifier for session key to use with history
-}
 \description{
 Post IDs to Eutils for later use
 }

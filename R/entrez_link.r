@@ -36,6 +36,7 @@
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #'@references http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_
+#'@importFrom XML xmlToList
 #' @examples
 #' \donttest{
 #'  (pubmed_search <- entrez_search(db = "pubmed", term ="10.1016/j.ympev.2010.07.013[doi]"))
@@ -91,10 +92,10 @@ parse_default <- function(x, cmd){
 
 parse_neighbors <- function(x, scores=FALSE){
     content <- ""
-    if("-1" %in% XML::xpathSApply(x, "//IdList/Id", XML::xmlValue)){
+    if("-1" %in% xpathSApply(x, "//IdList/Id", xmlValue)){
        warning(warning("Some IDs not found"))
     }
-    db_names <- XML::xpathSApply(x, "//LinkName", XML::xmlValue)
+    db_names <- xpathSApply(x, "//LinkName", xmlValue)
     links <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
     class(links) <- c("elink_classic", "list")
     res <- list(links = links, file=x)
@@ -110,17 +111,17 @@ parse_neighbors <- function(x, scores=FALSE){
 }
 
 parse_history <- function(x){
-    qks <-    XML::xpathSApply(x, "//LinkSetDbHistory/QueryKey", XML::xmlValue, simplify=FALSE)
-    cookie <- XML::xmlValue(x[["//WebEnv"]])
+    qks <-    xpathSApply(x, "//LinkSetDbHistory/QueryKey", xmlValue, simplify=FALSE)
+    cookie <- xmlValue(x[["//WebEnv"]])
     histories <- lapply(qks, web_history, WebEnv=cookie)
-    names(histories) <-    XML::xpathSApply(x, "//LinkSetDbHistory/LinkName", XML::xmlValue)
+    names(histories) <-    xpathSApply(x, "//LinkSetDbHistory/LinkName", xmlValue)
     res <- list(web_histories=histories, file=x)
     attr(res, "content") <- paste0(" $web_histories: Objects containing web history information\n")
     res
 }
 
 parse_acheck <- function(x){
-    db_info <- XML::xpathApply(x, "//LinkInfo", XML::xmlToList)
+    db_info <- xpathApply(x, "//LinkInfo", xmlToList)
     names(db_info) <-  sapply(db_info, "[[","LinkName")
     class(db_info)  <-  "elink_classic"
     res <- list(linked_databses = db_info)
@@ -130,7 +131,7 @@ parse_acheck <- function(x){
 
 parse_check <- function(x, attr){
     path <- paste0("//Id/@", attr)
-    is_it_y <- structure(names= XML::xpathSApply(x, "//Id", XML::xmlValue),
+    is_it_y <- structure(names= xpathSApply(x, "//Id", xmlValue),
                      x[path] == "Y")
     res <- list(check = is_it_y)
     attr(res, "content") <- " $check: TRUE/FALSE for wether each ID has links"
@@ -139,8 +140,8 @@ parse_check <- function(x, attr){
 
 parse_linkouts <- function(x){
     per_id <- x["//IdUrlList/IdUrlSet"]
-    list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], XML::xmlToList))
-    names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) XML::xmlValue(x[["Id"]])))
+    list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], xmlToList))
+    names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) xmlValue(x[["Id"]])))
     list_o_lists <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
     list_o_lists <- lapply(list_o_lists, lapply, add_class, "linkout")
     res <- list( linkouts = list_o_lists)
@@ -169,5 +170,5 @@ print.elink_classic <- function(x, ...){
 }
 get_linked_elements <- function(record, dbname, element){
     path <-  paste0("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
-    return(XML::xpathSApply(record, path, XML::xmlValue))
+    return(xpathSApply(record, path, xmlValue))
 }

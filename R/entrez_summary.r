@@ -32,7 +32,8 @@
 #'always_return_list if FALSE) or a single record.
 #'@return file XMLInternalDocument xml file containing the entire record
 #'returned by the NCBI.
-#'@import XML
+#'@importFrom XML xpathApply xmlSApply xmlGetAttr xmlValue
+#'@importFrom jsonlite fromJSON
 #' @examples
 #'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
@@ -113,8 +114,8 @@ parse_esummary.XMLInternalDocument  <- function(x, always_return_list){
        stop("Esummary document contains no DocSums, try 'version=2.0'?)")
     }
     per_rec <- function(r){
-        res <- XML::xpathApply(r, "Item", parse_node)
-        names(res) <- XML::xpathApply(r, "Item", XML::xmlGetAttr, "Name")
+        res <- xpathApply(r, "Item", parse_node)
+        names(res) <- xpathApply(r, "Item", xmlGetAttr, "Name")
         res <- c(res, file=x)
         class(res) <- c("esummary", class(res))
         return(res)
@@ -123,28 +124,28 @@ parse_esummary.XMLInternalDocument  <- function(x, always_return_list){
         return(per_rec(recs[[1]]))
     } 
     res <- lapply(recs, per_rec)
-    names(res) <-  XML::xpathSApply(x, "//DocSum/Id", XML::xmlValue)
+    names(res) <-  xpathSApply(x, "//DocSum/Id", xmlValue)
     class(res) <- c("esummary_list", "list")
     res
 }
 
 parse_node <- function(node) {
-    node_type <- XML::xmlGetAttr(node, "Type")
+    node_type <- xmlGetAttr(node, "Type")
 
     node_fxn <- switch(node_type, 
                        "Integer" = parse_esumm_int,
                        "List" = parse_esumm_list,
                        "Structure" = parse_esumm_list,
-                       XML::xmlValue) #unnamed arguments to switch = default val.
+                       xmlValue) #unnamed arguments to switch = default val.
     return(node_fxn(node))
 
 }
 
-parse_esumm_int <- function(node) as.integer(XML::xmlValue(node))
+parse_esumm_int <- function(node) as.integer(xmlValue(node))
 
 parse_esumm_list <- function(node){
     res <- lapply(node["Item"], parse_node)
-    names(res) <- lapply(node["Item"], XML::xmlGetAttr, "Name")
+    names(res) <- lapply(node["Item"], xmlGetAttr, "Name")
     return(res)
 }
 

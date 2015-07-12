@@ -78,7 +78,7 @@ check_xml_errors <- function(x){
     errs <- x["//ERROR"]
     if( length(errs) > 0){
         for(e in errs){
-            warning(XML::xmlValue(e))
+            warning(xmlValue(e))
         }
     }
     invisible()
@@ -87,8 +87,8 @@ check_xml_errors <- function(x){
 
 parse_response <- function(x, type=NULL){
     res <- switch(type, 
-            "json" = jsonlite::fromJSON(x),
-            "xml"  = XML::xmlTreeParse(x, useInternalNodes=TRUE),
+            "json" = fromJSON(x),
+            "xml"  = xmlTreeParse(x, useInternalNodes=TRUE),
             "text" = x, #citmatch uses plain old plain text
              x #fall-through, if in doubt, return un-parsed response
     )

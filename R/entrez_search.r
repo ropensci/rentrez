@@ -20,7 +20,6 @@
 #'@return retmax integer Maximum number of hits returned by the search
 #'@return web_history A web_history object for use in subsequent calls to NCBI
 #'@return QueryTranslation character, search term as the NCBI interpreted it
-#'@import  XML
 #'@return file either and XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
 #' resulting from the returned JSON file being parsed with
@@ -62,15 +61,15 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", use_history=FALS
 parse_esearch <- function(x, history) UseMethod("parse_esearch")
    
 parse_esearch.XMLInternalDocument <- function(x, history){
-    res <- list( ids      = XML::xpathSApply(x, "//IdList/Id", XML::xmlValue),
-                 count    = XML::xpathSApply(x, "/eSearchResult/Count", XML::xmlValue),
-                 retmax   = XML::xpathSApply(x, "/eSearchResult/RetMax", XML::xmlValue),
-                 QueryTranslation   = XML::xpathSApply(x, "/eSearchResult/QueryTranslation",XML::xmlValue),
+    res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
+                 count    = xpathSApply(x, "/eSearchResult/Count", xmlValue),
+                 retmax   = xpathSApply(x, "/eSearchResult/RetMax", xmlValue),
+                 QueryTranslation   = xpathSApply(x, "/eSearchResult/QueryTranslation",xmlValue),
                  file     = x)
     if(history){
         res$web_history = web_history(
-          QueryKey = XML::xpathSApply(x, "/eSearchResult/QueryKey", XML::xmlValue),
-          WebEnv   = XML::xpathSApply(x, "/eSearchResult/WebEnv", XML::xmlValue)
+          QueryKey = xpathSApply(x, "/eSearchResult/QueryKey", xmlValue),
+          WebEnv   = xpathSApply(x, "/eSearchResult/WebEnv", xmlValue)
         )
     }
     class(res) <- c("esearch", "list")

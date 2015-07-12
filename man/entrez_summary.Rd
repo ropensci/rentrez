@@ -62,7 +62,7 @@ pop_ids = c("307082412", "307075396", "307075338", "307075274")
 \seealso{
 \code{\link[httr]{config}} for available configs
 
-\code{\link{extract_from_esummarry}} which can be used to extract
+\code{\link{extract_from_esummary}} which can be used to extract
 elements from a list of esummary records
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_summary.r
 \name{extract_from_esummary}
 \alias{extract_from_esummary}
-\title{Extract elements from a list of esumarrry records}
+\title{Extract elements from a list of esummary records}
 \usage{
 extract_from_esummary(esummaries, elements, simplify = TRUE)
 }
@@ -17,6 +17,6 @@ extract_from_esummary(esummaries, elements, simplify = TRUE)
 List or vector containing requested elements
 }
 \description{
-Extract elements from a list of esumarrry records
+Extract elements from a list of esummary records
 }
 
