@@ -26,7 +26,7 @@
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
 #'@seealso \code{\link[httr]{config}} for available configs 
-#'@seealso \code{\link{extract_from_esummarry}} which can be used to extract
+#'@seealso \code{\link{extract_from_esummary}} which can be used to extract
 #'elements from a list of esummary records
 #'@return A list of esummary records (if multiple IDs are passed and
 #'always_return_list if FALSE) or a single record.
@@ -58,7 +58,7 @@ entrez_summary <- function(db, id=NULL, web_history=NULL,
     parse_esummary(whole_record, always_return_list)
 }
 
-#' Extract elements from a list of esumarrry records
+#' Extract elements from a list of esummary records
 #'@export
 #'@param esummaries A list of esummary objects
 #'@param elements the names of the element to extract
