@@ -24,8 +24,8 @@ test_that("Query building functions work", {
     expect_equal(nrecs, 2)
 
     #specific function have right "require one of" settings
-    expect_that(entrez_fetch(db="nuccore", rettype="fasta", WebEnv="SDA"), throws_error())
-    expect_that(entrez_summary(db="nuccore", query_key=1, WebEnv="ASD", id=123), throws_error())
+    expect_that(entrez_fetch(db="nuccore", rettype="fasta"), throws_error())
+    expect_that(entrez_summary(db="nuccore", web_history="A", id=123), throws_error())
     expect_that(entrez_link(db="nuccore", dbfrom="pubmed"), throws_error())
 
     #httr pases on errors
