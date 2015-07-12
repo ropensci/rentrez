@@ -11,25 +11,25 @@ test_that("we can post ids", {
 })
 
 test_that("we can add to WebEnv", {
-    ret2 <- entrez_post(id=119703751, db="protein", WebEnv=ret$WebEnv)
-    first <- entrez_summary(db="protein", WebEnv=ret2$WebEnv, query_key=1)
-    second <- entrez_summary(db="protein", WebEnv=ret2$WebEnv, query_key=2)
+    ret2 <- entrez_post(id=119703751, db="protein", web_history=ret)
+    first <- entrez_summary(db="protein", web_history=ret)
+    second <- entrez_summary(db="protein", web_history=ret2)
+    expect_equal(ret2$QueryKey, "2")
+    expect_equal(ret2$WebEnv, ret$WebEnv)
     expect_equal(length(first), 2)
-    expect_that(second, is_a("esummary")) 
+    expect_that(second, is_a("esummary"))#i.e. justone  
 })
 
-test_that("Example works", { 
+test_that("Example works", {
      so_many_snails <- entrez_search(db="nuccore", 
                            "Gastropoda[Organism] AND COI[Gene]", retmax=200)
      upload <- entrez_post(db="nuccore", id=so_many_snails$ids)
-     cookie <- upload$WebEnv
-     first <- entrez_fetch(db="nuccore", rettype="fasta", WebEnv=cookie,
-                           query_key=upload$QueryKey, retstart=0, retmax=4)
+     first <- entrez_fetch(db="nuccore", rettype="fasta", web_history=upload, retstart=0, retmax=4)
      nrecs <-  length(gregexpr(">", first)[[1]])
      expect_equal(nrecs, 4)
 })
 
 test_that("We can print a post result", {
     expect_output(ret,
-     "Entrez post result \\(QueryKey = \\d+, WebEnv = [A-Z0-9_]+\\.\\.\\.\\)") 
+     "\\(QueryKey = \\d+, WebEnv = [A-Z0-9_]+\\.\\.\\.\\)") 
 })
