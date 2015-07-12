@@ -4,11 +4,13 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, rettype, retmode = "text", parsed = FALSE, config = NULL,
-  ...)
+entrez_fetch(db, id = NULL, web_hisory = NULL, rettype, retmode = "text",
+  parsed = FALSE, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to use}
+
+\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
 
 \item{rettype}{character Format in which to get data (eg, fasta, xml...)}
 
@@ -19,13 +21,19 @@ file. Only works with rettype="xml" at present}
 
 \item{config}{vector configuration options passed to httr::GET}
 
+\item{web_history}{A web_history object}
+
 \item{\dots}{character Additional terms to add to the request}
 }
 \value{
 character string containing the file created
 }
 \description{
-Download data from NCBI databases
+A set of unique identifiers mush be specified with either the \code{db}
+argument (which directly specifies the IDs as a numeric or charavector of numerics or
+character) or a \code{web_history} object as returned by
+\code{\link{entrez_link}}, \code{\link{entrez_search}} or
+\code{\link{entrez_post}}.
 }
 \examples{
 katipo <- "Latrodectus katipo[Organism]"

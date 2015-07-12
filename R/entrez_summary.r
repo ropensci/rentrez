@@ -16,6 +16,8 @@
 #'
 #'@export
 #'@param db character Name of the database to search for
+#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param web_history A web_history object 
 #'@param \dots character Additional terms to add to the request. Requires either
 #'   id (unique id(s) for records in a given database) or WebEnv (a character
 #'   containing a cookie created by a previous entrez query).
@@ -47,7 +49,6 @@ entrez_summary <- function(db, id=NULL, web_history=NULL,
     v <-match.arg(version)
     retmode <- if(v == "2.0") "json" else "xml"
     args <- c(list("esummary", db=db, config=config, retmode=retmode, version=v, ...), identifiers)
-#    return(args)
     response  <- do.call(make_entrez_query, args)
     whole_record <- parse_response(response, retmode)
     parse_esummary(whole_record, always_return_list)

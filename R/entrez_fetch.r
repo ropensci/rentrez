@@ -1,9 +1,17 @@
 #' Download data from NCBI databases
 #'
+#' A set of unique identifiers mush be specified with either the \code{db}
+#' argument (which directly specifies the IDs as a numeric or charavector of numerics or
+#' character) or a \code{web_history} object as returned by 
+#' \code{\link{entrez_link}}, \code{\link{entrez_search}} or 
+#' \code{\link{entrez_post}}. 
 #'
+#' 
 #'
 #'@export
 #'@param db character Name of the database to use
+#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param web_history A web_history object 
 #'@param rettype character Format in which to get data (eg, fasta, xml...)
 #'@param retmode character Mode in which to receive data, defaults to 'text'
 #'@param \dots character Additional terms to add to the request

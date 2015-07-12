@@ -16,8 +16,7 @@
 #'@return ids integer Unique IDS returned by the search
 #'@return count integer Total number of hits for the search
 #'@return retmax integer Maximum number of hits returned by the search
-#'@return QueryKey integer identifier for specific query in webhistory
-#'@return WebEnv character identifier for session key to use with history
+#'@return web_history A web_history object for use in subsequent calls to NCBI
 #'@return QueryTranslation character, search term as the NCBI interpreted it
 #'@import  XML
 #'@return file either and XMLInternalDocument xml file resulting from search, parsed with

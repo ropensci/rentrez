@@ -9,6 +9,8 @@
 #'@param db character Name of the database to search for links (or use "all" to 
 #' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
+#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param web_history a web_history object  
 #'@param dbfrom character Name of database from which the Id(s) originate
 #'@param cmd link function to use. Allowled values include
 #' \itemize{
@@ -29,6 +31,7 @@
 #'@param \dots character Additional terms to add to the request
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
+#'@seealso  \code{entrez_db_links}
 #'@return An elink object containing the data defined by the \code{cmd} argument
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}

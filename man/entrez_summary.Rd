@@ -4,12 +4,15 @@
 \alias{entrez_summary}
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
-entrez_summary(db, id = NULL, WebEnv = NULL, query_key = NULL,
-  version = c("2.0", "1.0"), always_return_list = FALSE, config = NULL,
-  ...)
+entrez_summary(db, id = NULL, web_history = NULL, version = c("2.0",
+  "1.0"), always_return_list = FALSE, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
+
+\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+
+\item{web_history}{A web_history object}
 
 \item{version}{either 1.0 or 2.0 see above for description}
 

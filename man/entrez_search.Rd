@@ -4,7 +4,8 @@
 \alias{entrez_search}
 \title{Search the NCBI databases using EUtils}
 \usage{
-entrez_search(db, term, config = NULL, retmode = "xml", ...)
+entrez_search(db, term, config = NULL, retmode = "xml",
+  use_history = FALSE, ...)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
@@ -25,9 +26,7 @@ count integer Total number of hits for the search
 
 retmax integer Maximum number of hits returned by the search
 
-QueryKey integer identifier for specific query in webhistory
-
-WebEnv character identifier for session key to use with history
+web_history A web_history object for use in subsequent calls to NCBI
 
 QueryTranslation character, search term as the NCBI interpreted it
 
