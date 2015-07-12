@@ -37,7 +37,8 @@ to discover databases that might have linked information (see examples).}
 
 \item{config}{vector configuration options passed to httr::GET}
 
-\item{\dots}{character Additional terms to add to the request}
+\item{\dots}{character Additional terms to add to the request, see NCBI
+documentation linked to in referenes for a complete list}
 }
 \value{
 An elink object containing the data defined by the \code{cmd} argument
@@ -61,7 +62,7 @@ set for the \code{cmd} argument. Printing the returned object lists the names
 }
 }
 \references{
-http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_
+\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs

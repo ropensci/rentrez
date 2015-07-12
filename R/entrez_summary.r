@@ -20,11 +20,11 @@
 #'@param web_history A web_history object 
 #'@param always_return_list logical, return a list  of esummary objects even
 #'when only one ID is provided.
-#'@param \dots character Additional terms to add to the request. Requires either
-#'   id (unique id(s) for records in a given database) or WebEnv (a character
-#'   containing a cookie created by a previous entrez query).
+#'@param \dots character Additional terms to add to the request, see NCBI
+#'documentation linked to in referenes for a complete list
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
+#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_} 
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso \code{\link{extract_from_esummary}} which can be used to extract
 #'elements from a list of esummary records

@@ -20,7 +20,8 @@ difference in most cases.}
 \item{use_history}{locgical Return a web_history object for use in
 later calls to the NCBI}
 
-\item{\dots}{character Additional terms to add to the request}
+\item{\dots}{character Additional terms to add to the request, see NCBI
+documentation linked to in referenes for a complete list}
 }
 \value{
 ids integer Unique IDS returned by the search
@@ -45,7 +46,7 @@ a database name, then retrieves the XML document created by that query.
 \examples{
 \dontrun{
    query <- "Gastropoda[Organism] AND COI[Gene]"
-   web_env_search <- entrez_search(db="nuccore", query, usehistory="y")
+   web_env_search <- entrez_search(db="nuccore", query, use_history=TRUE)
    cookie <- web_env_search$WebEnv
    qk <- web_env_search$QueryKey
    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
@@ -61,6 +62,9 @@ fly_id <- entrez_search(db="taxonomy", term="Drosophila")
 tax_fields$RANK
 entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
 }
+}
+\references{
+\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs

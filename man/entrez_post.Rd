@@ -16,7 +16,8 @@ identifiers to an existing web environment on the NCBI}
 
 \item{config}{vector configuration options passed to httr::GET}
 
-\item{\dots}{character Additional terms to add to the request}
+\item{\dots}{character Additional terms to add to the request, see NCBI
+documentation linked to in referenes for a complete list}
 }
 \description{
 Post IDs to Eutils for later use
@@ -26,12 +27,14 @@ Post IDs to Eutils for later use
 so_many_snails <- entrez_search(db="nuccore",
                       "Gastropoda[Organism] AND COI[Gene]", retmax=200)
 upload <- entrez_post(db="nuccore", id=so_many_snails$ids)
-cookie <- upload$WebEnv
-first <- entrez_fetch(db="nuccore", rettype="fasta", WebEnv=cookie,
-                      query_key=upload$QueryKey, retmax=10)
-second <- entrez_fetch(db="nuccore", file_format="fasta", WebEnv=cookie,
-                       query_key=upload$QueryKey, retstart=10, retmax=10)
+first <- entrez_fetch(db="nuccore", rettype="fasta", web_history=upload,
+                      retmax=10)
+second <- entrez_fetch(db="nuccore", file_format="fasta", web_history=upload,
+                       retstart=10, retmax=10)
 }
+}
+\references{
+\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EPost_}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs

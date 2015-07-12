@@ -28,14 +28,15 @@
 #'   \item prlinks. As 'llinks' but returns only the primary external link for
 #'   each ID.
 #'}
-#'@param \dots character Additional terms to add to the request
+#'@param \dots character Additional terms to add to the request, see NCBI
+#'documentation linked to in referenes for a complete list
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso  \code{entrez_db_links}
 #'@return An elink object containing the data defined by the \code{cmd} argument
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
-#'@references http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_
+#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
 #'@importFrom XML xmlToList
 #' @examples
 #' \donttest{

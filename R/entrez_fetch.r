@@ -14,8 +14,10 @@
 #'@param web_history A web_history object 
 #'@param rettype character Format in which to get data (eg, fasta, xml...)
 #'@param retmode character Mode in which to receive data, defaults to 'text'
-#'@param \dots character Additional terms to add to the request
 #'@param config vector configuration options passed to httr::GET
+#'@param \dots character Additional terms to add to the request, see NCBI
+#'documentation linked to in referenes for a complete list
+#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_} 
 #'@param parsed boolean should entrez_fetch attempt to parse the resulting 
 #' file. Only works with rettype="xml" at present
 #'@seealso \code{\link[httr]{config}} for available configs

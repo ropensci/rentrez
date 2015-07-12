@@ -21,9 +21,8 @@ when only one ID is provided.}
 
 \item{config}{vector configuration options passed to \code{httr::GET}}
 
-\item{\dots}{character Additional terms to add to the request. Requires either
-id (unique id(s) for records in a given database) or WebEnv (a character
-containing a cookie created by a previous entrez query).}
+\item{\dots}{character Additional terms to add to the request, see NCBI
+documentation linked to in referenes for a complete list}
 }
 \value{
 A list of esummary records (if multiple IDs are passed and
@@ -58,6 +57,9 @@ pop_ids = c("307082412", "307075396", "307075338", "307075274")
  extract_from_esummary(cv, "title", simplify=FALSE)
  extract_from_esummary(cv, "trait_set")[1:2]
  extract_from_esummary(cv, "gene_sort")
+}
+\references{
+\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs

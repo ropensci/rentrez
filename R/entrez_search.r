@@ -10,8 +10,9 @@
 #' later calls to the NCBI
 #'@param retmode character One of json (default) or xml. This will make no
 #' difference in most cases.
+#'@param \dots character Additional terms to add to the request, see NCBI
+#'documentation linked to in referenes for a complete list
 #'@param config vector configuration options passed to httr::GET  
-#'@param \dots character Additional terms to add to the request 
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso \code{\link{entrez_db_searchable}} to get a set of search fields that
 #' can be used in \code{term} for any base
@@ -24,10 +25,11 @@
 #'\code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
 #' resulting from the returned JSON file being parsed with
 #' \code{\link[jsonlite]{fromJSON}}.
-#' @examples
+#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_} 
+#'@examples
 #' \dontrun{
 #'    query <- "Gastropoda[Organism] AND COI[Gene]"
-#'    web_env_search <- entrez_search(db="nuccore", query, usehistory="y")
+#'    web_env_search <- entrez_search(db="nuccore", query, use_history=TRUE)
 #'    cookie <- web_env_search$WebEnv
 #'    qk <- web_env_search$QueryKey 
 #'    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
