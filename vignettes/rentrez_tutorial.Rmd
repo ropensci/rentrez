@@ -12,15 +12,13 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
-
 ```{r, count_recs, echo=FALSE}
+library(rentrez)
 count_recs <- function(db, denom) {
-    round(as.integer(entrez_db_summary(db)["Count"])/denom, 1)
+    nrecs <-  rentrez::entrez_db_summary(db)["Count"]
+    round(as.integer(nrecs)/denom, 1)
 }
-
 ```
-
-
 ## Introduction: The NCBI, entrez and `rentrez`.
 
 The NCBI stores a _lot_ of data. At the time this document was compiled, there
@@ -351,7 +349,6 @@ knitr::kable(head(t(date_and_cite)), row.names=FALSE)
 ##Fetching full records
 
 ```{r, eval = F}
-library(rentrez)
 entrenzID <- c('11647', '351')
 fa.list <- list() ##use a list to store the fasta sequences
 for( gid in entrenzID) {
