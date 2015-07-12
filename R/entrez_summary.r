@@ -18,30 +18,34 @@
 #'@param db character Name of the database to search for
 #'@param id vector with unique ID(s) for reacods in database \code{db}. 
 #'@param web_history A web_history object 
+#'@param always_return_list logical, return a list  of esummary objects even
+#'when only one ID is provided.
 #'@param \dots character Additional terms to add to the request. Requires either
 #'   id (unique id(s) for records in a given database) or WebEnv (a character
 #'   containing a cookie created by a previous entrez query).
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
 #'@seealso \code{\link[httr]{config}} for available configs 
-#'@return A list of esummary records (if multiple IDs are passed) or a single
-#' record.
-#'@return file XMLInternalDocument xml file resulting from search, parsed with
-#'\code{\link{xmlTreeParse}}
+#'@seealso \code{\link{extract_from_esummarry}} which can be used to extract
+#'elements from a list of esummary records
+#'@return A list of esummary records (if multiple IDs are passed and
+#'always_return_list if FALSE) or a single record.
+#'@return file XMLInternalDocument xml file containing the entire record
+#'returned by the NCBI.
 #'@import XML
 #' @examples
 #'
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
-#'  sapply(pop_summ, "[[", "title")
+#'  extract_from_esummary(pop_summ, "title")
 #'  
 #'  # clinvar example
 #'  res <- entrez_search(db = "clinvar", term = "BRCA1", retmax=10)
 #'  cv <- entrez_summary(db="clinvar", id=res$ids)
-#'  cv[[1]] # get the names of the list for each result
-#'  sapply(cv, "[[", "title") # titles
-#'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
-#'  sapply(cv, "[[", "gene_sort") # gene_sort
+#'  cv
+#'  extract_from_esummary(cv, "title", simplify=FALSE)
+#'  extract_from_esummary(cv, "trait_set")[1:2] 
+#'  extract_from_esummary(cv, "gene_sort") 
 
 entrez_summary <- function(db, id=NULL, web_history=NULL, 
                            version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
@@ -53,6 +57,18 @@ entrez_summary <- function(db, id=NULL, web_history=NULL,
     whole_record <- parse_response(response, retmode)
     parse_esummary(whole_record, always_return_list)
 }
+
+#' Extract elements from a list of esumarrry records
+#'@export
+#'@param esummaries A list of esummary objects
+#'@param elements the names of the element to extract
+#'@param simplify logical, if possible return a vector
+#'@return List or vector containing requested elements 
+extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
+    fxn <- if (simplify & length(elements) == 1) "[[" else "["
+    sapply(esummaries, fxn, elements, simplify=simplify)
+}
+
 
 
 
@@ -185,15 +201,6 @@ parse_esumm_list <- function(node){
     res
 }
 
-#' Extract elements from a list of esumarrry records
-#'@export
-#'@param esummaries A list of esummary objects
-#'@param elements the names of the element to extract
-#'@param logical, if possible return a vector
-extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
-    fxn <- if (simplify & length(elements) == 1) "[[" else "["
-    sapply(esummaries, fxn, elements, simplify=simplify)
-}
 
 #' @export 
 print.esummary <- function(x, ...){

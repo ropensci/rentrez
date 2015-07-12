@@ -17,6 +17,9 @@ entrez_search(db, term, config = NULL, retmode = "xml",
 \item{retmode}{character One of json (default) or xml. This will make no
 difference in most cases.}
 
+\item{use_history}{locgical Return a web_history object for use in
+later calls to the NCBI}
+
 \item{\dots}{character Additional terms to add to the request}
 }
 \value{

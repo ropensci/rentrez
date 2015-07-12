@@ -11,7 +11,10 @@ extract_from_esummary(esummaries, elements, simplify = TRUE)
 
 \item{elements}{the names of the element to extract}
 
-\item{logical,}{if possible return a vector}
+\item{simplify}{logical, if possible return a vector}
+}
+\value{
+List or vector containing requested elements
 }
 \description{
 Extract elements from a list of esumarrry records
