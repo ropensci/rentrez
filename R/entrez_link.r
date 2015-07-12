@@ -44,10 +44,14 @@
 #'
 
 
-entrez_link <- function(dbfrom, id=NULL, db=NULL, WebEnv=NULL, query_key=NULL, cmd='neighbor', config=NULL, ...){
-    id_or_webenv()
-    response <- make_entrez_query("elink", db=db, id=id, WebEnv=WebEnv, dbfrom=dbfrom, cmd=cmd,
-                                  config=config, ...)
+entrez_link <- function(dbfrom, id=NULL, db=NULL, WebEnv=NULL, query_key=NULL, cmd='neighbor', config=NULL, by_id=FALSE, ...){
+    id_or_webenv(match.call())
+    args <- list("elink", db=db, WebEnv=WebEnv, dbfrom=dbfrom, cmd=cmd, config=config, ...)
+    if(by_id){
+        if(is.null(id)) stop("Can't use by_id mode without ids!")
+        args <- c(args, structure(id, names=rep("id", length(id))))
+    } else args$id <- id
+    response <- do.call(make_entrez_query, args)
     record <- parse_response(response, 'xml')
     Sys.sleep(0.33)
     parse_elink(record, cmd=cmd)
