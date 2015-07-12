@@ -4,13 +4,15 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, id = NULL, web_hisory = NULL, rettype, retmode = "text",
+entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "text",
   parsed = FALSE, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database to use}
 
 \item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+
+\item{web_history}{A web_history object}
 
 \item{rettype}{character Format in which to get data (eg, fasta, xml...)}
 
@@ -20,8 +22,6 @@ entrez_fetch(db, id = NULL, web_hisory = NULL, rettype, retmode = "text",
 file. Only works with rettype="xml" at present}
 
 \item{config}{vector configuration options passed to httr::GET}
-
-\item{web_history}{A web_history object}
 
 \item{\dots}{character Additional terms to add to the request}
 }

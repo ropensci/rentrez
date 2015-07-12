@@ -4,12 +4,15 @@
 \alias{entrez_post}
 \title{Post IDs to Eutils for later use}
 \usage{
-entrez_post(db, id, config = NULL, ...)
+entrez_post(db, id = NULL, web_history = NULL, config = NULL, ...)
 }
 \arguments{
 \item{db}{character Name of the database from which the IDs were taken}
 
-\item{id}{integer ID(s) for which data is being collected}
+\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+
+\item{web_history}{A web_history object. Can be used to add to additional
+identifiers to an existing web environment on the NCBI}
 
 \item{config}{vector configuration options passed to httr::GET}
 
