@@ -30,21 +30,9 @@ entrez_tool <- function() 'rentrez'
 #
 
 
-make_entrez_query <- function(util, 
-                              require_one_of=NULL,
-                              config,
-                              interface=".fcgi?",
-                              ...){
+make_entrez_query <- function(util, config, interface=".fcgi?", ...){
     args <- list(..., email=entrez_email(), tool=entrez_tool())
-    arg_names <- names(args)
-    if(length(require_one_of) > 1 ){
-        if(!sum(require_one_of %in% arg_names)==1){
-            msg <- paste("Function requires either", require_one_of[1], "or",
-                         require_one_of[2], "to be set as arguments\n")
-            stop(msg)
-        }
-    }
-    if("id" %in% arg_names){
+    if("id" %in% names(args){
         args$id <- paste(args$id, collapse=",")      
     }
     uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
@@ -53,14 +41,31 @@ make_entrez_query <- function(util,
     return(httr::content(response, as="text"))
 }
 
+##
+# Check for that we have either the ID or the web-history functions are 
+# specified for those functions that need one.
+##
+
+id_or_webenv <- function(args){
+    msg <- "Must specify either (not both) 'id' or web history arguments 'WebEnv' and 'query_key'"
+    arg_names <- names(Filter(function(x) !is.null(x), args))
+    cookie_args <- c("WebEnv", "query_key") %in% arg_names
+    if("id" %in% arg_names){
+        if(any(cookie_args)){
+            stop(msg)
+        }
+        return(invisible())
+    }
+    if(!all(cookie_args)){
+        stop(msg)
+    }
+    invisible()
+}
+
+
 entrez_check  <- function(req){
   if (req$status_code < 400) {
       return(invisible())
-  }
-  #for 414 errors the server will return an HTML page rescribing the error 
-  # since it's one case let's just treat is specially
-  if (req$status_code == 414){
-      stop("HTTP failure 414, the request is too large. For large requests, try using WebEnvs as described in the tutorial")
   }
   message <- httr::content(req)
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
