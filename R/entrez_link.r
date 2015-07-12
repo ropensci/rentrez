@@ -108,11 +108,11 @@ parse_neighbors <- function(x, scores=FALSE){
 
 parse_history <- function(x){
     qks <-    XML::xpathSApply(x, "//LinkSetDbHistory/QueryKey", XML::xmlValue, simplify=FALSE)
-    names(qks) <-    XML::xpathSApply(x, "//LinkSetDbHistory/LinkName", XML::xmlValue)
     cookie <- XML::xmlValue(x[["//WebEnv"]])
-    res <- list(WebEnv = cookie, QueryKeys=qks)
-    attr(res, "content") <- paste0(" $WebEnv: A WebEnv (cookie) value \n",
-                                   " $QueryKeys: A list of QUeryKeys for each included database")
+    histories <- lapply(qks, web_history, WebEnv=cookie)
+    names(histories) <-    XML::xpathSApply(x, "//LinkSetDbHistory/LinkName", XML::xmlValue)
+    res <- list(web_histories=histories, file=x)
+    attr(res, "content") <- paste0(" $web_histories: Objects containing web history information\n")
     res
 }
 
