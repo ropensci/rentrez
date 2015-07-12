@@ -28,7 +28,7 @@
 #' kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
 #'
 
-entrez_fetch <- function(db, id=NULL, web_hisory=NULL, rettype, retmode="text", parsed=FALSE,
+entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="text", parsed=FALSE,
                          config=NULL, ...){
     identifiers <- id_or_webenv()
     if(parsed){
