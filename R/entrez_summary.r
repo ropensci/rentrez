@@ -1,7 +1,5 @@
 #' Get summaries of objects in NCBI datasets from a unique ID 
 #
-#' Constructs a query from the given arguments, including a database name and
-#' list of of unique IDs for that database.
 #' 
 #' The NCBI offer two distinct formats for summary documents.
 #' Version 1.0 is a relatively limited summary of a database record based on a 
@@ -43,14 +41,14 @@
 #'  lapply(cv, "[[", "trait_set")[1:2] # trait_set
 #'  sapply(cv, "[[", "gene_sort") # gene_sort
 
-entrez_summary <- function(db, version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
-    id_or_webenv(match.call())
+entrez_summary <- function(db, id=NULL, web_history=NULL, 
+                           version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
+    identifiers <- id_or_webenv()
     v <-match.arg(version)
-    if(v == "2.0"){
-        retmode <- "json"
-    }else retmode <- "xml"
-    response  <- make_entrez_query("esummary", db=db, config=config,
-                                   retmode=retmode, version=v, ...)
+    retmode <- if(v == "2.0") "json" else "xml"
+    args <- c(list("esummary", db=db, config=config, retmode=retmode, version=v, ...), identifiers)
+#    return(args)
+    response  <- do.call(make_entrez_query, args)
     whole_record <- parse_response(response, retmode)
     parse_esummary(whole_record, always_return_list)
 }
