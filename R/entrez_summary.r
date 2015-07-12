@@ -50,7 +50,7 @@ entrez_summary <- function(db, version=c("2.0", "1.0"), always_return_list = FAL
         retmode <- "json"
     }else retmode <- "xml"
     response  <- make_entrez_query("esummary", db=db, config=config,
-                                   retmode=retmode, version=v)
+                                   retmode=retmode, version=v, ...)
     whole_record <- parse_response(response, retmode)
     parse_esummary(whole_record, always_return_list)
 }
