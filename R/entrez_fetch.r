@@ -20,17 +20,17 @@
 #' kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
 #'
 
-entrez_fetch <- function(db, rettype, retmode="text", parsed=FALSE,
+entrez_fetch <- function(db, id=NULL, web_hisory=NULL, rettype, retmode="text", parsed=FALSE,
                          config=NULL, ...){
-    id_or_webenv(match.call())
+    identifiers <- id_or_webenv()
     if(parsed){
         if(rettype != "xml"){            
           msg <- paste("Can't parse records of type", rettype)
           stop(msg)
         }
     }
-    records <- make_entrez_query("efetch", db=db, rettype=rettype,
-                                 config=config, ...) 
+    args <- c(list("efetch", db=db, rettype=rettype, config=config, ...), identifiers) 
+    records <- do.call(make_entrez_query, args) 
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
     if(parsed){
