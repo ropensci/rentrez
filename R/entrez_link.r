@@ -44,11 +44,10 @@
 #'
 
 
-entrez_link <- function(db, dbfrom, cmd='neighbor', config=NULL, ...){
-
-    response <- make_entrez_query("elink", db=db, dbfrom=dbfrom, cmd=cmd,
-                                  config=config, ..., 
-                                  require_one_of=c("id", "WebEnv"))
+entrez_link <- function(dbfrom, id=NULL, db=NULL, WebEnv=NULL, query_key=NULL, cmd='neighbor', config=NULL, ...){
+    id_or_webenv()
+    response <- make_entrez_query("elink", db=db, id=id, WebEnv=WebEnv, dbfrom=dbfrom, cmd=cmd,
+                                  config=config, ...)
     record <- parse_response(response, 'xml')
     Sys.sleep(0.33)
     parse_elink(record, cmd=cmd)
