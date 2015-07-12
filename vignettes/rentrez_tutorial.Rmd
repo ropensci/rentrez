@@ -159,20 +159,20 @@ As an example, we will go searching for COI sequences from all the snail
 `entrez_db_searchable` helps us find fields that can make part of a search term. 
 
 
-```{r fields}
+```r
 search_fields <- entrez_db_searchable("nuccore")
 search_fields
 search_fields$ORGN
 ```
 We can then use those terms in a call to `entrez_search`:
 
-```{r webenvs1, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
+```r
 snail_search <- entrez_search(db = "nuccore", "Gastropoda[ORGN] AND COI[Gene]", usehistory = "y")
 ```
 
 Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the hundreds of ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
 
-```{r webenvs2, message=FALSE, warning=FALSE, comment=NA, cache=FALSE}
+```r
 cookie <- snail_search$WebEnv
 qk <- snail_search$QueryKey
 snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk, rettype = "fasta", retmax = 10)
