@@ -22,6 +22,7 @@
 
 entrez_fetch <- function(db, rettype, retmode="text", parsed=FALSE,
                          config=NULL, ...){
+    id_or_webenv(match.call())
     if(parsed){
         if(rettype != "xml"){            
           msg <- paste("Can't parse records of type", rettype)
@@ -29,8 +30,7 @@ entrez_fetch <- function(db, rettype, retmode="text", parsed=FALSE,
         }
     }
     records <- make_entrez_query("efetch", db=db, rettype=rettype,
-                                 config=config, ..., 
-                                 require_one_of = c("id", "WebEnv"))
+                                 config=config, ...) 
     #NCBI limits requests to three per second
     Sys.sleep(0.33)
     if(parsed){

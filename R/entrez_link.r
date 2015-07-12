@@ -45,7 +45,7 @@
 
 
 entrez_link <- function(dbfrom, id=NULL, db=NULL, WebEnv=NULL, query_key=NULL, cmd='neighbor', config=NULL, ...){
-    id_or_webenv()
+    id_or_webenv(match.call())
     response <- make_entrez_query("elink", db=db, id=id, WebEnv=WebEnv, dbfrom=dbfrom, cmd=cmd,
                                   config=config, ...)
     record <- parse_response(response, 'xml')
