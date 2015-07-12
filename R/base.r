@@ -32,7 +32,7 @@ entrez_tool <- function() 'rentrez'
 
 make_entrez_query <- function(util, config, interface=".fcgi?", ...){
     args <- list(..., email=entrez_email(), tool=entrez_tool())
-    if("id" %in% names(args){
+    if("id" %in% names(args)){
         args$id <- paste(args$id, collapse=",")      
     }
     uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
@@ -52,12 +52,12 @@ id_or_webenv <- function(args){
     cookie_args <- c("WebEnv", "query_key") %in% arg_names
     if("id" %in% arg_names){
         if(any(cookie_args)){
-            stop(msg)
+            stop(msg, call.=FALSE)
         }
         return(invisible())
     }
     if(!all(cookie_args)){
-        stop(msg)
+        stop(msg, call.=FALSE)
     }
     invisible()
 }
