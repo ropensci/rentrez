@@ -96,7 +96,7 @@ print.esearch <- function(x, ...){
     cookie_word <- if("web_history" %in% names(x)) "a" else "no"
     msg<- paste("Entrez search result with", x$count, "hits (object contains",
                 length(x$ids), "IDs and", cookie_word, 
-                "cookie)\n Search term (as translated): "  , display_term, "\n")
+                "web_history object)\n Search term (as translated): "  , display_term, "\n")
     cat(msg)
 }
  
