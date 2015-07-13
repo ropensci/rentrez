@@ -200,7 +200,6 @@ plot(year, as.numeric(papers), type='b', main="The Rise of the Connectome")
 
 ## Finding cross-references : `entrez_link()`:
 
-###Cross-linked data
 
 One of the strengths of the NCBI databases is the degree to which records of one
 type are connected to  other records within the NCBI or to external data
@@ -284,6 +283,10 @@ Each element in that list contains a Url for information aout this paper:
 ```{r, urls}
 paper_links$linkouts
 ```
+
+The full list of options for the `cmd` argument are given in in-line
+documentation (`?entrez_link`).
+
 ## Getting summary data: `entrez_summary()`
 
 Having foundt the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
@@ -346,26 +349,94 @@ date_and_cite <- extract_from_esummary(multi_summs, c("pubdate", "pmcrefcount", 
 knitr::kable(head(t(date_and_cite)), row.names=FALSE)
 ```
 
-##Fetching full records
+##Fetching full records: `entrez_fetch()`
 
-```{r, eval = F}
-entrenzID <- c('11647', '351')
-fa.list <- list() ##use a list to store the fasta sequences
-for( gid in entrenzID) {
-    ez_link <- entrez_link(dbfrom = 'gene',
-                           id = id,
-                           db = 'nuccore')
-    refRNAid <- ez_link$gene_nuccore_refseqrna ##here we got refseq ids corresponding to gid gene
-    for(rnai in refRNAid) {
-        fa <- entrez_fetch(db = 'nuccore',
-                           id = rnai,
-                           rettype = 'fasta')
-        fa.list[[length(fa.list) + 1]] <- fa
-    }
-}
-##fa.list now contrains the sequence data of genes of interest
-str(fa.list)
+As useful as the summary records are, sometimes they just don't have the
+information that you need. If you want a complete representation of a record you
+can use `entrez_fetch`, using the argument `rettype` specify for format you'd
+like the record in.
+
+###Fetch DNA sequences in fasta format
+
+Let's extend the example given in the `entrez_link()` by dowloading sequences in
+the FASTA format. We can start by repeating the steps in the earlier example
+to get nucleotide IDs for refseq transcripts for two genes:
+
+```{r, transcript_ids}
+gene_ids <- entrenzID <- c(11647, 351)
+linked_seq_ids <- entrez_link(dbfrom="gene", id=gene_ids, db="nuccore")
+linked_transripts <- linked_seq_ids$links$gene_nuccore_refseqrna
+head(linked_transripts)
 ```
+
+Now we can get our sequnces with `entrez_fetch`, setting `rettype` to "fasta".
+(The list of formats avaliable for [each databse is give in this table](http://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/)):
+
+```{r fetch_fasta}
+all_recs <- entrez_fetch(db="nuccore", id=linked_transripts, rettype="fasta")
+typeof(all_recs)
+nchar(all_recs)
+```
+
+Congratulations, now you have a really huge character vector! If you want to use
+these sequences in some other application you can write them to file:
+
+```r
+write(all_recs, file="my_transcripts.fasta")
+```
+
+Alternatively, if you want to use these sequences in an r session you write them
+to temporary file then read that. In this case I'm using `read.dna()` from the
+pylogenetics package ape (but not executing the code block in this vignette, so
+you don't have to install that package):
+
+```r
+temp <- tempfile()
+write(all_recs, temp)
+parsed_recs <- ape::read.dna(all_recs, temp)
+```
+
+###Fetch a parsed XML document
+
+Most of the NCBI's databases can return records in XML format. In additional to
+downloading the text-representation of these files, `entrez_fetch()` can return
+ibjects parsed by the `XML` package. As an example, we can check of `taxonomy`
+databases' record for the (did I mention they are amazing....) _Tetrahymena
+thermophila_. 
+
+```{r, Tt_tax}
+Tt <- entrez_search(db="taxonomy", term="(Tetrahymena thermophila[ORGN]) AND Species[RANK]")
+tax_rec <- entrez_fetch(db="taxonomy", id=Tt$ids, rettype="xml", parsed=TRUE)
+class(tax_rec)
+```
+
+The package XML (which you have if you have installed `rentrez`) provides
+functions to get information from these files. For relatively simple records
+like this one you can use `XML::xmlToList`:
+
+```{r, Tt_list}
+tax_list <- XML::xmlToList(tax_rec)
+tax_list$Taxon$GeneticCode
+```
+
+For more complex records, which generate deeply-nested lists, you can use
+[XPath experssions](https://en.wikipedia.org/wiki/XPath) along with the functions 
+`XML::xpathApply` or the extraction operator `[` to get specific parts of the
+file. In this case we can get the scientific name of each taxon in _T.
+thermophila_'s lineage:
+
+```{r, Tt_path}
+tax_rec["//LineageEx/Taxon/ScientificName"]
+```
+
+As the name suggests, `XML::xpathApply()` can be used to apply a function to
+each node. A particularly useful one is `XML::xmlValue` which returns the
+content of the node:
+
+```{r, Tt_apply}
+XML::xpathApply(tax_rec, "//LineageEx/Taxon/ScientificName", XML::xmlValue)
+```
+There are a few more complex examples of using `XPath` [on the rentrez wiki](https://github.com/ropensci/rentrez/wiki)
 
 ##Using NCBI's Web History features
 
