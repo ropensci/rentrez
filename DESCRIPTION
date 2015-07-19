@@ -11,9 +11,9 @@ Authors@R: c(
 Depends:
     R (>= 2.6.0)
 Imports:
+    XML,
     httr (>= 0.5),
-    jsonlite (>= 0.9),
-    XML
+    jsonlite (>= 0.9)
 Suggests:
     testthat,
     knitr

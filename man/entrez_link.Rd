@@ -4,14 +4,19 @@
 \alias{entrez_link}
 \title{Get links to datasets related to records from an NCBI database}
 \usage{
-entrez_link(db, dbfrom, cmd = "neighbor", config = NULL, ...)
+entrez_link(dbfrom, web_history = NULL, id = NULL, db = NULL,
+  cmd = "neighbor", config = NULL, ...)
 }
 \arguments{
+\item{dbfrom}{character Name of database from which the Id(s) originate}
+
+\item{web_history}{a web_history object}
+
+\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+
 \item{db}{character Name of the database to search for links (or use "all" to
 search all databases available for \code{db}. \code{entrez_db_links} allows you
 to discover databases that might have linked information (see examples).}
-
-\item{dbfrom}{character Name of database from which the Id(s) originate}
 
 \item{cmd}{link function to use. Allowled values include
 \itemize{
@@ -32,7 +37,8 @@ to discover databases that might have linked information (see examples).}
 
 \item{config}{vector configuration options passed to httr::GET}
 
-\item{\dots}{character Additional terms to add to the request}
+\item{\dots}{character Additional terms to add to the request, see NCBI
+documentation linked to in referenes for a complete list}
 }
 \value{
 An elink object containing the data defined by the \code{cmd} argument
@@ -56,9 +62,11 @@ set for the \code{cmd} argument. Printing the returned object lists the names
 }
 }
 \references{
-http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_
+\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs
+
+\code{entrez_db_links}
 }
 

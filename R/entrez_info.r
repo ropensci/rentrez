@@ -15,10 +15,11 @@
 #'(set by 'db')
 #'@seealso \code{\link[httr]{config}} for available httr configurations
 #'@family einfo
+#'@importFrom XML xmlChildren xmlName xpathSApply
 #'@examples
 #'\dontrun{
 #'all_the_data <- entrez_info()
-#'XML::xpathSApply(all_the_data, "//DbName", XML::xmlValue)
+#'xpathSApply(all_the_data, "//DbName", xmlValue)
 #'entrez_dbs()
 #'}
 #'@export
@@ -42,7 +43,7 @@ entrez_info <- function(db=NULL, config=NULL){
 #' entrez_dbs()
 #'}
 entrez_dbs <- function(config=NULL){
-    XML::xpathSApply(entrez_info(config), "//DbName", XML::xmlValue)
+    xpathSApply(entrez_info(config), "//DbName", xmlValue)
 }
 
 
@@ -64,9 +65,9 @@ entrez_dbs <- function(config=NULL){
 
 entrez_db_summary <- function(db, config=NULL){
     rec <- entrez_info(db, config)
-    unparsed <- XML::xpathApply( rec, "//DbInfo/*[not(self::LinkList or self::FieldList)]")
-    res <- sapply(unparsed, XML::xmlValue)
-    names(res) <- sapply(unparsed, XML::xmlName)
+    unparsed <- xpathApply( rec, "//DbInfo/*[not(self::LinkList or self::FieldList)]")
+    res <- sapply(unparsed, xmlValue)
+    names(res) <- sapply(unparsed, xmlName)
     class(res) <- c("eInfoEntry", class(res))
     res
 }
@@ -98,12 +99,12 @@ entrez_db_summary <- function(db, config=NULL){
 #'@export
 entrez_db_links <- function(db, config=NULL){
     rec <- entrez_info(db, config)
-    unparsed <- XML::xpathApply(rec, "//Link", XML::xmlChildren)
-    res <- lapply(unparsed, lapply, XML::xmlValue)
+    unparsed <- xpathApply(rec, "//Link", xmlChildren)
+    res <- lapply(unparsed, lapply, xmlValue)
     res <- lapply(res, add_class, new_class='eInfoEntry')
     names(res) <- sapply(res, "[[", "DbTo")
     class(res) <- c("eInfoLink", "eInfoList", "list")
-    attr(res, 'db') <- XML::xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
+    attr(res, 'db') <- xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
     res
 }
 
@@ -135,12 +136,12 @@ entrez_db_searchable <- function(db, config=NULL){
     rec <- entrez_info(db, config)
     unparsed <- xpathApply(rec, 
                            "/eInfoResult/DbInfo/FieldList/Field",
-                           XML::xmlChildren)
-    res <- lapply(unparsed, lapply, XML::xmlValue)
+                           xmlChildren)
+    res <- lapply(unparsed, lapply, xmlValue)
     res <- lapply(res, add_class, new_class="eInfoEntry")
     names(res) <- sapply(res, "[[", "Name")
     class(res) <- c("eInfoSearch", "eInfoList", "list")
-    attr(res, 'db') <- XML::xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
+    attr(res, 'db') <- xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
     res
 }
 

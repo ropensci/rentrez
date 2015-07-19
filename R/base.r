@@ -46,26 +46,28 @@ make_entrez_query <- function(util, config, interface=".fcgi?", ...){
 # specified for those functions that need one.
 ##
 
-id_or_webenv <- function(args){
-    msg <- "Must specify either (not both) 'id' or web history arguments 'WebEnv' and 'query_key'"
-    arg_names <- names(Filter(function(x) !is.null(x), args))
-    cookie_args <- c("WebEnv", "query_key") %in% arg_names
-    if("id" %in% arg_names){
-        if(any(cookie_args)){
+id_or_webenv <- function(){
+    args <- sys.frame(sys.parent())
+    msg <- "Must specify either (not both) 'id' or web history arguments 'WebEnv' and 'query_key'" 
+    if(!is.null(args$id)){
+        if(!is.null(args$web_history)){
             stop(msg, call.=FALSE)
         }
-        return(invisible())
+        return(list(id=args$id))
     }
-    if(!all(cookie_args)){
+    if(is.null(args$web_history)){
         stop(msg, call.=FALSE)
     }
-    invisible()
+    list(WebEnv=args$web_history$WebEnv, query_key=args$web_history$QueryKey)
 }
 
 
 entrez_check  <- function(req){
   if (req$status_code < 400) {
       return(invisible())
+  }
+  if (req$status_code == 414){
+      stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the tutorial")
   }
   message <- httr::content(req)
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
@@ -79,7 +81,7 @@ check_xml_errors <- function(x){
     errs <- x["//ERROR"]
     if( length(errs) > 0){
         for(e in errs){
-            warning(XML::xmlValue(e))
+            warning(xmlValue(e))
         }
     }
     invisible()
@@ -88,13 +90,28 @@ check_xml_errors <- function(x){
 
 parse_response <- function(x, type=NULL){
     res <- switch(type, 
-            "json" = jsonlite::fromJSON(x),
-            "xml"  = XML::xmlTreeParse(x, useInternalNodes=TRUE),
+            "json" = fromJSON(x),
+            "xml"  = xmlTreeParse(x, useInternalNodes=TRUE),
             "text" = x, #citmatch uses plain old plain text
              x #fall-through, if in doubt, return un-parsed response
     )
     return(res)
 }
+
+#contsructor for web history objects
+web_history <- function(WebEnv, QueryKey){
+    res <- list(WebEnv=WebEnv, QueryKey=QueryKey)
+    class(res) <- list("web_history", "list")
+    res
+}
+
+#'@export
+print.web_history <- function(x, ...){
+    cat("Web history object (QueryKey = ", x$QueryKey,
+        ", WebEnv = ", substr(x$WebEnv, 1, 12), "...", ")\n",sep="")    
+}
+
+
 
 add_class <- function(x, new_class){
     class(x) <- c(new_class, class(x))

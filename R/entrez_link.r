@@ -9,6 +9,8 @@
 #'@param db character Name of the database to search for links (or use "all" to 
 #' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
+#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param web_history a web_history object  
 #'@param dbfrom character Name of database from which the Id(s) originate
 #'@param cmd link function to use. Allowled values include
 #' \itemize{
@@ -26,13 +28,16 @@
 #'   \item prlinks. As 'llinks' but returns only the primary external link for
 #'   each ID.
 #'}
-#'@param \dots character Additional terms to add to the request
+#'@param \dots character Additional terms to add to the request, see NCBI
+#'documentation linked to in referenes for a complete list
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
+#'@seealso  \code{entrez_db_links}
 #'@return An elink object containing the data defined by the \code{cmd} argument
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
-#'@references http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_
+#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
+#'@importFrom XML xmlToList
 #' @examples
 #' \donttest{
 #'  (pubmed_search <- entrez_search(db = "pubmed", term ="10.1016/j.ympev.2010.07.013[doi]"))
@@ -44,14 +49,14 @@
 #'
 
 
-entrez_link <- function(dbfrom, id=NULL, db=NULL, WebEnv=NULL, query_key=NULL, cmd='neighbor', config=NULL, by_id=FALSE, ...){
-    id_or_webenv(match.call())
-    args <- list("elink", db=db, WebEnv=WebEnv, dbfrom=dbfrom, cmd=cmd, config=config, ...)
+entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbor', config=NULL, ...){
+    identifiers <- id_or_webenv()
+    args <- c(list("elink", db=db, dbfrom=dbfrom, cmd=cmd, config=config, ...), identifiers)
     if(by_id){
         if(is.null(id)) stop("Can't use by_id mode without ids!")
         args <- c(args, structure(id, names=rep("id", length(id))))
     } else args$id <- id
-    response <- do.call(make_entrez_query, args)
+    response <- do.call(make_entrez_query,args)
     record <- parse_response(response, 'xml')
     Sys.sleep(0.33)
     parse_elink(record, cmd=cmd)
@@ -92,10 +97,10 @@ parse_default <- function(x, cmd){
 
 parse_neighbors <- function(x, scores=FALSE){
     content <- ""
-    if("-1" %in% XML::xpathSApply(x, "//IdList/Id", XML::xmlValue)){
+    if("-1" %in% xpathSApply(x, "//IdList/Id", xmlValue)){
        warning(warning("Some IDs not found"))
     }
-    db_names <- XML::xpathSApply(x, "//LinkName", XML::xmlValue)
+    db_names <- xpathSApply(x, "//LinkName", xmlValue)
     links <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
     class(links) <- c("elink_classic", "list")
     res <- list(links = links, file=x)
@@ -111,17 +116,17 @@ parse_neighbors <- function(x, scores=FALSE){
 }
 
 parse_history <- function(x){
-    qks <-    XML::xpathSApply(x, "//LinkSetDbHistory/QueryKey", XML::xmlValue, simplify=FALSE)
-    names(qks) <-    XML::xpathSApply(x, "//LinkSetDbHistory/LinkName", XML::xmlValue)
-    cookie <- XML::xmlValue(x[["//WebEnv"]])
-    res <- list(WebEnv = cookie, QueryKeys=qks)
-    attr(res, "content") <- paste0(" $WebEnv: A WebEnv (cookie) value \n",
-                                   " $QueryKeys: A list of QUeryKeys for each included database")
+    qks <-    xpathSApply(x, "//LinkSetDbHistory/QueryKey", xmlValue, simplify=FALSE)
+    cookie <- xmlValue(x[["//WebEnv"]])
+    histories <- lapply(qks, web_history, WebEnv=cookie)
+    names(histories) <-    xpathSApply(x, "//LinkSetDbHistory/LinkName", xmlValue)
+    res <- list(web_histories=histories, file=x)
+    attr(res, "content") <- paste0(" $web_histories: Objects containing web history information\n")
     res
 }
 
 parse_acheck <- function(x){
-    db_info <- XML::xpathApply(x, "//LinkInfo", XML::xmlToList)
+    db_info <- xpathApply(x, "//LinkInfo", xmlToList)
     names(db_info) <-  sapply(db_info, "[[","LinkName")
     class(db_info)  <-  "elink_classic"
     res <- list(linked_databses = db_info)
@@ -131,7 +136,7 @@ parse_acheck <- function(x){
 
 parse_check <- function(x, attr){
     path <- paste0("//Id/@", attr)
-    is_it_y <- structure(names= XML::xpathSApply(x, "//Id", XML::xmlValue),
+    is_it_y <- structure(names= xpathSApply(x, "//Id", xmlValue),
                      x[path] == "Y")
     res <- list(check = is_it_y)
     attr(res, "content") <- " $check: TRUE/FALSE for wether each ID has links"
@@ -140,8 +145,8 @@ parse_check <- function(x, attr){
 
 parse_linkouts <- function(x){
     per_id <- x["//IdUrlList/IdUrlSet"]
-    list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], XML::xmlToList))
-    names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) XML::xmlValue(x[["Id"]])))
+    list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], xmlToList))
+    names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) xmlValue(x[["Id"]])))
     list_o_lists <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
     list_o_lists <- lapply(list_o_lists, lapply, add_class, "linkout")
     res <- list( linkouts = list_o_lists)
@@ -170,5 +175,5 @@ print.elink_classic <- function(x, ...){
 }
 get_linked_elements <- function(record, dbname, element){
     path <-  paste0("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
-    return(XML::xpathSApply(record, path, XML::xmlValue))
+    return(xpathSApply(record, path, xmlValue))
 }
