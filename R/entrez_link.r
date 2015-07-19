@@ -9,9 +9,13 @@
 #'@param db character Name of the database to search for links (or use "all" to 
 #' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
-#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param id vector with unique ID(s) for records in database \code{db}. 
 #'@param web_history a web_history object  
 #'@param dbfrom character Name of database from which the Id(s) originate
+#'@param by_id logial If FALSE (default) return a single 
+#' \code{elink} objects containing links for all of the provided \code{id}s. 
+#' Alternatively, if TRUE return a list of \code{elink} objects, one for each 
+#' ID in \code{id}. 
 #'@param cmd link function to use. Allowled values include
 #' \itemize{
 #'   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
@@ -34,6 +38,7 @@
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso  \code{entrez_db_links}
 #'@return An elink object containing the data defined by the \code{cmd} argument
+#'(if by_id=FALSE) or a list of such object (if by_id=TRUE).
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
@@ -66,12 +71,16 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
 # Parising Elink is.... fun. The XML files returned by the different 'cmd'
 # args are very differnt, so we can't hope for a one-size-fits all solution. 
 # Instead, we can break of a few similar cases and write parsing functions, 
-# whih we dispatch via a big switch statement
+# whih we dispatch via a big switch statement. 
 #
-# Each parising function should return a list with elements corresponding to the
+# Each parsing function should return a list with elements corresponding to the
 # data n XML, and set the attribute "content" to a brief description of what
 # each element in the record contains, to be used by the print fxn.
-
+#
+# In addition, the "by_id" mode
+# means we we sometimes reuturn a list of elink objects, have applied the
+# relevant function to each "<LinkSet>" in the XML.
+#
 parse_elink <- function(x, cmd, by_id){
     if(by_id){
        res <-  xpathApply(x, "//LinkSet", .parse_elink_base, cmd)
