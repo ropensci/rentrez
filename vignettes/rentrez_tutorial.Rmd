@@ -77,7 +77,7 @@ entrez_db_searchable("sra")
 Just how these 'helper' functions might help you will become clearer once
 you've started using the EUtils api, so let's get started.
 
-## Searching databases: `entrez_search`
+## Searching databases: `entrez_search()`
 
 The function `entrez_search()` lets you search for records in a given NCBI
 database.  In the simplest case you just need to provide a database name (`db`)
@@ -273,7 +273,7 @@ this document the first paper linked to our gene of interest above had a pmid of
 by setting the `cmd` argument to 'llinks':
 
 ```{r, outlinks}
-paper_links <- entrez_link(db='', dbfrom="pubmed", id=25500142, cmd="llinks")
+paper_links <- entrez_link(dbfrom="pubmed", id=25500142, cmd="llinks")
 paper_links
 ```
 
