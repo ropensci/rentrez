@@ -9,9 +9,13 @@
 #'@param db character Name of the database to search for links (or use "all" to 
 #' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
-#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param id vector with unique ID(s) for records in database \code{db}. 
 #'@param web_history a web_history object  
 #'@param dbfrom character Name of database from which the Id(s) originate
+#'@param by_id logial If FALSE (default) return a single 
+#' \code{elink} objects containing links for all of the provided \code{id}s. 
+#' Alternatively, if TRUE return a list of \code{elink} objects, one for each 
+#' ID in \code{id}. 
 #'@param cmd link function to use. Allowled values include
 #' \itemize{
 #'   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
@@ -34,6 +38,7 @@
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso  \code{entrez_db_links}
 #'@return An elink object containing the data defined by the \code{cmd} argument
+#'(if by_id=FALSE) or a list of such object (if by_id=TRUE).
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
 #'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
@@ -49,26 +54,44 @@
 #'
 
 
-entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbor', config=NULL, ...){
+entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbor', by_id=FALSE, config=NULL, ...){
     identifiers <- id_or_webenv()
-    args <- c(list("elink", db=db, dbfrom=dbfrom, cmd=cmd, config=config, ...), identifiers)
+
+    args <- c(list("elink", db=db, dbfrom=dbfrom, cmd=cmd, config=config, by_id=by_id, ...), identifiers)
+    if(by_id){
+        if(is.null(id)) stop("Can't use by_id mode without ids!")
+    } 
     response <- do.call(make_entrez_query,args)
     record <- parse_response(response, 'xml')
     Sys.sleep(0.33)
-    parse_elink(record, cmd=cmd)
+    parse_elink(record, cmd=cmd, by_id=by_id)
 }
 
 #
 # Parising Elink is.... fun. The XML files returned by the different 'cmd'
 # args are very differnt, so we can't hope for a one-size-fits all solution. 
 # Instead, we can break of a few similar cases and write parsing functions, 
-# whih we dispatch via a big switch statement
+# whih we dispatch via a big switch statement. 
 #
-# Each parising function should return a list with elements corresponding to the
+# Each parsing function should return a list with elements corresponding to the
 # data n XML, and set the attribute "content" to a brief description of what
 # each element in the record contains, to be used by the print fxn.
+#
+# In addition, the "by_id" mode
+# means we we sometimes reuturn a list of elink objects, have applied the
+# relevant function to each "<LinkSet>" in the XML.
+#
+parse_elink <- function(x, cmd, by_id){
+    if(by_id){
+       res <-  xpathApply(x, "//LinkSet", .parse_elink_base, cmd)
+       class(res) <- c("elink_list", "list")
+       return(res)
+       
+    }
+    .parse_elink_base(x,cmd)
+}
 
-parse_elink <- function(x, cmd){
+.parse_elink_base <- function(x, cmd){
     check_xml_errors(x)
     res <- switch(cmd,
                   "neighbor"         = parse_neighbors(x),
@@ -140,7 +163,7 @@ parse_check <- function(x, attr){
 }
 
 parse_linkouts <- function(x){
-    per_id <- x["//IdUrlList/IdUrlSet"]
+    per_id <- xpathApply(x, "//IdUrlList/IdUrlSet")
     list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], xmlToList))
     names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) xmlValue(x[["Id"]])))
     list_o_lists <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
@@ -150,6 +173,13 @@ parse_linkouts <- function(x){
     res
 }
 
+
+#' @export
+
+print.elink_list <- function(x, ...){
+    payload <- attr(x[[1]], "content")
+    cat("List of", length(x), "elink objects,each containing\n", payload)
+}
 
 #' @export
 print.elink <- function(x, ...){

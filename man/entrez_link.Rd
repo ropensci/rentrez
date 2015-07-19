@@ -5,7 +5,7 @@
 \title{Get links to datasets related to records from an NCBI database}
 \usage{
 entrez_link(dbfrom, web_history = NULL, id = NULL, db = NULL,
-  cmd = "neighbor", config = NULL, ...)
+  cmd = "neighbor", by_id = FALSE, config = NULL, ...)
 }
 \arguments{
 \item{dbfrom}{character Name of database from which the Id(s) originate}
