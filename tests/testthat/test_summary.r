@@ -44,15 +44,6 @@ test_that("JSON and XML objects are similar", {
           
 })
 
-test_that("Suggestions when slicing verion 2.0 records ", { 
-    sapply(pop_summ_json,  function(x) 
-           expect_warning(x$Journal, "has no object named 'Journal'"))
-    sapply(pop_summ_json,  function(x) 
-           expect_warning(x[['Journal']], "has no object named 'Journal'"))
-    sapply(pop_summ_json,  function(x) 
-           expect_warning(x['Journal']))
-})
-    
 test_that("We can print summary records", {
       expect_output(pop_summ_json[[1]], "esummary result with \\d+ items")        
        expect_output(pop_summ_xml[[1]], "esummary result with \\d+ items")        
