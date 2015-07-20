@@ -12,7 +12,7 @@ entrez_link(dbfrom, web_history = NULL, id = NULL, db = NULL,
 
 \item{web_history}{a web_history object}
 
-\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+\item{id}{vector with unique ID(s) for records in database \code{db}.}
 
 \item{db}{character Name of the database to search for links (or use "all" to
 search all databases available for \code{db}. \code{entrez_db_links} allows you
@@ -35,6 +35,11 @@ to discover databases that might have linked information (see examples).}
   each ID.
 }}
 
+\item{by_id}{logial If FALSE (default) return a single
+\code{elink} objects containing links for all of the provided \code{id}s.
+Alternatively, if TRUE return a list of \code{elink} objects, one for each
+ID in \code{id}.}
+
 \item{config}{vector configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request, see NCBI
@@ -42,6 +47,7 @@ documentation linked to in referenes for a complete list}
 }
 \value{
 An elink object containing the data defined by the \code{cmd} argument
+(if by_id=FALSE) or a list of such object (if by_id=TRUE).
 
 file XMLInternalDocument xml file resulting from search, parsed with
 \code{\link{xmlTreeParse}}
