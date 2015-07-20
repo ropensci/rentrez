@@ -51,11 +51,10 @@ test_that("Elink sub-elements can be acessed and printed", {
 })
 
 
-test_that("Elink warns on mis-spelled/unknown cmds",{
-    expect_warning(rcheck <- entrez_link(dbfrom = "pubmed",
+test_that("Elink errors on mis-spelled/unknown cmds",{
+    expect_error(rcheck <- entrez_link(dbfrom = "pubmed",
                                          id = 19880848, db = "all", 
-                                         cmd='rcheck'), 
-                   "Command rcheck is not supported")
+                                         cmd='rcheck'))
 })
 
 

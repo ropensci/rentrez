@@ -82,44 +82,43 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
 # relevant function to each "<LinkSet>" in the XML.
 #
 parse_elink <- function(x, cmd, by_id){
-    if(by_id){
-       res <-  xpathApply(x, "//LinkSet", .parse_elink_base, cmd)
-       class(res) <- c("elink_list", "list")
-       return(res)
-       
-    }
-    .parse_elink_base(x,cmd)
-}
-
-.parse_elink_base <- function(x, cmd){
     check_xml_errors(x)
-    res <- switch(cmd,
-                  "neighbor"         = parse_neighbors(x),
-                  "neighbor_score"   = parse_neighbors(x, scores=TRUE),
-                  "neighbor_history" = parse_history(x),
-                  "acheck"           = parse_acheck(x),
-                  "ncheck"           = parse_check(x, "HasNeighbor"),
-                  "lcheck"           = parse_check(x, "HasLinkOut"),
-                  "llinkslib"        = parse_linkouts(x),
-                  "llinks"           = parse_linkouts(x),
-                  "prlinks"          = parse_linkouts(x),
-                  parse_default(x, cmd)
-    )
-    class(res) <- c("elink", "list")
-    res
+    f <- make_elink_fxn(cmd)
+    res <-  xpathApply(x, "//LinkSet",f)
+    if(length(res) > 1){
+        class(res) <- c("elink_list", "list")
+        return(res)
+    }
+    res[[1]]
 }
 
-parse_default <- function(x, cmd){
-    warning(paste("Don't know how to deal with cmd", cmd, "returning xml file"))
-    x
+make_elink_fxn <- function(cmd){
+    f <- switch(cmd,
+                  "neighbor"         = parse_neighbors,
+                  "neighbor_score"   = function(x) parse_neighbors(x, scores=TRUE),
+                  "neighbor_history" = parse_history,
+                  "acheck"           = parse_acheck,
+                  "ncheck"           = function(x) parse_check(x, "HasNeighbor"),
+                  "lcheck"           = function(x) parse_check(x, "HasLinkOut"),
+                  "llinkslib"        = parse_linkouts,
+                  "llinks"           = parse_linkouts,
+                  "prlinks"          = parse_linkouts,
+                  stop("Don't know how to deal with cmd ", cmd)
+    )
+    function(x){
+        res <- f(x)
+        class(res) <- c("elink", "list")
+        res
+    }
+    
 }
 
 parse_neighbors <- function(x, scores=FALSE){
     content <- ""
     if("-1" %in% xpathSApply(x, "//IdList/Id", xmlValue)){
-       warning(warning("Some IDs not found"))
+       warning("Some IDs not found")
     }
-    db_names <- xpathSApply(x, "//LinkName", xmlValue)
+    db_names <- xpathSApply(x, "LinkSetDb/LinkName", xmlValue)
     links <- sapply(db_names, get_linked_elements, record=x, element="Id", simplify=FALSE)
     class(links) <- c("elink_classic", "list")
     res <- list(links = links, file=x)
@@ -154,9 +153,10 @@ parse_acheck <- function(x){
 }
 
 parse_check <- function(x, attr){
-    path <- paste0("//Id/@", attr)
-    is_it_y <- structure(names= xpathSApply(x, "//Id", xmlValue),
-                     x[path] == "Y")
+    path <- paste0("IdCheckList/Id/@", attr)
+    is_it_y <- structure(names= xpathSApply(x, "IdCheckList/Id", xmlValue),
+                         xpathSApply(x, path, `==`, "Y"))
+                   
     res <- list(check = is_it_y)
     attr(res, "content") <- " $check: TRUE/FALSE for wether each ID has links"
     res
@@ -200,6 +200,6 @@ print.elink_classic <- function(x, ...){
    print (names(x), quote=FALSE)
 }
 get_linked_elements <- function(record, dbname, element){
-    path <-  paste0("//LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
+    path <-  paste0("LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
     return(xpathSApply(record, path, xmlValue))
 }

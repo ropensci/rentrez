@@ -287,6 +287,31 @@ paper_links$linkouts
 The full list of options for the `cmd` argument are given in in-line
 documentation (`?entrez_link`).
 
+###Using more than one ID
+
+It is possible to pass more than on ID to `entrez_link()`. By default, doing so
+will give you a single elink object containing the complete set of links fo
+r _all_ of the IDs that you specified. So, if you were looking for protein IDs
+related to specific genes youd could do;
+
+```{r, multi_default}
+all_links_together  <- entrez_link(db="protein", dbfrom="gene", id=c("93100", "223646"))
+all_links_together
+all_links_together$links$gene_protein
+```
+
+Although this behaviour might sometimes be useful, it means we've lost track o
+which `protein` ID is linked to which `gene` ID. To retain that information we
+can set `by_id` to `TRUE`. Doign so gives us a list of elink objects, each once
+containing links from a single `gene` ID;
+
+```{r, multi_byid}
+all_links_sep  <- entrez_link(db="protein", dbfrom="gene", id=c("93100", "223646"), by_id=TRUE)
+all_links_sep
+lapply(all_links_sep, function(x) x$links$gene_protein)
+```
+
+
 ## Getting summary data: `entrez_summary()`
 
 Having foundt the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
