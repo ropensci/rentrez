@@ -45,8 +45,10 @@ test_that("JSON and XML objects are similar", {
 })
 
 test_that("We can print summary records", {
+      expect_output(pop_summ_json, "List of  4 esummary records")        
       expect_output(pop_summ_json[[1]], "esummary result with \\d+ items")        
-       expect_output(pop_summ_xml[[1]], "esummary result with \\d+ items")        
+      expect_output(pop_summ_xml, "List of  4 esummary records")        
+      expect_output(pop_summ_xml[[1]], "esummary result with \\d+ items")        
 })
 
 test_that("We can detect errors in esummary records", {
@@ -58,4 +60,14 @@ test_that("We can detect errors in esummary records", {
     )
 })
                          
-test_that
+test_that("We can extract elements from esummary object", {
+    expect_that(extract_from_esummary(pop_summ_xml, c("Title", "TaxId")), is_a("matrix"))
+    expect_that(extract_from_esummary(pop_summ_xml, c("Title", "TaxId"), simplify=FALSE), is_a("list"))
+    expect_that(extract_from_esummary(pop_summ_json, "title"), is_a("character"))
+   
+})
+
+test_that("We can get a list of one element if we ask for it", {
+    expect_that(entrez_summary(db="popset", id=307075396, always_return_list=TRUE), is_a("list"))
+    expect_that(entrez_summary(db="popset", id=307075396), is_a("esummary"))
+})
