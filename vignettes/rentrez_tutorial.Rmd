@@ -465,6 +465,96 @@ There are a few more complex examples of using `XPath` [on the rentrez wiki](htt
 
 ##Using NCBI's Web History features
 
+When you are dealing with very large queries it can be time consuming to pass
+long vectors of unique IDs to and from the NCBI. The NCBI provides a 'web
+history' feature, that allows users to store a set of IDs on their servers and
+refer to them later.  
+
+###Post a set of IDs to the NCBI for later use: `entrez_post()`
+
+If you have a list of many NCBI IDs that you want to use later on, you can post
+them to the NCBI's severs. To make a brief example I'm going to post just one
+ID, the `omim` identifier for asthma:
+
+```{r, asthma}
+upload <- entrez_post(db="omim", id=600807)
+upload
+```
+The NCBI sends you back from information so you can use to refer to IDS you just
+uploaded and `rentrez` represents that information as a `web_history` object. 
+
+###Get a `web_history` object from `entrez_search` or `entrez_link()`
+
+In addition to directly uploading ids to the NCBI, you can use the web history
+features with `entrez_search` and `entrez_link`. For instance, say you wanted to
+find all of the sequences of the widely-studied gene `COI` from snails
+(gastropods):
+
+```{r, snail_search}
+entrez_search(db="nuccore", term="COI[Gene] AND Gastropoda[ORGN]")
+```
+
+That's a lot of sequences! If you really wanted to download all of these it
+would be a good idea to save all those IDs to the server by setting
+`use_history` to `TRUE` (note you now get a `web_history` object along with your
+normal search result):
+
+```{r, snail_history}
+snail_coi <- entrez_search(db="nuccore", term="COI[Gene] AND Gastropoda[ORGN]", use_history=TRUE)
+snail_coi
+snail_coi$web_history
+```
+
+Similarily, `entrez_link()` can return `web_history` objects by using the `cmd`
+`neighbor_history`. Let's find SNPs associated with asthma (using the `omim` ID
+mentioned above):
+
+```{r, asthma_links}
+asthma_snps <- entrez_link(dbfrom="omim", db="snp", cmd="neighbor_history", id=600807)
+asthma_snps$web_histories
+```
+
+As you can see, instead of returning lists of IDs for each linked database (as
+it would be default), `entrez_link()` returns a list of web_histories:
+
+###Use a `web_history` object
+
+Once you have those IDs stored on the NCBI's servers, you are going to want to
+do something with them. The functions `entrez_fetch()` `entrez_summary()` and
+`entrez_link()` can all use `web_history` objects in exactly the same way they
+use IDs. 
+
+So, we could repeat the last example (finding SNPs linked to asthma) using our
+uploaded id...
+
+```{r, asthma_links_upload}
+asthma_snps <- entrez_link(dbfrom="omim", db="snp", cmd="neighbor_history", web_history=upload)
+asthma_snps
+```
+
+... then summarize each linked SNP using `entrez_summary()`:
+                           
+
+```{r, links}
+snp_summ <- entrez_summary(db="snp", web_history=asthma_snps$web_histories$omim_snp)
+knitr::kable(extract_from_esummary(snp_summ, c("chr", "fxn_class", "global_maf")))
+```
+
+If you really wanted to yo could download all those thousands of COI sequences.
+When downoading large sets of data, it is a good idea to take advatanage of the
+arguments `retmax` and `restart` to split the request up into smaller chunks.
+For instance, we could get the first 200 sequences in 50 sequence chunks like
+so (this code block is not executed to save time and bandwith):
+
+
+```r
+for( seq_start in seq(1,200,50)){
+    recs <- entrez_fetch(db="nuccore", web_history=snail_coi$web_history,
+                         rettype="fasta", retmax=50, retstart=seq_start)
+    cat(recs, file="snail_coi.fasta", append=TRUE)
+    cat(seq_start+49, "sequences downloaded\r")
+}
+```
 
 
 
