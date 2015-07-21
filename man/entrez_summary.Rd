@@ -10,7 +10,7 @@ entrez_summary(db, id = NULL, web_history = NULL, version = c("2.0",
 \arguments{
 \item{db}{character Name of the database to search for}
 
-\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+\item{id}{vector with unique ID(s) for records in database \code{db}.}
 
 \item{web_history}{A web_history object}
 
@@ -22,7 +22,7 @@ when only one ID is provided.}
 \item{config}{vector configuration options passed to \code{httr::GET}}
 
 \item{\dots}{character Additional terms to add to the request, see NCBI
-documentation linked to in referenes for a complete list}
+documentation linked to in references for a complete list}
 }
 \value{
 A list of esummary records (if multiple IDs are passed and

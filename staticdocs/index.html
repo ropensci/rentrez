@@ -43,7 +43,7 @@
 to search or download data from various NCBI databases. </p>
 
 <p>The package hasn&#39;t been thoroughly tested yet, but the functions for each of 
-the Eutils functions are implimented. If you try the package and find bugs
+the Eutils functions are implemented. If you try the package and find bugs
 please let me know.</p>
 
 <p>##Install</p>
@@ -84,7 +84,7 @@ papers, but we can use <code>entrez_search</code> to find the paper using the do
     # [1] 20203609
 </code></pre>
 
-<p>Now, what sorts of data are avaliable from other NCBI database for this paper?</p>
+<p>Now, what sorts of data are available from other NCBI database for this paper?</p>
 
 <pre><code>    &gt; hox_data &lt;- entrez_link(db=&quot;all&quot;, ids=hox_pmid, dbfrom=&quot;pubmed&quot;)
     &gt; str(hox_data)
@@ -112,7 +112,7 @@ you want to dive into the XML yourself.</p>
 <pre><code>    &gt; hox_proteins &lt;- entrez_fetch(db=&quot;protein&quot;, ids=hox_data$pubmed_protein, file_format=&quot;gb&quot;)
 </code></pre>
 
-<p>###Retreiving datasets associated a particular organism.</p>
+<p>###Retrieving datasets associated a particular organism.</p>
 
 <p>I like spiders. So let&#39;s say I want to learn a little more about New Zealand&#39;s
 endemic &ldquo;black widow&rdquo; the katipo. Specifically, in the past the katipo has 
@@ -130,7 +130,7 @@ phylogenetic or population-level studies, so let&#39;s start there.</p>
 
 <p>In this search <code>count</code> is the total number of hits returned for the search term.
 We can use <code>entrez_summary</code> to learn a little about these datasets. Because 
-different databases give differnt xml files, <code>entrez_summary</code> returns an xml 
+different databases give different xml files, <code>entrez_summary</code> returns an xml 
 file for you to further process. In this case, a little xpath can tell us about
 each dataset.</p>
 
@@ -186,7 +186,7 @@ the Eutils API):</p>
     }
 </code></pre>
 
-<p>With that we can fetch the data for earch term and, by searching with no term, 
+<p>With that we can fetch the data for each term and, by searching with no term, 
 find the total number of papers published in each year:</p>
 
 <pre><code>    &gt; years &lt;- 1990:2011
@@ -226,7 +226,7 @@ find the total number of papers published in each year:</p>
         <code><a href="entrez_fetch.html">entrez_fetch</a></code><br />Download data from NCBI databases</li>
             
       <li>
-        <code><a href="entrez_global_query.html">entrez_global_query</a></code><br />See how many hits there are for a given term across all NCBI Entrez databses</li>
+        <code><a href="entrez_global_query.html">entrez_global_query</a></code><br />See how many hits there are for a given term across all NCBI Entrez databases</li>
             
       <li>
         <code><a href="entrez_link.html">entrez_link</a></code><br />Get links to datasets related to an unique ID from an NCBI database</li>
@@ -241,7 +241,7 @@ find the total number of papers published in each year:</p>
         <code><a href="entrez_summary.html">entrez_summary</a></code><br />Get summaries of objects in NCBI datasets from a unique ID</li>
             
       <li>
-        <code><a href="parse_pubmed_xml.html">parse_pubmed_xml</a></code><br />Summarise an XML record from pubmed.</li>
+        <code><a href="parse_pubmed_xml.html">parse_pubmed_xml</a></code><br />Summarize an XML record from pubmed.</li>
             
       <li>
         <code><a href="rentrez.html">rentrez</a></code>(rentrez-package)<br />rentrez</li>

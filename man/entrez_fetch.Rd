@@ -10,7 +10,7 @@ entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "text",
 \arguments{
 \item{db}{character Name of the database to use}
 
-\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+\item{id}{vector with unique ID(s) for records in database \code{db}.}
 
 \item{web_history}{A web_history object}
 
@@ -24,7 +24,7 @@ file. Only works with rettype="xml" at present}
 \item{config}{vector configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request, see NCBI
-documentation linked to in referenes for a complete list}
+documentation linked to in references for a complete list}
 }
 \value{
 character string containing the file created

@@ -16,7 +16,7 @@ is intended to be a general-purpose wrapper for the `Eutils` API. Functions that
 make use of `rentrez` to perform more specific tasks should be added to existing
 packages, or form the basis of new ones. 
 
-###Perferred way to contribute code
+###Preferred way to contribute code
 
 * Fork this repo to your Github account
 * Clone your version on your account down to your machine from your account, e.g,. `git clone https://github.com/<yourgithubusername>/rentrez.git`
@@ -33,5 +33,5 @@ Please note that this project is released with a [Contributor Code of
 Conduct](CONDUCT.md). By participating in this project you agree to abide by its
 terms.
 
- Thanks for contibuting!
+ Thanks for contributing!
 

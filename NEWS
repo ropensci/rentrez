@@ -8,19 +8,19 @@ Version 0.4
 ------------------------
  * entrez_summary now fetches 'version 2.0' esummary records from NCBI
      * This change may break some scripts. In particular, the names of some
-       elements in esummary records have changed. Broken scripts shold produce a
+       elements in esummary records have changed. Broken scripts should produce a
        helpful error message, and using entrez_summary(..., version="1.0")
        should fix it. More details are given in the help to entrez_summary. 
      * When version 2.0 records are requested entrez_summary fetches the json
        record.
  * New helper functions for einfo Eutil
-    * entrez_dbs() lists avaliable databases.
+    * entrez_dbs() lists available databases.
     * entrez_db_summary() gets summary information about a given database.  
     * entrez_db_links() lists databases against which a given db's records might
       be cross referenced.
-    * entrez_db_searchable() lists search terms avaliable for a given database.
+    * entrez_db_searchable() lists search terms available for a given database.
  * Nicer print functions for search and summary objects
- * New dependancy on jsonlite for handling json records.
+ * New dependency on jsonlite for handling json records.
  * Bunch of bugs squashed and typos cleaned up
 
 Version 0.3.1
@@ -41,8 +41,8 @@ Version 0.2.4
 
 Version 0.2.3
 ---------------------------------
-    * Edited license/description to meet CRAN requiremens
-    * Added sentence to description to summarise the package
+    * Edited license/description to meet CRAN requirements
+    * Added sentence to description to summarize the package
 
 
 Version 0.2.2

@@ -12,20 +12,20 @@ entrez_link(dbfrom, web_history = NULL, id = NULL, db = NULL,
 
 \item{web_history}{a web_history object}
 
-\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+\item{id}{vector with unique ID(s) for records in database \code{db}.}
 
 \item{db}{character Name of the database to search for links (or use "all" to
 search all databases available for \code{db}. \code{entrez_db_links} allows you
 to discover databases that might have linked information (see examples).}
 
-\item{cmd}{link function to use. Allowled values include
+\item{cmd}{link function to use. Allowed values include
 \itemize{
   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
   input IDs in \code{dbfrom}.
   \item neighbor_score. As 'neighbor', but additionally returns similarity scores.
   \item neighbor_history. As 'neighbor', but returns web history objects.
   \item acheck. Returns a list of linked databases available from NCBI for a set of IDs.
-  \item ncheck. Checks for the existance of links within a single database.
+  \item ncheck. Checks for the existence of links within a single database.
   \item lcheck. Checks for external (i.e. outside NCBI) links.
   \item llinks. Returns a list of external links for each ID, excluding links
   provided by libraries.
@@ -38,7 +38,7 @@ to discover databases that might have linked information (see examples).}
 \item{config}{vector configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request, see NCBI
-documentation linked to in referenes for a complete list}
+documentation linked to in references for a complete list}
 }
 \value{
 An elink object containing the data defined by the \code{cmd} argument

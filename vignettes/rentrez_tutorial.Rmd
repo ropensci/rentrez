@@ -23,7 +23,7 @@ count_recs <- function(db, denom) {
 
 The NCBI stores a _lot_ of data. At the time this document was compiled, there
 were `r count_recs("pubmed",1e6)` million papers in [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/),
-including `r count_recs("pmc", 1e6)` million full-text records avaliable in [pubmed-central](http://www.ncbi.nlm.nih.gov/pubmed/).
+including `r count_recs("pmc", 1e6)` million full-text records available in [pubmed-central](http://www.ncbi.nlm.nih.gov/pubmed/).
 [The NCBI Nucleotide Database](http://www.ncbi.nlm.nih.gov/nuccore) (also known as GenBank) has data for `r count_recs("nuccore", 1e6)`
 million different sequences, and [dbSNP](http://www.ncbi.nlm.nih.gov/snp/) describes
 `r count_recs("snp", 1e6)` million different genetic variants. All of these
@@ -32,18 +32,18 @@ species in the [NCBI taxonomy](www.ncbi.nlm.nih.gov/taxonomy) or `r count_recs("
 described in [OMIM]('http://www.ncbi.nlm.nih.gov/omim').
 
 
-The NCBI makes this data avaliable through a [web interface](http://www.ncbi.nlm.nih.gov/),
+The NCBI makes this data available through a [web interface](http://www.ncbi.nlm.nih.gov/),
 an [FTP server](ftp://ftp.ncbi.nlm.nih.gov/) and through a REST API called the
 [Entrez Utilities](http://www.ncbi.nlm.nih.gov/books/NBK25500/) (`Eutils` for
 short). This package provides functions to wrap that API, allowing users to
-gather and combine data from multiple NCBI databases in the confort of a R
+gather and combine data from multiple NCBI databases in the comfort of a R
 session or script.
 
 ## Getting started with the rentrez
 
 `rentrez` gives you a few tools that help you to get to know your way around the
 NCBI's databases. First, you can use `entrez_dbs()` to find out just what
-databases are avaliable:
+databases are available:
 
 ```{r, dbs}
 entrez_dbs()
@@ -90,12 +90,12 @@ r_search
 ```
 
 There are a few things to note here. First, the NCBI's server has worked out
-that we meant R as a programming language, and so inlcuded the
+that we meant R as a programming language, and so included the
 ['MeSh' term](http://www.ncbi.nlm.nih.gov/mesh). We'll worry about these and
 other special search terms in a second. Second, there are many more 'hits' for this search than there
 are unique IDs contained in this object. That's because the optional argument
 `retmax`, which controls the maximum number of returned values has a default
-value of 20. We can acess those 20 IDs like this:
+value of 20. We can access those 20 IDs like this:
 
 
 ```{r search_ids}
@@ -118,7 +118,7 @@ TUTORIAL
 
 The EUtils api uses a special syntax to build search queries. You can search a
 database against a specific term using the format `query[SEARCH TERM]`, and
-combine multiple such seaches using the operators `AND`, `OR` and `NOT`.
+combine multiple such searches using the operators `AND`, `OR` and `NOT`.
 
 For instance, we can find next generation sequence datasets for the (amazing...) ciliate
 _Tetrahymena thermophila_ by using the organism ('ORGN') search field:
@@ -131,7 +131,7 @@ entrez_search(db="sra",
 ```
 
 Find only those records that have been added recently (using the colon to
-sepcify a range of values):
+specify a range of values):
 
 
 ```{r, Tt2}
@@ -150,8 +150,8 @@ entrez_search(db="sra",
               retmax=0)
 ```
 
-The set of search terms avalaliable varies between databases. You can get a list
-of avaliable terms or any given data base with `entrez_db_searchable()`
+The set of search terms available varies between databases. You can get a list
+of available terms or any given data base with `entrez_db_searchable()`
 
 ```{r, sra_searchable}
 entrez_db_searchable("sra")
@@ -159,9 +159,9 @@ entrez_db_searchable("sra")
 
 ###Precise queries using MeSH terms
 
-In addition to the seach terms described above, the NCBI allows searches using
+In addition to the search terms described above, the NCBI allows searches using
 [Medical Subject Heading (MeSH)](http://www.ncbi.nlm.nih.gov/mesh) terms. These
-terms create a 'controled vocubulary',  and allow users to make very finely
+terms create a 'controlled vocabulary',  and allow users to make very finely
 controlled queries of databases.
 
 For instance, if you were interested in reviewing studies on how a class of
@@ -173,7 +173,7 @@ entrez_search(db   = "pubmed",
               term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
 ```
 
-The complete database of mesh terms is avaliable in EUtils, so you can search
+The complete database of mesh terms is available in EUtils, so you can search
 for specific terms with `entrez_search(db='mesh, term =...)` and learn about the
 terms you search finds with the tools described below.
 
@@ -207,11 +207,11 @@ sources. The function `entrez_link()` allows users to uncover these links
 
 ###My god, it's full of links
 
-To get an idea of the degree to whih records in the NCBI are cross-linked we can
+To get an idea of the degree to which records in the NCBI are cross-linked we can
 find all of the other records in NCBI which are linked to the record describing
 one gene. To do this we use the `entrez_link` function, providing a gene ID and
 specifying that ID comes from the `gene` database by setting `dbfrom` to 'gene'.
-To get links from all other databses we set `db` to 'all':
+To get links from all other databases we set `db` to 'all':
 
 ```{r elink0}
 all_the_links <- entrez_link(dbfrom='gene', id=351, db='all')
@@ -219,16 +219,16 @@ all_the_links
 all_the_links$links
 ```
 
-The resultling list of links takes a format
+The resulting list of links takes a format
 `[source_database]_[linked_database]` and element in that list is a vector of
-IDS. So, to find open-acess papers discussion this gene we could look at links
+IDS. So, to find open-access papers discussion this gene we could look at links
 in PMC:
 
 ```{r, elink_pmc}
 all_the_links$links$gene_pmc[1:10]
 ```
 
-Or if were intrested in this genes role in diseases we could find links to OMIM:
+Or if were interested in this genes role in diseases we could find links to OMIM:
 
 ```{r, elink_omim}
 all_the_links$links$gene_omim
@@ -238,14 +238,14 @@ all_the_links$links$gene_omim
 ###Narrowing our focus
 
 If you know beforehand what sort of links you are looking for, it's a good idea
-to use the `db` argument to narrow the focus of your search. Here is an example 
+to use the `db` argument to narrow the focus of your search. Here is an example
 illustrating how to get the transcripts sequences
 of corresponding genes with entrez gene id. In NCBI, gene entrez
 IDs are stored in the gene database(`dbfrom = gene`) while gene transcript information
 is stored in  the nucleotide database(`db = nuccore`), but the good
 news is that entries in these two databases are linked, thus, we can
-firstly use `entrez_link()` to 'convert' entrez gene id to refseq transcirpt
-ID. 
+firstly use `entrez_link()` to 'convert' entrez gene id to refseq transcript
+ID.
 
 ```{r, elink1}
 nuc_links <- entrez_link(dbfrom='gene', id=351, db='nuccore')
@@ -253,15 +253,15 @@ nuc_links
 nuc_links$links
 ```
 The object we get back contains links to the nucleotide database generally, but
-also to special subsets of that database like [refseq](http://www.ncbi.nlm.nih.gov/refseq/). 
+also to special subsets of that database like [refseq](http://www.ncbi.nlm.nih.gov/refseq/).
 We can take advantage of this narrower set of links to find IDs that match unique
 transcripts from our gene of interest.
 
-```{r, elinik_refseqs}
+```{r, elink_refseqs}
 nuc_links$links$gene_nuccore_refseqrna
 ```
 We can use these ids in calls to `entrez_fetch() or `entrez_summary()` to learn
-more about the transcripts they represent. 
+more about the transcripts they represent.
 
 ###External links
 
@@ -269,7 +269,7 @@ In addition to finding data within the NCBI, `entrez_link` can turn up
 connections to external databases. Perhaps the most interesting example is
 finding links to the full text of papers in pubmed. For example, when I wrote
 this document the first paper linked to our gene of interest above had a pmid of
-`25500142`. We can find links to the full text of that paper with `entrez_link` 
+`25500142`. We can find links to the full text of that paper with `entrez_link`
 by setting the `cmd` argument to 'llinks':
 
 ```{r, outlinks}
@@ -278,7 +278,7 @@ paper_links
 ```
 
 Instead of a `links` elements, the object returned has a list of `linkouts`.
-Each element in that list contains a Url for information aout this paper:
+Each element in that list contains a Url for information out this paper:
 
 ```{r, urls}
 paper_links$linkouts
@@ -289,13 +289,13 @@ documentation (`?entrez_link`).
 
 ## Getting summary data: `entrez_summary()`
 
-Having foundt the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
+Having found the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
 probably going to want to learn something about them. The `Eutils` API has two
 ways to get information about a record. `entrez_fetch()` returns 'full' records
 in varying formats and `entrez_summary()` returns less information but in
 relatively simple format. Very often the summary records have the information
-you are afer, so `rentrez` provides functions to parse and summarise summary
-recods.
+you are after, so `rentrez` provides functions to parse and summarize summary
+records.
 
 
 ###The summary record
@@ -358,22 +358,22 @@ like the record in.
 
 ###Fetch DNA sequences in fasta format
 
-Let's extend the example given in the `entrez_link()` by dowloading sequences in
+Let's extend the example given in the `entrez_link()` by downloading sequences in
 the FASTA format. We can start by repeating the steps in the earlier example
 to get nucleotide IDs for refseq transcripts for two genes:
 
 ```{r, transcript_ids}
 gene_ids <- entrenzID <- c(11647, 351)
 linked_seq_ids <- entrez_link(dbfrom="gene", id=gene_ids, db="nuccore")
-linked_transripts <- linked_seq_ids$links$gene_nuccore_refseqrna
-head(linked_transripts)
+linked_transcripts <- linked_seq_ids$links$gene_nuccore_refseqrna
+head(linked_transcripts)
 ```
 
-Now we can get our sequnces with `entrez_fetch`, setting `rettype` to "fasta".
-(The list of formats avaliable for [each databse is give in this table](http://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/)):
+Now we can get our sequences with `entrez_fetch`, setting `rettype` to "fasta".
+(The list of formats available for [each database is give in this table](http://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/)):
 
 ```{r fetch_fasta}
-all_recs <- entrez_fetch(db="nuccore", id=linked_transripts, rettype="fasta")
+all_recs <- entrez_fetch(db="nuccore", id=linked_transcripts, rettype="fasta")
 typeof(all_recs)
 nchar(all_recs)
 ```
@@ -400,9 +400,9 @@ parsed_recs <- ape::read.dna(all_recs, temp)
 
 Most of the NCBI's databases can return records in XML format. In additional to
 downloading the text-representation of these files, `entrez_fetch()` can return
-ibjects parsed by the `XML` package. As an example, we can check of `taxonomy`
+objects parsed by the `XML` package. As an example, we can check of `taxonomy`
 databases' record for the (did I mention they are amazing....) _Tetrahymena
-thermophila_. 
+thermophila_.
 
 ```{r, Tt_tax}
 Tt <- entrez_search(db="taxonomy", term="(Tetrahymena thermophila[ORGN]) AND Species[RANK]")
@@ -420,7 +420,7 @@ tax_list$Taxon$GeneticCode
 ```
 
 For more complex records, which generate deeply-nested lists, you can use
-[XPath experssions](https://en.wikipedia.org/wiki/XPath) along with the functions 
+[XPath expressions](https://en.wikipedia.org/wiki/XPath) along with the functions
 `XML::xpathApply` or the extraction operator `[` to get specific parts of the
 file. In this case we can get the scientific name of each taxon in _T.
 thermophila_'s lineage:
