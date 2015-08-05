@@ -3,7 +3,7 @@
 #
 #  http://cran.r-project.org/web/packages/httr/vignettes/api-packages.html
 #
-#and also conforming to the NBCI's requirements about rate limiting and 
+#and also conforming to the NBCI's requirements about rate limiting and
 #adding identifiers to each request:
 #
 # http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requirements
@@ -16,7 +16,7 @@
 entrez_email <- function() 'david.winter@gmail.com'
 entrez_tool <- function() 'rentrez'
 
-#Create a URL for the EUtils API. 
+#Create a URL for the EUtils API.
 #
 # This function is used by all the API-querying functions in rentrez to build
 # the appropriate url. Required arguments for each rentrez are handled in each
@@ -24,16 +24,17 @@ entrez_tool <- function() 'rentrez'
 # by passing a string or two argument names to `make_entrez_query`
 #
 #
-# efetch_url <- make_entrez_query("efetch", require_one_of=c("id", "WebEnv"), 
+# efetch_url <- make_entrez_query("efetch", require_one_of=c("id", "WebEnv"),
 #                                 id=c(23310964,23310965), db="pubmed",
 #                                 rettype="xml")
 #
 
 
 make_entrez_query <- function(util, config, interface=".fcgi?", ...){
+    ##this fxn assembles the uri make query and return the result as text
     args <- list(..., email=entrez_email(), tool=entrez_tool())
     if("id" %in% names(args)){
-        args$id <- paste(args$id, collapse=",")      
+        args$id <- paste(args$id, collapse=",")
     }
     uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     response <- httr::GET(uri, query=args, config= config)
@@ -42,13 +43,13 @@ make_entrez_query <- function(util, config, interface=".fcgi?", ...){
 }
 
 ##
-# Check for that we have either the ID or the web-history functions are 
+# Check for that we have either the ID or the web-history functions are
 # specified for those functions that need one.
 ##
 
 id_or_webenv <- function(){
-    args <- sys.frame(sys.parent())
-    msg <- "Must specify either (not both) 'id' or web history arguments 'WebEnv' and 'query_key'" 
+    args <- sys.frame(sys.parent()) ##get the eviroment of using the parent call frame number
+    msg <- "Must specify either (not both) 'id' or web history arguments 'WebEnv' and 'query_key'"
     if(!is.null(args$id)){
         if(!is.null(args$web_history)){
             stop(msg, call.=FALSE)
@@ -89,7 +90,7 @@ check_xml_errors <- function(x){
 
 
 parse_response <- function(x, type=NULL){
-    res <- switch(type, 
+    res <- switch(type,
             "json" = fromJSON(x),
             "xml"  = xmlTreeParse(x, useInternalNodes=TRUE),
             "text" = x, #citmatch uses plain old plain text
@@ -108,7 +109,7 @@ web_history <- function(WebEnv, QueryKey){
 #'@export
 print.web_history <- function(x, ...){
     cat("Web history object (QueryKey = ", x$QueryKey,
-        ", WebEnv = ", substr(x$WebEnv, 1, 12), "...", ")\n",sep="")    
+        ", WebEnv = ", substr(x$WebEnv, 1, 12), "...", ")\n",sep="")
 }
 
 

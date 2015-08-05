@@ -100,9 +100,10 @@ entrez_db_summary <- function(db, config=NULL){
 entrez_db_links <- function(db, config=NULL){
     rec <- entrez_info(db, config)
     unparsed <- xpathApply(rec, "//Link", xmlChildren)
-    res <- lapply(unparsed, lapply, xmlValue)
+    res <- lapply(unparsed, lapply, xmlValue) ##this line applies xmlvalue fun to the list element of a list
+                                              ##and return a list of list
     res <- lapply(res, add_class, new_class='eInfoEntry')
-    names(res) <- sapply(res, "[[", "DbTo")
+    names(res) <- sapply(res, "[[", "DbTo") ##this line get the 4th elemnt of each element(also a list) in res
     class(res) <- c("eInfoLink", "eInfoList", "list")
     attr(res, 'db') <- xmlValue(rec["/eInfoResult/DbInfo/DbName"][[1]])
     res
@@ -115,9 +116,9 @@ entrez_db_links <- function(db, config=NULL){
 #' search fields to include in the \code{term} argument of that function.
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database to get search field from
-#'@return An eInfoSearch object (subclassed from list) summarizing linked-databases. 
+#'@return An eInfoSearch object (subclassed from list) summarizing linked-databases.
 #' Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
-#' shows only the names of each available search field. 
+#' shows only the names of each available search field.
 #'@seealso \code{\link{entrez_search}}
 #'@family einfo
 #'@examples
@@ -134,7 +135,7 @@ entrez_db_links <- function(db, config=NULL){
 
 entrez_db_searchable <- function(db, config=NULL){
     rec <- entrez_info(db, config)
-    unparsed <- xpathApply(rec, 
+    unparsed <- xpathApply(rec,
                            "/eInfoResult/DbInfo/FieldList/Field",
                            xmlChildren)
     res <- lapply(unparsed, lapply, xmlValue)
@@ -160,7 +161,7 @@ as.data.frame.eInfoList <- function(x, ...){
 print.eInfoSearch <- function(x, ...){
     cat("Searchable fields for database '", attr(x, "db"), "'\n", sep="")
     for (term in x){
-        cat(" ", term$Name, "\t", term$Description, "\n")  
+        cat(" ", term$Name, "\t", term$Description, "\n")
     }
 }
 
