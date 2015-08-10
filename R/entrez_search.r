@@ -64,14 +64,14 @@ parse_esearch <- function(x, history) UseMethod("parse_esearch")
    
 parse_esearch.XMLInternalDocument <- function(x, history){
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
-                 count    = xpathSApply(x, "/eSearchResult/Count", xmlValue),
-                 retmax   = xpathSApply(x, "/eSearchResult/RetMax", xmlValue),
-                 QueryTranslation   = xpathSApply(x, "/eSearchResult/QueryTranslation",xmlValue),
+                 count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
+                 retmax   = as.integer(xmlValue(x[["/eSearchResult/RetMax"]])),
+                 QueryTranslation   = xmlValue(x[["/eSearchResult/QueryTranslation"]]),
                  file     = x)
     if(history){
         res$web_history = web_history(
-          QueryKey = xpathSApply(x, "/eSearchResult/QueryKey", xmlValue),
-          WebEnv   = xpathSApply(x, "/eSearchResult/WebEnv", xmlValue)
+          QueryKey = xmlValue(x[["/eSearchResult/QueryKey"]]),
+          WebEnv   = xmlValue(x[["/eSearchResult/WebEnv"]])
         )
     }
     class(res) <- c("esearch", "list")
@@ -79,12 +79,16 @@ parse_esearch.XMLInternalDocument <- function(x, history){
 }
 
 parse_esearch.list <- function(x, history){
+    #for consitancy between xml/json records we are going to change the
+    #file names from lower -> CamelCase
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querytranslation") ]
     names(res)[c(1,4)] <- c("ids", "QueryTranslation")
     if(history){
         res$web_history = web_history(QueryKey = x$esearch_result[["querykey"]], 
                                       WebEnv   = x$esearch_result[["webenv"]])
     }
+    res$count <- as.integer(res$count)
+    res$retmax <- as.integer(res$retmax)
     res$file <- x
     class(res) <- c("esearch", "list")
     return(res)
@@ -101,4 +105,6 @@ print.esearch <- function(x, ...){
                 "web_history object)\n Search term (as translated): "  , display_term, "\n")
     cat(msg)
 }
- 
+
+
+ c("//IdList/Id", "/eSearchResult/Count", "/eSearchResult/RetMax", "/eSearchResult/QueryTranslation")

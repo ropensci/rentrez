@@ -5,7 +5,6 @@ date: "`r Sys.Date()`"
 output: 
     rmarkdown::html_vignette:
         toc: true
-        figwidth: 3
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -185,7 +184,7 @@ databases using only the search utility. For instance, let's track the raise of
 the buzzword "connectome" in pubmed, programatically creating  search terms for
 the `PDAT` field:
 
-```{r, connectome}
+```{r, connectome, fig.width=5, fig.height=4, fig.align='center'}
 search_year <- function(year, term){
     query <- paste(term, "AND (", year, "[PDAT])")
     entrez_search(db="pubmed", term=query, retmax=0)$count
