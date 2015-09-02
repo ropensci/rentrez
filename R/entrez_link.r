@@ -9,7 +9,7 @@
 #'@param db character Name of the database to search for links (or use "all" to 
 #' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
-#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param id vector with unique ID(s) for records in database \code{db}. 
 #'@param web_history a web_history object  
 #'@param dbfrom character Name of database from which the Id(s) originate
 #'@param cmd link function to use. Allowled values include
@@ -19,7 +19,7 @@
 #'   \item neighbor_score. As 'neighbor', but additionally returns similarity scores.
 #'   \item neighbor_history. As 'neighbor', but returns web history objects.
 #'   \item acheck. Returns a list of linked databases available from NCBI for a set of IDs.
-#'   \item ncheck. Checks for the existance of links within a single database.
+#'   \item ncheck. Checks for the existence of links within a single database.
 #'   \item lcheck. Checks for external (i.e. outside NCBI) links.
 #'   \item llinks. Returns a list of external links for each ID, excluding links
 #'   provided by libraries.
@@ -29,7 +29,7 @@
 #'   each ID.
 #'}
 #'@param \dots character Additional terms to add to the request, see NCBI
-#'documentation linked to in referenes for a complete list
+#'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso  \code{entrez_db_links}
@@ -62,9 +62,9 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
 # Parising Elink is.... fun. The XML files returned by the different 'cmd'
 # args are very differnt, so we can't hope for a one-size-fits all solution. 
 # Instead, we can break of a few similar cases and write parsing functions, 
-# whih we dispatch via a big switch statement
+# which we dispatch via a big switch statement
 #
-# Each parising function should return a list with elements corresponding to the
+# Each parsing function should return a list with elements corresponding to the
 # data n XML, and set the attribute "content" to a brief description of what
 # each element in the record contains, to be used by the print fxn.
 
@@ -125,8 +125,8 @@ parse_acheck <- function(x){
     db_info <- xpathApply(x, "//LinkInfo", xmlToList)
     names(db_info) <-  sapply(db_info, "[[","LinkName")
     class(db_info)  <-  "elink_classic"
-    res <- list(linked_databses = db_info)
-    attr(res, "content") <- " $linked_databases: a list of summary data from each databse with linked records"
+    res <- list(linked_databases = db_info)
+    attr(res, "content") <- " $linked_databases: a list of summary data from each database with linked records"
     res    
 }
 

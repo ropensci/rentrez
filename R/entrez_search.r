@@ -6,12 +6,12 @@
 #'@export
 #'@param db character Name of the database to search for
 #'@param term character The search term
-#'@param use_history locgical Return a web_history object for use in 
+#'@param use_history logical Return a web_history object for use in 
 #' later calls to the NCBI
 #'@param retmode character One of json (default) or xml. This will make no
 #' difference in most cases.
 #'@param \dots character Additional terms to add to the request, see NCBI
-#'documentation linked to in referenes for a complete list
+#'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso \code{\link{entrez_db_searchable}} to get a set of search fields that

@@ -4,11 +4,11 @@
 #'
 #'@export
 #'@param db character Name of the database from which the IDs were taken
-#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param id vector with unique ID(s) for records in database \code{db}. 
 #'@param web_history A web_history object. Can be used to add to additional
 #' identifiers to an existing web environment on the NCBI 
 #'@param \dots character Additional terms to add to the request, see NCBI
-#'documentation linked to in referenes for a complete list
+#'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to httr::GET  
 #'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EPost_} 
 #'@seealso \code{\link[httr]{config}} for available configs 

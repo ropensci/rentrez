@@ -16,12 +16,12 @@
 #'
 #'@export
 #'@param db character Name of the database to search for
-#'@param id vector with unique ID(s) for reacods in database \code{db}. 
+#'@param id vector with unique ID(s) for records in database \code{db}. 
 #'@param web_history A web_history object 
 #'@param always_return_list logical, return a list  of esummary objects even
 #'when only one ID is provided.
 #'@param \dots character Additional terms to add to the request, see NCBI
-#'documentation linked to in referenes for a complete list
+#'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
 #'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_} 
@@ -97,12 +97,12 @@ parse_esummary.list <- function(x, always_return_list){
     res
 }
 
-# Prase a sumamry XML 
+# Prase a summary XML 
 #
 # Logic goes like this
 # 1. Define functions parse_esumm_* to handle all data types
 # 2. For each node detect type, parse accordingly
-# 3. wrap it all up in function parse_esummary that 
+# 3. wrap it all up in function parse_summary that 
 #
 
 #
