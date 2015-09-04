@@ -444,15 +444,12 @@ There are a few more complex examples of using `XPath` [on the rentrez wiki](htt
 Web history feature enables us to fetch a large number of entries in batch mode. Let's assume that we are studying the effect of aging on the transcriptome of human blood. We got ~500 genes which were found to be differentially expressed between the younger group and the elder group. With the entrez ids of 500 DEGs in hand, the first thing we want to do is to get the corresponding gene name/symbol of these DEGs. Further more, we may be interested in the corresponding literatures of these DEGs, we realize that we want to fetch the pmid as well as the paper title of those corresponding literature. We can do this without the web history feature, just put these 500 genes into a vector and feed it to the entrez_esummary or entrez_efetch to get want we want. 
 ```{r, fetch_without_web_hist}
 ```
-You may find that the way mentioned above is a little bit slow, especially when the number of DEGs increases significantlly(It's common to get ~2000 DEGs under certain curmistances). We need a new way which allows us to upload those ids first and then do what we want accordingly. Here comes the web history way...
+You may find that the way mentioned above is a little bit slow, especially when the number of DEGs increases significantlly(It's common to get ~2000 DEGs under certain curmistances). We need a new way which allows us to upload those ids first and then do what we want accordingly. This makes the web history way...
 ```{r, fetch_with_web_hist}
 ```
 In the code above, we upload those query entries first with entrez_epost, which returns a web_history object serving as an address for us to refer. following this is the web_histroy version efetch which accepts a web_history object and do the efetch command as what we do previously in the classical mode. Querying in this way benifits both the network loads and the NCBI eutils web server loads as we upload once for all. NCBI web server will hold the web_history for us for ??? until its expiration.
 
-
-
-
-
+There is another feature in the web history version code,job segmentation, which means that we break the 500 DEGs into about 50 pieces(that is, 10 for each loop body) in the loop command. This ensures that the query process inside each loop body executes effeciently. This is the 'map-reduce' way of treating big data.
 
 
 
