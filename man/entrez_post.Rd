@@ -9,7 +9,7 @@ entrez_post(db, id = NULL, web_history = NULL, config = NULL, ...)
 \arguments{
 \item{db}{character Name of the database from which the IDs were taken}
 
-\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+\item{id}{vector with unique ID(s) for records in database \code{db}.}
 
 \item{web_history}{A web_history object. Can be used to add to additional
 identifiers to an existing web environment on the NCBI}
@@ -17,7 +17,7 @@ identifiers to an existing web environment on the NCBI}
 \item{config}{vector configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request, see NCBI
-documentation linked to in referenes for a complete list}
+documentation linked to in references for a complete list}
 }
 \description{
 Post IDs to Eutils for later use
