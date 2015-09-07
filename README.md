@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/ropensci/rentrez.png?branch=master)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master) [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master)
+[![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master) [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master)
 
 rentrez
 =======
@@ -14,12 +14,6 @@ Install
     library(devtools)
     install_github("ropensci/rentrez")
 
-_Note_ (April 2015): Please note that `rentrez` is working towards a new
-release, which changes some of the behaviour described below. At present, this
-file describes the version of `rentrez` available from CRAN, and not the code in
-this repository. As we get closer to the new release this document will be
-updated.
-
 Get help
 --------
 
@@ -28,7 +22,7 @@ Hopefully this README, and the package's vignette and in-line documentation, , p
 The EUtils API
 --------------
 
-Each of the functions exportd by `rentrez` is documented, and this README and the pakage vignette provide examples of how to use the functions together as part of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Be sure to read the official documenation to get the most out of API. In particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times (`rentrez` takes care of limiting the number of requests per second, and seeting the appropriate entrez tool name in each request).
+Each of the functions exported by `rentrez` is documented, and this README and the package vignette provide examples of how to use the functions together as part of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Be sure to read the official documentation to get the most out of API. In particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times (`rentrez` takes care of limiting the number of requests per second, and setting the appropriate entrez tool name in each request).
 
 See [getting information about NCBI databases](#getting-information-about-ncbi-databases)
 
@@ -48,19 +42,14 @@ hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 #> [1] "20203609"
 ```
 
-Now, what sorts of data are avaliable from other NCBI database for this paper?
+Now, what sorts of data are available from other NCBI database for this paper?
 
 ``` r
 hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
 hox_data
-#> elink result with ids from 13 databases:
-#>  [1] pubmed_medgen              pubmed_mesh_major         
-#>  [3] pubmed_nuccore             pubmed_nucleotide         
-#>  [5] pubmed_pmc_refs            pubmed_protein            
-#>  [7] pubmed_pubmed              pubmed_pubmed_citedin     
-#>  [9] pubmed_pubmed_combined     pubmed_pubmed_five        
-#> [11] pubmed_pubmed_reviews      pubmed_pubmed_reviews_five
-#> [13] pubmed_taxonomy_entrez
+#> elink object with contents:
+#>  $links: IDs for linked records from NCBI
+#> 
 ```
 
 Each of the character vectors in this object contain unique IDS for records in the named databases. These functions try to make the most useful bits of the returned files available to users, but they also return the original file in case you want to dive into the XML yourself.
@@ -71,7 +60,7 @@ In this case we'll get the protein sequences as genbank files, using ' `entrez_f
 hox_proteins <- entrez_fetch(db="protein", id=hox_data$pubmed_protein, rettype="gb")
 ```
 
-### Retreiving datasets associated a particular organism.
+### Retrieving datasets associated a particular organism.
 
 I like spiders. So let's say I want to learn a little more about New Zealand's endemic "black widow" the katipo. Specifically, in the past the katipo has been split into two species, can we make a phylogeny to test this idea?
 
@@ -89,10 +78,10 @@ In this search `count` is the total number of hits returned for the search term.
 ``` r
 summaries <- entrez_summary(db="popset", id=katipo_search$ids)
 summaries[[1]]
-#> esummary result with 16 items:
+#> esummary result with 17 items:
 #>  [1] uid        caption    title      extra      gi         settype   
 #>  [7] createdate updatedate flags      taxid      authors    article   
-#> [13] journal    statistics properties oslt
+#> [13] journal    strain     statistics properties oslt
 sapply(summaries, "[[", "title")
 #>                                                                                                                                                                                                                  167843272 
 #> "Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
@@ -137,7 +126,7 @@ tree <- nj(dist.dna(coi_aligned))
 
 As of version 0.3, rentrez uses [httr](https://github.com/hadley/httr) to manage calls to the Eutils API. This allows users to take advantage of some of `httr`'s configuration options.
 
-Any `rentrez` function that interacts with the Eutils api will pass the value of the argument `config` along to `httr`'s `GET` function. For instance, if you acess the internet through a proxy you use the `httr` function `use_proxy()` to provide connection details to an entrez call:
+Any `rentrez` function that interacts with the Eutils api will pass the value of the argument `config` along to `httr`'s `GET` function. For instance, if you access the internet through a proxy you use the `httr` function `use_proxy()` to provide connection details to an entrez call:
 
 ``` r
 entrez_search(db="pubmed",
@@ -173,7 +162,7 @@ snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, rettype="fa
 
 ### Getting information about NCBI databases
 
-Most of the exmples above required some background information about what databases NCBI has to offer, and how they can be searched. `rentrez` provides a set of functions with names starting `entrez_db` that help you to discover this information in an interactive session.
+Most of the examples above required some background information about what databases NCBI has to offer, and how they can be searched. `rentrez` provides a set of functions with names starting `entrez_db` that help you to discover this information in an interactive session.
 
 First up, `entrez_dbs()` gives you a list of database names
 
@@ -181,37 +170,36 @@ First up, `entrez_dbs()` gives you a list of database names
 entrez_dbs()
 #>  [1] "pubmed"          "protein"         "nuccore"        
 #>  [4] "nucleotide"      "nucgss"          "nucest"         
-#>  [7] "structure"       "genome"          "assembly"       
-#> [10] "genomeprj"       "bioproject"      "biosample"      
-#> [13] "blastdbinfo"     "books"           "cdd"            
-#> [16] "clinvar"         "clone"           "gap"            
-#> [19] "gapplus"         "grasp"           "dbvar"          
-#> [22] "epigenomics"     "gene"            "gds"            
-#> [25] "geoprofiles"     "homologene"      "medgen"         
-#> [28] "journals"        "mesh"            "ncbisearch"     
+#>  [7] "structure"       "genome"          "gpipe"          
+#> [10] "annotinfo"       "assembly"        "bioproject"     
+#> [13] "biosample"       "blastdbinfo"     "books"          
+#> [16] "cdd"             "clinvar"         "clone"          
+#> [19] "gap"             "gapplus"         "grasp"          
+#> [22] "dbvar"           "epigenomics"     "gene"           
+#> [25] "gds"             "geoprofiles"     "homologene"     
+#> [28] "medgen"          "mesh"            "ncbisearch"     
 #> [31] "nlmcatalog"      "omim"            "orgtrack"       
 #> [34] "pmc"             "popset"          "probe"          
 #> [37] "proteinclusters" "pcassay"         "biosystems"     
 #> [40] "pccompound"      "pcsubstance"     "pubmedhealth"   
 #> [43] "seqannot"        "snp"             "sra"            
-#> [46] "taxonomy"        "toolkit"         "toolkitall"     
-#> [49] "toolkitbook"     "unigene"         "gencoll"        
-#> [52] "gtr"
+#> [46] "taxonomy"        "unigene"         "gencoll"        
+#> [49] "gtr"
 ```
 
-Some of the names are a little opaque, so you can get some more descriptve information about each with `entrez_db_summary()`
+Some of the names are a little opaque, so you can get some more descriptive information about each with `entrez_db_summary()`
 
 ``` r
 entrez_db_summary("cdd")
 #>  DbName: cdd
 #>  MenuName: Conserved Domains
 #>  Description: Conserved Domain Database
-#>  DbBuild: Build150108-1904.1
-#>  Count: 50415
-#>  LastUpdate: 2015/01/09 00:21
+#>  DbBuild: Build150814-1106.1
+#>  Count: 50648
+#>  LastUpdate: 2015/08/14 18:00
 ```
 
-`entrez_db_searchable()` lets you discover the fields avalible for search terms for a given database. You get back a named-list, with names are fields. Each element has additional information about each named search field (you can also use `as.data.frame` to create a dataframe, with one search-field per row):
+`entrez_db_searchable()` lets you discover the fields available for search terms for a given database. You get back a named-list, with names are fields. Each element has additional information about each named search field (you can also use `as.data.frame` to create a dataframe, with one search-field per row):
 
 ``` r
 search_fields <- entrez_db_searchable("pmc")
@@ -219,7 +207,7 @@ search_fields$GRNT
 #>  Name: GRNT
 #>  FullName: Grant Number
 #>  Description: NIH Grant Numbers
-#>  TermCount: 2135694
+#>  TermCount: 2216323
 #>  IsDate: N
 #>  IsNumerical: N
 #>  SingleToken: Y
@@ -253,7 +241,7 @@ papers_by_year <- function(years, search_term){
         }
 ```
 
-With that we can fetch the data for earch term and, by searching with no term, find the total number of papers published in each year:
+With that we can fetch the data for each term and, by searching with no term, find the total number of papers published in each year:
 
 ``` r
 years <- 1990:2014

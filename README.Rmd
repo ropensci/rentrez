@@ -45,12 +45,12 @@ or [by filing an issue](https://github.com/ropensci/rentrez/issues)
 
 ##The EUtils API
 
-Each of the functions exportd by `rentrez` is documented, and this README and
-the pakage vignette provide examples of how to use the functions together as part
+Each of the functions exported by `rentrez` is documented, and this README and
+the package vignette provide examples of how to use the functions together as part
 of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/).
-Be sure to read the official documenation to get the most out of API. In particular, be aware of the NCBI's usage
+Be sure to read the official documentation to get the most out of API. In particular, be aware of the NCBI's usage
 policies and try to limit very large requests to off peak (USA) times (`rentrez`
-takes care of limiting the number of requests per second, and seeting the
+takes care of limiting the number of requests per second, and setting the
 appropriate entrez tool name in each request).
 
 See [getting information about NCBI databases](#getting-information-about-ncbi-databases)
@@ -76,7 +76,7 @@ hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 (hox_pmid <- hox_paper$ids)
 ```
 
-Now, what sorts of data are avaliable from other NCBI database for this paper?
+Now, what sorts of data are available from other NCBI database for this paper?
 
 ```{r links}
 hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
@@ -95,7 +95,7 @@ In this case we'll get the protein sequences as genbank files, using '
 hox_proteins <- entrez_fetch(db="protein", id=hox_data$pubmed_protein, rettype="gb")
 ```
 
-###Retreiving datasets associated a particular organism.
+###Retrieving datasets associated a particular organism.
 
 I like spiders. So let's say I want to learn a little more about New Zealand's
 endemic "black widow" the katipo. Specifically, in the past the katipo has
@@ -160,7 +160,7 @@ configuration options.
 
 Any `rentrez` function that interacts with the Eutils api will
 pass the value of the argument `config` along to `httr`'s  `GET` function. For
-instance, if you acess the internet through a proxy you use the `httr` function
+instance, if you access the internet through a proxy you use the `httr` function
 `use_proxy()` to provide connection details to an entrez call:
 
 ```r
@@ -204,7 +204,7 @@ snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, rettype="fa
 
 ###Getting information about NCBI databases
 
-Most of the exmples above required some background information about what
+Most of the examples above required some background information about what
 databases NCBI has to offer, and how they can be searched. `rentrez` provides
 a set of functions with names starting `entrez_db` that help you to discover
 this information in an interactive session.
@@ -216,14 +216,14 @@ First up, `entrez_dbs()` gives you a list of database names
 entrez_dbs()
 ```
 
-Some of the names are a little opaque, so you can get some more descriptve
+Some of the names are a little opaque, so you can get some more descriptive
 information about each with `entrez_db_summary()`
 
 ```{r summary}
 entrez_db_summary("cdd")
 ```
 
-`entrez_db_searchable()` lets you discover the fields avalible for search terms
+`entrez_db_searchable()` lets you discover the fields available for search terms
 for a given database. You get back a named-list, with names are fields. Each
 element has additional information about each named search field (you can also
 use `as.data.frame` to create a dataframe, with one search-field per row):
@@ -259,7 +259,7 @@ papers_by_year <- function(years, search_term){
         }
 ```
 
-With that we can fetch the data for earch term and, by searching with no term,
+With that we can fetch the data for each term and, by searching with no term,
 find the total number of papers published in each year:
 
 
