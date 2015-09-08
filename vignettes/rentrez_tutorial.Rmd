@@ -108,8 +108,7 @@ another_r_search
 ```
 
 If we want to get IDs for all of those thousands of records that match this
-search, we can use the NCBI's web history feature, DESCRIBED LATER IN THE
-TUTORIAL
+search, we can use the NCBI's web history feature [described below](#web_history).
 
 
 ### Building search terms
@@ -193,7 +192,7 @@ search_year <- function(year, term){
 year <- 2008:2014
 papers <- sapply(year, search_year, term="Connectome", USE.NAMES=FALSE)
 
-plot(year, as.numeric(papers), type='b', main="The Rise of the Connectome")
+plot(year, papers, type='b', main="The Rise of the Connectome")
 ```
 
 ## Finding cross-references : `entrez_link()`:
@@ -288,9 +287,9 @@ documentation (`?entrez_link`).
 ###Using more than one ID
 
 It is possible to pass more than on ID to `entrez_link()`. By default, doing so
-will give you a single elink object containing the complete set of links fo
-r _all_ of the IDs that you specified. So, if you were looking for protein IDs
-related to specific genes youd could do;
+will give you a single elink object containing the complete set of links for 
+_all_ of the IDs that you specified. So, if you were looking for protein IDs
+related to specific genes youd could do:
 
 ```{r, multi_default}
 all_links_together  <- entrez_link(db="protein", dbfrom="gene", id=c("93100", "223646"))
@@ -298,10 +297,10 @@ all_links_together
 all_links_together$links$gene_protein
 ```
 
-Although this behaviour might sometimes be useful, it means we've lost track o
+Although this behaviour might sometimes be useful, it means we've lost track of
 which `protein` ID is linked to which `gene` ID. To retain that information we
-can set `by_id` to `TRUE`. Doign so gives us a list of elink objects, each once
-containing links from a single `gene` ID;
+can set `by_id` to `TRUE`. This gives us a list of elink objects, each once
+containing links from a single `gene` ID:
 
 ```{r, multi_byid}
 all_links_sep  <- entrez_link(db="protein", dbfrom="gene", id=c("93100", "223646"), by_id=TRUE)
@@ -312,7 +311,7 @@ lapply(all_links_sep, function(x) x$links$gene_protein)
 
 ## Getting summary data: `entrez_summary()`
 
-Having foundt the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
+Having found the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
 probably going to want to learn something about them. The `Eutils` API has two
 ways to get information about a record. `entrez_fetch()` returns 'full' records
 in varying formats and `entrez_summary()` returns less information but in
@@ -359,7 +358,7 @@ multi_summs <- entrez_summary(db="pubmed", id=vivax_search$ids)
 ```
 
 `rentrez` provides a helper function, `extract_from_esummary()` that takes one
-or more elements from every summary record in one of these lists. Here is is
+or more elements from every summary record in one of these lists. Here it is
 working with one...
 
 ```{r, multi_summ2}
@@ -424,8 +423,7 @@ parsed_recs <- ape::read.dna(all_recs, temp)
 Most of the NCBI's databases can return records in XML format. In additional to
 downloading the text-representation of these files, `entrez_fetch()` can return
 objects parsed by the `XML` package. As an example, we can check of `taxonomy`
-
-databases' record for the (did I mention they are amazing....) _Tetrahymena
+database's record for (did I mention they are amazing....) _Tetrahymena
 thermophila_. 
 
 ```{r, Tt_tax}
@@ -450,17 +448,20 @@ file. In this case we can get the scientific name of each taxon in _T.
 thermophila_'s lineage:
 
 ```{r, Tt_path}
-tax_rec["//LineageEx/Taxon/ScientificName"]
+tt_lineage <- tax_rec["//LineageEx/Taxon/ScientificName"]
+tt_lineage[1:4]
 ```
 
-As the name suggests, `XML::xpathApply()` can be used to apply a function to
+As the name suggests, `XML::xpathSApply()` can be used to apply a function to
 each node. A particularly useful one is `XML::xmlValue` which returns the
 content of the node:
 
 ```{r, Tt_apply}
-XML::xpathApply(tax_rec, "//LineageEx/Taxon/ScientificName", XML::xmlValue)
+XML::xpathSApply(tax_rec, "//LineageEx/Taxon/ScientificName", XML::xmlValue)
 ```
 There are a few more complex examples of using `XPath` [on the rentrez wiki](https://github.com/ropensci/rentrez/wiki)
+
+<a name="web_history"></a>
 
 ##Using NCBI's Web History features
 
@@ -560,13 +561,5 @@ for( seq_start in seq(1,200,50)){
 
 This tutorial has introduced you to the core function of `rentrez`, there are
 almost limitless ways that you could put them together. 
-
-
-
-
-
-
-
-
 
 
