@@ -65,6 +65,7 @@ set for the \code{cmd} argument. Printing the returned object lists the names
  nucleotide_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db ="nuccore")
  #Sources for the full text of the paper
  res <- entrez_link(dbfrom="pubmed", db="", cmd="llinks", id=pubmed_search$ids)
+ linkout_urls(res)
 }
 }
 \references{

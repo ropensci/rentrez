@@ -50,13 +50,13 @@
 #'  nucleotide_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db ="nuccore")
 #'  #Sources for the full text of the paper 
 #'  res <- entrez_link(dbfrom="pubmed", db="", cmd="llinks", id=pubmed_search$ids)
+#'  linkout_urls(res)
 #'}
 #'
 
 
 entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbor', by_id=FALSE, config=NULL, ...){
     identifiers <- id_or_webenv()
-
     args <- c(list("elink", db=db, dbfrom=dbfrom, cmd=cmd, config=config, by_id=by_id, ...), identifiers)
     if(by_id){
         if(is.null(id)) stop("Can't use by_id mode without ids!")
@@ -66,6 +66,20 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
     Sys.sleep(0.33)
     parse_elink(record, cmd=cmd, by_id=by_id)
 }
+
+#' Extract urls from an elink object
+#' @param elink: elink object (returned by entrez_link) containing Urls
+#' @param list of character vectors, one per ID each containing of urls for that
+#' ID.
+#' @seealso entrez_link
+
+linkout_urls <- function(elink){
+    if (!("linkouts" %in% names(elink))){
+        stop("Not linkouts in the elink object. Use entrez_link commands 'prlinks', 'llinks' or 'llinkslib' to fetch urls")
+    }
+    lapply(elink$linkouts, function(lo) if(length(lo) == 0) NA else sapply(lo, "[[", "Url"))    
+}
+
 
 #
 # Parising Elink is.... fun. The XML files returned by the different 'cmd'
@@ -91,6 +105,10 @@ parse_elink <- function(x, cmd, by_id){
     }
     res[[1]]
 }
+
+
+
+
 
 make_elink_fxn <- function(cmd){
     f <- switch(cmd,
@@ -174,6 +192,8 @@ parse_linkouts <- function(x){
 }
 
 
+
+
 #' @export
 
 print.elink_list <- function(x, ...){
@@ -199,6 +219,8 @@ print.elink_classic <- function(x, ...){
    cat(paste("elink result with information from", len , "databases:\n"))
    print (names(x), quote=FALSE)
 }
+
+
 get_linked_elements <- function(record, dbname, element){
     path <-  paste0("LinkSetDb/LinkName[text()='", dbname, "']/../Link/", element)
     return(xpathSApply(record, path, xmlValue))
