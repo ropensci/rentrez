@@ -54,11 +54,17 @@ test_that("Elink sub-elements can be acessed and printed", {
 })
 
 
+test_that("URls can be extracted from elink objs", {
+   for(idx in 6:8){
+       urls <- linkout_urls(all_the_commands[[idx]])
+       expect_that(urls, is_a("list"))
+       expect_that(urls[[1]], is_a("character"))
+   }
+})
+
 test_that("Elink errors on mis-spelled/unknown cmds",{
     expect_error(rcheck <- entrez_link(dbfrom = "pubmed",
                                          id = 19880848, db = "all", 
                                          cmd='rcheck'))
 })
-
-
 
