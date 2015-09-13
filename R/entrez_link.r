@@ -68,8 +68,8 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
 }
 
 #' Extract urls from an elink object
-#' @param elink: elink object (returned by entrez_link) containing Urls
-#' @param list of character vectors, one per ID each containing of urls for that
+#' @param elink elink object (returned by entrez_link) containing Urls
+#' @return list of character vectors, one per ID each containing of urls for that
 #' ID.
 #' @seealso entrez_link
 #' @export
