@@ -1,3 +1,17 @@
+Version 1.0.0
+--------------------
+    * new function extract_from_esummary() for extracting like-elements
+      from a list esummary records
+    * Support for `cmd` opion in entrez_link (breaks backward compatability)
+        * Allows discovery of external links from and use of web_history
+        * New helper function linkout_urls to get urls form external links
+    * Support for 'by_id' mode for entrez_link. Pass a vector of IDs to
+      entrez_link, get a list on elink objects back (one per ID)
+    * web_history object makes using web history features easier
+    * All of these changes documented in new vignette
+    * New tests, minor bug fixes and extended documentation
+
+
 
 Version 0.4.1
 ---------------------
