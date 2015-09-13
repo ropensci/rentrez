@@ -72,7 +72,7 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
 #' @param list of character vectors, one per ID each containing of urls for that
 #' ID.
 #' @seealso entrez_link
-
+#' @export
 linkout_urls <- function(elink){
     if (!("linkouts" %in% names(elink))){
         stop("Not linkouts in the elink object. Use entrez_link commands 'prlinks', 'llinks' or 'llinkslib' to fetch urls")
