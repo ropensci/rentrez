@@ -9,7 +9,7 @@ output:
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#"
 )
 knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)  
 

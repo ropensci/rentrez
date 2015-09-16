@@ -67,6 +67,12 @@ test_that("We can extract elements from esummary object", {
    
 })
 
+test_that("We can extract elements from a single esummary", {
+    expect_that(extract_from_esummary(pop_summ_xml[[1]], c("Title", "TaxId")), is_a("list"))
+    expect_that(extract_from_esummary(pop_summ_xml[[1]], "Gi"), is_a("integer"))
+    expect_that(extract_from_esummary(pop_summ_xml[[1]], "Gi", FALSE), is_a("list"))
+})
+
 test_that("We can get a list of one element if we ask for it", {
     expect_that(entrez_summary(db="popset", id=307075396, always_return_list=TRUE), is_a("list"))
     expect_that(entrez_summary(db="popset", id=307075396), is_a("esummary"))
