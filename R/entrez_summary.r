@@ -66,7 +66,18 @@ entrez_summary <- function(db, id=NULL, web_history=NULL,
 #'@param simplify logical, if possible return a vector
 #'@return List or vector containing requested elements 
 extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
-    fxn <- if (simplify & length(elements) == 1) "[[" else "["
+    UseMethod("extract_from_esummary", esummaries)
+}
+
+#'@export
+extract_from_esummary.esummary <- function(esummaries, elements, simplify=TRUE){
+    fxn <- if(simplify & length(elements)==1) `[[` else `[`
+    fxn(esummaries, elements)
+}
+
+#'@export
+extract_from_esummary.esummary_list <- function(esummaries, elements, simplify=TRUE){
+    fxn <- if (simplify & length(elements) == 1) `[[` else `[`
     sapply(esummaries, fxn, elements, simplify=simplify)
 }
 

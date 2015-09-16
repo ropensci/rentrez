@@ -9,7 +9,7 @@ output:
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#"
 )
 knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)  
 
@@ -80,7 +80,7 @@ Now, what sorts of data are available from other NCBI database for this paper?
 
 ```{r links}
 hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
-hox_data
+hox_data$links
 ```
 
 Each of the character vectors in this object contain unique IDS for records in
@@ -92,7 +92,7 @@ In this case we'll get the protein sequences as genbank files, using '
 `entrez_fetch`:
 
 ```{r proteins}
-hox_proteins <- entrez_fetch(db="protein", id=hox_data$pubmed_protein, rettype="gb")
+hox_proteins <- entrez_fetch(db="protein", id=hox_data$links$pubmed_protein, rettype="gb")
 ```
 
 ###Retrieving datasets associated a particular organism.

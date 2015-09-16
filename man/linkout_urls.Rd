@@ -7,10 +7,11 @@
 linkout_urls(elink)
 }
 \arguments{
-\item{elink:}{elink object (returned by entrez_link) containing Urls}
-
-\item{list}{of character vectors, one per ID each containing of urls for that
-ID.}
+\item{elink}{elink object (returned by entrez_link) containing Urls}
+}
+\value{
+list of character vectors, one per ID each containing of urls for that
+ID.
 }
 \description{
 Extract urls from an elink object
