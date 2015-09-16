@@ -69,11 +69,13 @@ extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
     UseMethod("extract_from_esummary", esummaries)
 }
 
+#'@export
 extract_from_esummary.esummary <- function(esummaries, elements, simplify=TRUE){
     fxn <- if(simplify & length(elements)==1) `[[` else `[`
     fxn(esummaries, elements)
 }
 
+#'@export
 extract_from_esummary.esummary_list <- function(esummaries, elements, simplify=TRUE){
     fxn <- if (simplify & length(elements) == 1) `[[` else `[`
     sapply(esummaries, fxn, elements, simplify=simplify)
