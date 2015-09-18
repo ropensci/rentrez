@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#"
 )
-knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)  
+knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)
 
 ```
 
@@ -268,7 +268,8 @@ years <- 1990:2014
 total_papers <- as.numeric(papers_by_year(years, ""))
 omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))
-trend_props <- as.numeric(trend_data)/total_papers
+mode(trend_data) <- 'numeric'
+trend_props <- trend_data/total_papers
 ```
 
 That's the data, let's plot it:
