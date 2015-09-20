@@ -37,10 +37,11 @@ parse_pubmed_xml<- function(record){
 parse_one_pubmed <- function(paper){
     atype <- xmlName(paper) 
     if( atype != "PubmedArticle" ){
-        pmid = xpathSApply(x, "//PMID", xmlValue)
-        msg = paste0("Pubmed records include article of type '",
-                     atype, "' which  rentrez doesn't know how to parse.",
-                     " Retuning empty record")
+        pmid = xpathSApply(paper, "//PMID", xmlValue)
+        msg = paste0("Pubmed record ", pmid, " is of type '", atype, 
+                     "' which  rentrez doesn't know how to parse.",
+                     " Returning empty record")
+
         warning(msg)
         return(structure(list(), class="pubmed_record", empty=TRUE))
     }
