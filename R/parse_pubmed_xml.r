@@ -1,6 +1,7 @@
 #' Summarize an XML record from pubmed.
 #'
-#' Note: this function assumes all records are pubed
+#' Note: this function assumes all records are of the type "PubmedArticle"
+#' and will return an empty record for any other type (including books).
 #'
 #'@export
 #'@param record Either and XMLInternalDocument or character the record to be
