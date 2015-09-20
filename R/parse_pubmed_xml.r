@@ -1,11 +1,14 @@
 #' Summarize an XML record from pubmed.
 #'
+#' Note: this function assumes all records are pubed
 #'
 #'@export
 #'@param record Either and XMLInternalDocument or character the record to be
 #'parsed ( expected to come from \code{\link{entrez_fetch}})
 #'@return Either a single pubmed_record object, or a list of several 
+#'@importFrom XML xmlName
 #'@examples
+
 #' 
 #' hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 #' hox_rel <- entrez_link(db="pubmed", dbfrom="pubmed", id=hox_paper$ids)
@@ -20,7 +23,7 @@ parse_pubmed_xml<- function(record){
         record <- xmlTreeParse(record, useInternalNodes=TRUE)
     }
     res <- xpathApply(record, 
-                      "/PubmedArticleSet/PubmedArticle", 
+                      "/PubmedArticleSet/*", 
                       parse_one_pubmed)
     if(length(res)==1){
         return(res[[1]])
@@ -31,6 +34,15 @@ parse_pubmed_xml<- function(record){
 
 #The work-horse function - get information from a single xml rec
 parse_one_pubmed <- function(paper){
+    atype <- xmlName(paper) 
+    if( atype != "PubmedArticle" ){
+        pmid = xpathSApply(x, "//PMID", xmlValue)
+        msg = paste0("Pubmed records include article of type '",
+                     atype, "' which  rentrez doesn't know how to parse.",
+                     " Retuning empty record")
+        warning(msg)
+        return(structure(list(), class="pubmed_record", empty=TRUE))
+    }
     get_value <- function(path){
         return(xpathSApply(paper, path, xmlValue))
     }
@@ -47,14 +59,19 @@ parse_one_pubmed <- function(paper){
     res$doi <- get_value(".//ArticleId[@IdType='doi']")
     res$pmid <- get_value(".//ArticleId[@IdType='pubmed']")
     res$abstract <- get_value(".//AbstractText")
-    class(res) <- "pubmed_record"
- return(res) 
+    
+    structure(res, class="pubmed_record", empty=FALSE) 
 }
 
 
 
 #' @export
 print.pubmed_record  <- function(x, first_line=TRUE, ...){
+ if( attr(x, "empty")){
+   cat('Pubmed record (empty)\n')
+   return()
+ }                      
+
  if(length(x$authors) == 1){
   display.author <- x$authors[1]
  }
