@@ -14,7 +14,8 @@ parsed ( expected to come from \code{\link{entrez_fetch}})}
 Either a single pubmed_record object, or a list of several
 }
 \description{
-Summarize an XML record from pubmed.
+Note: this function assumes all records are of the type "PubmedArticle"
+and will return an empty record for any other type (including books).
 }
 \examples{
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")

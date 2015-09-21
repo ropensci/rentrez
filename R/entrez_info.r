@@ -1,6 +1,6 @@
 #' Get information about EUtils databases
 #'
-#'Constructs a query to NCBI's einfo and returns a parsed XML object
+#' Gather information about EUtils generally, or a given Eutils database.
 #'Note: The most common uses-cases for the einfo util are finding the list of
 #' search fields available for a given database or the other NCBI databases to
 #' which records in a given database might be linked. Both these use cases
@@ -19,7 +19,7 @@
 #'@examples
 #'\dontrun{
 #'all_the_data <- entrez_info()
-#'xpathSApply(all_the_data, "//DbName", xmlValue)
+#'XML::xpathSApply(all_the_data, "//DbName", xmlValue)
 #'entrez_dbs()
 #'}
 #'@export
@@ -31,7 +31,7 @@ entrez_info <- function(db=NULL, config=NULL){
     res
 }
 
-#' List databases avaliable from the NCBI
+#' List databases available from the NCBI
 #'
 #' Retrieves the names of  databases available through the EUtils API
 #'@param config config vector passed to \code{httr::GET}
@@ -64,7 +64,7 @@ entrez_dbs <- function(config=NULL){
 #'@export
 
 entrez_db_summary <- function(db, config=NULL){
-    rec <- entrez_info(db, config)
+    rec <- available(db, config)
     unparsed <- xpathApply( rec, "//DbInfo/*[not(self::LinkList or self::FieldList)]")
     res <- sapply(unparsed, xmlValue)
     names(res) <- sapply(unparsed, xmlName)
@@ -75,8 +75,10 @@ entrez_db_summary <- function(db, config=NULL){
 
 #' List available links for records from a given NCBI database
 #'
-#'Can be used in conjunction with \code{\link{entrez_link}} to find
-#' the right name for the \code{db} argument in that function.
+#' For a given database, fetch a list of other databases that contain
+#' cross-referenced records. The names of these records can be used as the
+#' \code{db} argument in \code{\link{entrez_link}}
+#'
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database to search
 #'@return An eInfoLink object (sub-classed from list) summarizing linked-databases.
@@ -89,8 +91,8 @@ entrez_db_summary <- function(db, config=NULL){
 #'@examples
 #' \donttest{
 #'taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
-#'(tax_links <- entrez_db_links("taxonomy"))
-#'tax_links[["pubmed"]]
+#'tax_links <- entrez_db_links("taxonomy")
+#'tax_links
 #'entrez_link(dbfrom="taxonomy", db="pmc", id=taxid)
 #'
 #'sra_links <- entrez_db_links("sra")
@@ -111,8 +113,9 @@ entrez_db_links <- function(db, config=NULL){
 
 #' List available search fields for a given database
 #'
-#' Can be used in conjunction with \code{\link{entrez_search}} to find available
-#' search fields to include in the \code{term} argument of that function.
+
+#'Fetch a list of search fields that can be used with a given database. Fields
+#' can be used as part of the \code{term} argument to \code{\link{entrez_search}}
 #'@param config config vector passed to \code{httr::GET}
 #'@param db character, name of database to get search field from
 #'@return An eInfoSearch object (subclassed from list) summarizing linked-databases. 
@@ -122,7 +125,7 @@ entrez_db_links <- function(db, config=NULL){
 #'@family einfo
 #'@examples
 #'\donttest{
-#' (pmc_fields <- entrez_db_searchable("pmc"))
+#' pmc_fields <- entrez_db_searchable("pmc")
 #' pmc_fields[["AFFL"]]
 #' entrez_search(db="pmc", term="Otago[AFFL]", retmax=0)
 #' entrez_search(db="pmc", term="Auckland[AFFL]", retmax=0)

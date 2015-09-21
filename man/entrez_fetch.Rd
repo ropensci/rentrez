@@ -8,33 +8,37 @@ entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "text",
   parsed = FALSE, config = NULL, ...)
 }
 \arguments{
-\item{db}{character Name of the database to use}
+\item{db}{character, name of the database to use}
 
-\item{id}{vector with unique ID(s) for reacods in database \code{db}.}
+\item{id}{vector (numeric or character), unique ID(s) for records in database \code{db}}
 
-\item{web_history}{A web_history object}
+\item{web_history,}{a web_history object}
 
-\item{rettype}{character Format in which to get data (eg, fasta, xml...)}
+\item{rettype}{character, format in which to get data (eg, fasta, xml...)}
 
-\item{retmode}{character Mode in which to receive data, defaults to 'text'}
+\item{retmode}{character, mode in which to receive data, defaults to 'text'}
 
 \item{parsed}{boolean should entrez_fetch attempt to parse the resulting
 file. Only works with rettype="xml" at present}
 
-\item{config}{vector configuration options passed to httr::GET}
+\item{config}{vector, httr configuration options passed to httr::GET}
 
-\item{\dots}{character Additional terms to add to the request, see NCBI
-documentation linked to in referenes for a complete list}
+\item{\dots}{character, additional terms to add to the request, see NCBI
+documentation linked to in references for a complete list}
 }
 \value{
 character string containing the file created
+
+XMLInternalDocument a parsed XML document if parsed=TRUE and
+rettype='xml'
 }
 \description{
 A set of unique identifiers mush be specified with either the \code{db}
-argument (which directly specifies the IDs as a numeric or charavector of numerics or
-character) or a \code{web_history} object as returned by
+argument (which directly specifies the IDs as a numeric or character vector)
+or a \code{web_history} object as returned by
 \code{\link{entrez_link}}, \code{\link{entrez_search}} or
-\code{\link{entrez_post}}.
+\code{\link{entrez_post}}. See Table 1 in the linked reference for the set of
+formats available for each database.
 }
 \examples{
 katipo <- "Latrodectus katipo[Organism]"

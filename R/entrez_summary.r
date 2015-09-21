@@ -14,12 +14,23 @@
 #' naming of the "Version 1.0" summary files can be updated by setting the new
 #' \code{version} argument to "1.0".
 #'
+#' By default, entrez_summary returns a single record when only one ID is
+#' passed and a list of such records when multiple IDs are passed. This can lead
+#' to unexpected behaviour when the results of a variable number of IDs (perhaps the
+#' result of \code{entrez_search}) are processed with an apply family function
+#' or in a for-loop. If you use this function as part of a function or script that
+#' generates a variably-sized vector of IDs setting \code{always_return_list} to 
+#' \code{TRUE} will avoid these problems. The function
+#' \code{extract_from_esummary} is  provided for the specific case of extracting
+#' named elements from a list of esummary objects, and is designed to work on
+#' single objects as well as lists.
+#'
 #'@export
 #'@param db character Name of the database to search for
 #'@param id vector with unique ID(s) for records in database \code{db}. 
 #'@param web_history A web_history object 
 #'@param always_return_list logical, return a list  of esummary objects even
-#'when only one ID is provided.
+#'when only one ID is provided (see description for a note about this option)
 #'@param \dots character Additional terms to add to the request, see NCBI
 #'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to \code{httr::GET}
@@ -35,7 +46,7 @@
 #'@importFrom XML xpathApply xmlSApply xmlGetAttr xmlValue
 #'@importFrom jsonlite fromJSON
 #' @examples
-#'
+#'\donttest{
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
 #'  extract_from_esummary(pop_summ, "title")
@@ -47,7 +58,7 @@
 #'  extract_from_esummary(cv, "title", simplify=FALSE)
 #'  extract_from_esummary(cv, "trait_set")[1:2] 
 #'  extract_from_esummary(cv, "gene_sort") 
-
+#' }
 entrez_summary <- function(db, id=NULL, web_history=NULL, 
                            version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
     identifiers <- id_or_webenv()

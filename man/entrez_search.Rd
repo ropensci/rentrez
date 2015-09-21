@@ -8,19 +8,19 @@ entrez_search(db, term, config = NULL, retmode = "xml",
   use_history = FALSE, ...)
 }
 \arguments{
-\item{db}{character Name of the database to search for}
+\item{db}{character, name of the database to search for.}
 
-\item{term}{character The search term}
+\item{term}{character, the search term.}
 
 \item{config}{vector configuration options passed to httr::GET}
 
-\item{retmode}{character One of json (default) or xml. This will make no
+\item{retmode}{character, one of json (default) or xml. This will make no
 difference in most cases.}
 
-\item{use_history}{logical Return a web_history object for use in
+\item{use_history}{logical. If TRUE return a web_history object for use in
 later calls to the NCBI}
 
-\item{\dots}{character Additional terms to add to the request, see NCBI
+\item{\dots}{characte, additional terms to add to the request, see NCBI
 documentation linked to in references for a complete list}
 }
 \value{
@@ -40,8 +40,19 @@ resulting from the returned JSON file being parsed with
 \code{\link[jsonlite]{fromJSON}}.
 }
 \description{
-Constructs a query with the given arguments, including a search term, and
-a database name, then retrieves the XML document created by that query.
+The NCBI uses a search term syntax where search terms can be associated with
+a specific search field with square brackets. So, for instance ``Homo[ORGN]''
+denotes a search for Homo in the ``Organism'' field. The names and
+definitions of these fields can be identified using
+\code{\link{entrez_db_searchable}}.
+}
+\details{
+Searches can make use of several fields by combining them via the boolean
+operators AND, OR and NOT. So, using the search term``((Homo[ORGN] AND APP[GENE]) NOT
+Review[PTYP])'' in PubMed would identify articles matching the gene APP in
+humans, and exclude review articles. More examples of the use of these search
+terms, and the more specific MeSH terms for precise searching,
+is given in the package vignette.
 }
 \examples{
 \dontrun{
@@ -67,9 +78,9 @@ entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
 \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_}
 }
 \seealso{
-\code{\link[httr]{config}} for available configs
+\code{\link[httr]{config}} for available httr configurations
 
 \code{\link{entrez_db_searchable}} to get a set of search fields that
-can be used in \code{term} for any base
+can be used in \code{term} for any database
 }
 

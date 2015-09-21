@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_link.r
 \name{linkout_urls}
 \alias{linkout_urls}
-\title{Extract urls from an elink object}
+\title{Extract URLs from an elink object}
 \usage{
 linkout_urls(elink)
 }
@@ -10,11 +10,11 @@ linkout_urls(elink)
 \item{elink}{elink object (returned by entrez_link) containing Urls}
 }
 \value{
-list of character vectors, one per ID each containing of urls for that
+list of character vectors, one per ID each containing of URLs for that
 ID.
 }
 \description{
-Extract urls from an elink object
+Extract URLs from an elink object
 }
 \seealso{
 entrez_link

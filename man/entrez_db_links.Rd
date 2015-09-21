@@ -19,14 +19,15 @@ and can be used to get (a little) more information about each linked database
 (see example below).
 }
 \description{
-Can be used in conjunction with \code{\link{entrez_link}} to find
-the right name for the \code{db} argument in that function.
+For a given database, fetch a list of other databases that contain
+cross-referenced records. The names of these records can be used as the
+\code{db} argument in \code{\link{entrez_link}}
 }
 \examples{
 \donttest{
 taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
-(tax_links <- entrez_db_links("taxonomy"))
-tax_links[["pubmed"]]
+tax_links <- entrez_db_links("taxonomy")
+tax_links
 entrez_link(dbfrom="taxonomy", db="pmc", id=taxid)
 
 sra_links <- entrez_db_links("sra")

@@ -17,7 +17,7 @@ databases available in Eutils (if db is not set) or one particular database
 (set by 'db')
 }
 \description{
-Constructs a query to NCBI's einfo and returns a parsed XML object
+Gather information about EUtils generally, or a given Eutils database.
 Note: The most common uses-cases for the einfo util are finding the list of
 search fields available for a given database or the other NCBI databases to
 which records in a given database might be linked. Both these use cases
@@ -29,7 +29,7 @@ it is exported by \code{rentrez} for the sake of completeness.
 \examples{
 \dontrun{
 all_the_data <- entrez_info()
-xpathSApply(all_the_data, "//DbName", xmlValue)
+XML::xpathSApply(all_the_data, "//DbName", xmlValue)
 entrez_dbs()
 }
 }
