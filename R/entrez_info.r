@@ -64,7 +64,7 @@ entrez_dbs <- function(config=NULL){
 #'@export
 
 entrez_db_summary <- function(db, config=NULL){
-    rec <- available(db, config)
+    rec <- entrez_info(db, config)
     unparsed <- xpathApply( rec, "//DbInfo/*[not(self::LinkList or self::FieldList)]")
     res <- sapply(unparsed, xmlValue)
     names(res) <- sapply(unparsed, xmlName)
