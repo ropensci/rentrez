@@ -17,7 +17,7 @@ entrez_summary(db, id = NULL, web_history = NULL, version = c("2.0",
 \item{version}{either 1.0 or 2.0 see above for description}
 
 \item{always_return_list}{logical, return a list  of esummary objects even
-when only one ID is provided.}
+when only one ID is provided (see description for a note about this option)}
 
 \item{config}{vector configuration options passed to \code{httr::GET}}
 
@@ -45,8 +45,21 @@ into native R types). Existing scripts which relied on the structure and
 naming of the "Version 1.0" summary files can be updated by setting the new
 \code{version} argument to "1.0".
 }
+\details{
+By default, entrez_summary returns a single record when only one ID is
+passed and a list of such records when multiple IDs are passed. This can lead
+to unexpected behaviour when the results of a variable number of IDs (perhaps the
+result of \code{entrez_search}) are processed with an apply family function
+or in a for-loop. If you use this function as part of a function or script that
+generates a variably-sized vector of IDs setting \code{always_return_list} to
+\code{TRUE} will avoid these problems. The function
+\code{extract_from_esummary} is  provided for the specific case of extracting
+named elements from a list of esummary objects, and is designed to work on
+single objects as well as lists.
+}
 \examples{
-pop_ids = c("307082412", "307075396", "307075338", "307075274")
+\donttest{
+ pop_ids = c("307082412", "307075396", "307075338", "307075274")
  pop_summ <- entrez_summary(db="popset", id=pop_ids)
  extract_from_esummary(pop_summ, "title")
 
@@ -57,6 +70,7 @@ pop_ids = c("307082412", "307075396", "307075338", "307075274")
  extract_from_esummary(cv, "title", simplify=FALSE)
  extract_from_esummary(cv, "trait_set")[1:2]
  extract_from_esummary(cv, "gene_sort")
+}
 }
 \references{
 \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_}

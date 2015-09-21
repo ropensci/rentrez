@@ -14,7 +14,7 @@ entrez_post(db, id = NULL, web_history = NULL, config = NULL, ...)
 \item{web_history}{A web_history object. Can be used to add to additional
 identifiers to an existing web environment on the NCBI}
 
-\item{config}{vector configuration options passed to httr::GET}
+\item{config}{vector of configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request, see NCBI
 documentation linked to in references for a complete list}
@@ -37,6 +37,6 @@ second <- entrez_fetch(db="nuccore", file_format="fasta", web_history=upload,
 \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EPost_}
 }
 \seealso{
-\code{\link[httr]{config}} for available configs
+\code{\link[httr]{config}} for available httr configurations
 }
 

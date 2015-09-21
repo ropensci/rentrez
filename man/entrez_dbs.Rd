@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_info.r
 \name{entrez_dbs}
 \alias{entrez_dbs}
-\title{List databases avaliable from the NCBI}
+\title{List databases available from the NCBI}
 \usage{
 entrez_dbs(config = NULL)
 }

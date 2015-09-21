@@ -1,4 +1,4 @@
-#' Fetch pubmed ids from specially formatted citation strings
+#' Fetch pubmed ids matching specially formatted citation strings
 #'
 #'@param bdata character, containing citation data. 
 #' Each citation must be represented in a pipe-delimited format
@@ -8,7 +8,7 @@
 #'@param db character, the database to search. Defaults to pubmed,
 #' the only database currently available
 #'@param retmode character, file format to retrieve. Defaults to xml, as 
-#' per the API documentation, though, note the API only returns plain text
+#' per the API documentation, though note the API only returns plain text
 #'@param config vector configuration options passed to httr::GET  
 #'@return A character vector containing PMIDs
 #'@seealso \code{\link[httr]{config}} for available configs

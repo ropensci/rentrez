@@ -1,21 +1,31 @@
 #' Search the NCBI databases using EUtils
 #'
-#' Constructs a query with the given arguments, including a search term, and
-#' a database name, then retrieves the XML document created by that query. 
+#' The NCBI uses a search term syntax where search terms can be associated with 
+#' a specific search field with square brackets. So, for instance ``Homo[ORGN]''
+#' denotes a search for Homo in the ``Organism'' field. The names and
+#' definitions of these fields can be identified using
+#' \code{\link{entrez_db_searchable}}.
+#'
+#' Searches can make use of several fields by combining them via the boolean
+#' operators AND, OR and NOT. So, using the search term``((Homo[ORGN] AND APP[GENE]) NOT
+#' Review[PTYP])'' in PubMed would identify articles matching the gene APP in
+#' humans, and exclude review articles. More examples of the use of these search
+#' terms, and the more specific MeSH terms for precise searching, 
+#' is given in the package vignette.
 #' 
 #'@export
-#'@param db character Name of the database to search for
-#'@param term character The search term
-#'@param use_history logical Return a web_history object for use in 
+#'@param db character, name of the database to search for.
+#'@param term character, the search term.
+#'@param use_history logical. If TRUE return a web_history object for use in 
 #' later calls to the NCBI
-#'@param retmode character One of json (default) or xml. This will make no
+#'@param retmode character, one of json (default) or xml. This will make no
 #' difference in most cases.
-#'@param \dots character Additional terms to add to the request, see NCBI
+#'@param \dots characte, additional terms to add to the request, see NCBI
 #'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to httr::GET  
-#'@seealso \code{\link[httr]{config}} for available configs 
+#'@seealso \code{\link[httr]{config}} for available httr configurations 
 #'@seealso \code{\link{entrez_db_searchable}} to get a set of search fields that
-#' can be used in \code{term} for any base
+#' can be used in \code{term} for any database
 #'@return ids integer Unique IDS returned by the search
 #'@return count integer Total number of hits for the search
 #'@return retmax integer Maximum number of hits returned by the search

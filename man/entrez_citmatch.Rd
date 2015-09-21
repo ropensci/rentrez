@@ -2,7 +2,7 @@
 % Please edit documentation in R/entrez_citmatch.r
 \name{entrez_citmatch}
 \alias{entrez_citmatch}
-\title{Fetch pubmed ids from specially formatted citation strings}
+\title{Fetch pubmed ids matching specially formatted citation strings}
 \usage{
 entrez_citmatch(bdata, db = "pubmed", retmode = "xml", config = NULL)
 }
@@ -17,7 +17,7 @@ fit. Fields can be left empty, but be sure to keep 6 pipes.}
 the only database currently available}
 
 \item{retmode}{character, file format to retrieve. Defaults to xml, as
-per the API documentation, though, note the API only returns plain text}
+per the API documentation, though note the API only returns plain text}
 
 \item{config}{vector configuration options passed to httr::GET}
 }
@@ -25,7 +25,7 @@ per the API documentation, though, note the API only returns plain text}
 A character vector containing PMIDs
 }
 \description{
-Fetch pubmed ids from specially formatted citation strings
+Fetch pubmed ids matching specially formatted citation strings
 }
 \examples{
 \donttest{

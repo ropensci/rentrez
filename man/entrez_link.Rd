@@ -22,10 +22,10 @@ to discover databases that might have linked information (see examples).}
 \itemize{
   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
   input IDs in \code{dbfrom}.
-  \item neighbor_score. As 'neighbor', but additionally returns similarity scores.
-  \item neighbor_history. As 'neighbor', but returns web history objects.
+  \item neighbor_score. As `neighbor'', but additionally returns similarity scores.
+  \item neighbor_history. As `neighbor', but returns web history objects.
   \item acheck. Returns a list of linked databases available from NCBI for a set of IDs.
-  \item ncheck. Checks for the existance of links within a single database.
+  \item ncheck. Checks for the existence of links within a single database.
   \item lcheck. Checks for external (i.e. outside NCBI) links.
   \item llinks. Returns a list of external links for each ID, excluding links
   provided by libraries.
@@ -43,7 +43,7 @@ ID in \code{id}.}
 \item{config}{vector configuration options passed to httr::GET}
 
 \item{\dots}{character Additional terms to add to the request, see NCBI
-documentation linked to in referenes for a complete list}
+documentation linked to in references for a complete list}
 }
 \value{
 An elink object containing the data defined by the \code{cmd} argument
@@ -53,15 +53,16 @@ file XMLInternalDocument xml file resulting from search, parsed with
 \code{\link{xmlTreeParse}}
 }
 \description{
-entrez_link can discover records related to a set of unique identifiers from
-a NCBI database. The object returned by this function depends on the value
+Discover records related to a set of unique identifiers from
+an NCBI database. The object returned by this function depends on the value
 set for the \code{cmd} argument. Printing the returned object lists the names
 , and provides a brief description, of the elements included in the object.
 }
 \examples{
 \donttest{
- (pubmed_search <- entrez_search(db = "pubmed", term ="10.1016/j.ympev.2010.07.013[doi]"))
- (linked_dbs <- entrez_db_links("pubmed"))
+ pubmed_search <- entrez_search(db = "pubmed", term ="10.1016/j.ympev.2010.07.013[doi]")
+ linked_dbs <- entrez_db_links("pubmed")
+ linked_dbs
  nucleotide_data <- entrez_link(dbfrom = "pubmed", id = pubmed_search$ids, db ="nuccore")
  #Sources for the full text of the paper
  res <- entrez_link(dbfrom="pubmed", db="", cmd="llinks", id=pubmed_search$ids)

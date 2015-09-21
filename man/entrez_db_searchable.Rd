@@ -17,12 +17,12 @@ Can be coerced to a data-frame with \code{as.data.frame}. Printing the object
 shows only the names of each available search field.
 }
 \description{
-Can be used in conjunction with \code{\link{entrez_search}} to find available
-search fields to include in the \code{term} argument of that function.
+Fetch a list of search fields that can be used with a given database. Fields
+can be used as part of the \code{term} argument to \code{\link{entrez_search}}
 }
 \examples{
 \donttest{
-(pmc_fields <- entrez_db_searchable("pmc"))
+pmc_fields <- entrez_db_searchable("pmc")
 pmc_fields[["AFFL"]]
 entrez_search(db="pmc", term="Otago[AFFL]", retmax=0)
 entrez_search(db="pmc", term="Auckland[AFFL]", retmax=0)

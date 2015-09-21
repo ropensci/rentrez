@@ -1,4 +1,4 @@
-#' See how many hits there are for a given term across all NCBI Entrez databases
+#' Find the number of records that match a given term across all NCBI Entrez databases
 #'
 #' 
 #'
