@@ -35,12 +35,6 @@ library(devtools)
 install_github("ropensci/rentrez")
 ```
 
-##Get help
-Hopefully this README, and the package's vignette and in-line documentation,
-, provide you with enough information to get started with `rentrez`. If you need
-more help, or if discover a bug in `rentrez` please let us know, either through
-one of the [contact methods described here](http://ropensci.org/contact.html),
-or [by filing an issue](https://github.com/ropensci/rentrez/issues)
 
 
 ##The EUtils API
@@ -53,7 +47,11 @@ policies and try to limit very large requests to off peak (USA) times (`rentrez`
 takes care of limiting the number of requests per second, and setting the
 appropriate entrez tool name in each request).
 
-See [getting information about NCBI databases](#getting-information-about-ncbi-databases)
+Hopefully this README, and the package's vignette and in-line documentation,
+, provide you with enough information to get started with `rentrez`. If you need
+more help, or if you discover a bug in `rentrez` please let us know, either through
+one of the [contact methods described here](http://ropensci.org/contact.html),
+or [by filing an issue](https://github.com/ropensci/rentrez/issues)
 
 
 ##Examples
@@ -67,32 +65,34 @@ package vignette for others).
 Let's say I've just read a paper on the evolution of Hox genes,
 [Di-Poi _et al_. (2010)](dx.doi.org/10.1038/nature08789), and I want to get the
 data required to replicate their results. First, I need the unique ID for this
-paper in pubmed (the PMID). Annoyingly, many journals don't give PMIDS for their
+paper in pubmed (the PMID). Unfortunately, many journals don't give PMIDS for their
 papers, but we can use `entrez_search` to find the paper using the doi field:
 
 ```{r doi}
 library(rentrez)
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
-(hox_pmid <- hox_paper$ids)
+hox_paper$ids
 ```
 
 Now, what sorts of data are available from other NCBI database for this paper?
 
 ```{r links}
-hox_data <- entrez_link(db="all", id=hox_pmid, dbfrom="pubmed")
+hox_data <- entrez_link(db="all", id=hox_paper$ids, dbfrom="pubmed")
+hox_data
 hox_data$links
 ```
 
-Each of the character vectors in this object contain unique IDS for records in
+Each of the character vectors in this object contain unique IDs for records in
 the named databases. These functions try to make the most useful bits of the
 returned files available to users, but they also return the original file in case
 you want to dive into the XML yourself.
 
-In this case we'll get the protein sequences as genbank files, using '
+In this case we'll get the protein sequences as fasta files, using '
 `entrez_fetch`:
 
 ```{r proteins}
-hox_proteins <- entrez_fetch(db="protein", id=hox_data$links$pubmed_protein, rettype="gb")
+hox_proteins <- entrez_fetch(db="protein", id=hox_data$links$pubmed_protein, rettype="fasta")
+cat(substr(hox_proteins, 1, 237))
 ```
 
 ###Retrieving datasets associated a particular organism.
@@ -119,9 +119,9 @@ and we see what each one contains like so:
 
 
 ```{r summ}
-summaries <- entrez_summary(db="popset", id=katipo_search$ids)
-summaries[[1]]
-sapply(summaries, "[[", "title")
+katipo_summs <- entrez_summary(db="popset", id=katipo_search$ids)
+katipo_summs
+extract_from_esummary(katipo_summs, "title")
 ```
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
@@ -151,55 +151,41 @@ coi_aligned <- clustal(coi)
 tree <- nj(dist.dna(coi_aligned))
 ```
 
-###Making use of `httr` configuration options
 
 
-As of version 0.3, rentrez uses [httr](https://github.com/hadley/httr) to manage
-calls to the Eutils API. This allows users to take advantage of some of `httr`'s
-configuration options.
+### web_history and big queries
 
-Any `rentrez` function that interacts with the Eutils api will
-pass the value of the argument `config` along to `httr`'s  `GET` function. For
-instance, if you access the internet through a proxy you use the `httr` function
-`use_proxy()` to provide connection details to an entrez call:
+The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. 
+As an example, imagine you wanted to learn something about all of the SNPs on
+the Y-Chromosome in umans. You could first find these SNPs using `entrez_fetch`
 
-```r
-entrez_search(db="pubmed",
-              term="10.1038/nature08789[doi]",
-              config=use_proxy("0.0.0.0", port=80,username="user", password="****")
+
+```{r snp_search}
+snp_search <- entrez_search(db="snp", term="12[CHR] AND Homo[ORGN]")
+snp_search
 ```
 
-Other options include `verbose()` which prints a detailed account of what's
-going on during a request, `timeout()` which sets the number of seconds to wait
-for a response before giving up, and, in the development version of `httr`,
-`progress()` which prints a progress bar to screen.
+When I wrote this that was a little over 300 000 SNPs. That's too many too
+download all of the IDs. Instead we can use the NCBI's Web History feature to 
+store the matching IDs on the NCBI's servers and refer to them later using a
+`web_history` object in `rentrez`:
 
-`rentrez` functions will also be effected by the global `httr` configuration set by
-`httr::set_config()`. For example, it's possible to have all calls to Eutils
-pass through a proxy and produce verbose output
 
-```r
-httr::set_config(use_proxy("0.0.0.0", port=80,username="user", password="****"),
-                 verbose() )
-entrez_search(db="pubmed",  term="10.1038/nature08789[doi]")
+
+```{r snp_history}
+snp_search <- entrez_search(db="snp", term="y[CHR] AND Homo[ORGN]",  use_history=TRUE)
+snp_search
+snp_search$web_history
 ```
+We can now use the `web_history` object to refer to all those IDs in later calls
+using `entrez_link` or  `entrez_fetch`. Here we will just fetch complete records 
+of the first 5 SNPs in tabular "cluster report" format:
 
+```{r snp_fetch}
+recs <- entrez_fetch(db="snp", web_history=snp_search$web_history, retmax=5, rettype="rsr")
+recs
+y_chrom_linked_disaese <- entrez_link(dbfrom="snp", db="omim", web_history=snp_search$web_history)
 
-
-### WebEnv and big queries
-
-The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, we will go searching for COI sequences from all the snail (Gastropod) species we can find in the nucleotide database:
-
-```{r snail_search}
-snail_search <- entrez_search(db="nuccore", "Gastropoda[Organism] AND COI[Gene]", retmax=200, usehistory="y")
-```
-
-Because we set usehistory to "y" the `snail_search` object contains a unique ID for the search (`WebEnv`) and the particular query in that search history (`QueryKey`). Instead of using the 200 ids we turned up to make a new URL and fetch the sequences we can use the webhistory features.
-
-```{r snail_fetch}
-cookie <- snail_search$WebEnv
-qk <- snail_search$QueryKey
-snail_coi <- entrez_fetch(db="nuccore", WebEnv=cookie, query_key=qk, rettype="fasta", retmax=10)
 ```
 
 ###Getting information about NCBI databases
@@ -252,11 +238,11 @@ Let's start by making a function that finds the number of records matching a giv
 search term for each of several years (using the `mindate` and `maxdate` terms from
 the Eutils API):
 
-```r
+```
 library(rentrez)
 papers_by_year <- function(years, search_term){
-            return(sapply(years, function(y) entrez_search(db="pubmed",term=search_term, mindate=y, maxdate=y, retmax=0)$count))
-        }
+    return(sapply(years, function(y) entrez_search(db="pubmed",term=search_term, mindate=y, maxdate=y, retmax=0)$count))
+}
 ```
 
 With that we can fetch the data for each term and, by searching with no term,
