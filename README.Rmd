@@ -82,7 +82,7 @@ hox_data
 ```
 In this case all the data is in the `links` element:
 
-```
+```{r showlinks}
 hox_data$links
 ```
 

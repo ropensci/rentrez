@@ -51,7 +51,18 @@ hox_data
 
 In this case all the data is in the `links` element:
 
-    hox_data$links
+``` r
+hox_data$links
+```
+
+    # elink result with information from 14 databases:
+    #  [1] pubmed_medgen              pubmed_mesh_major         
+    #  [3] pubmed_nuccore             pubmed_nucleotide         
+    #  [5] pubmed_pmc_refs            pubmed_protein            
+    #  [7] pubmed_pubmed              pubmed_pubmed_alsoviewed  
+    #  [9] pubmed_pubmed_citedin      pubmed_pubmed_combined    
+    # [11] pubmed_pubmed_five         pubmed_pubmed_reviews     
+    # [13] pubmed_pubmed_reviews_five pubmed_taxonomy_entrez
 
 Each of the character vectors in this object contain unique IDs for records in the named databases. These functions try to make the most useful bits of the returned files available to users, but they also return the original file in case you want to dive into the XML yourself.
 
