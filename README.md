@@ -99,18 +99,16 @@ katipo_summs
 An we can extract specific elements from list of summary records with `extract_from_esummary`:
 
 ``` r
-knitr::kable(
-   extract_from_esummary(katipo_summs, "title")
-)
+titles <- extract_from_esummary(katipo_summs, "title")
+unname(titles)
 ```
 
-|:----------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 167843272 | Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence. |
-| 167843256 | Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial.                                                                                                                                  |
-| 145206810 | Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence.        |
-| 145206746 | Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial.                                                                                                                                         |
-| 41350664  | Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial.                                                                                             |
-| 39980346  | Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial.                                                                                                                                         |
+    # [1] "Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence."
+    # [2] "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial."                                                                                                                                 
+    # [3] "Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence."       
+    # [4] "Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial."                                                                                                                                        
+    # [5] "Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial."                                                                                            
+    # [6] "Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial."
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
 
@@ -141,59 +139,45 @@ tree$tip.label <- stringr::str_extract(tree$tip.label, "Steatoda [a-z]+|Latrodec
 plot( root(tree, outgroup="Steatoda grossa" ), cex=0.8)
 ```
 
-![](http://i.imgur.com/vDJdXny.png)
+![](http://i.imgur.com/8n9UeIi.png)
 
 ### web\_history and big queries
 
-The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. As an example, imagine you wanted to learn something about all of the SNPs on the Y-Chromosome in umans. You could first find these SNPs using `entrez_fetch`
+The NCBI provides search history features, which can be useful for dealing with large lists of IDs or repeated searches.
+
+As an example, imagine you wanted to learn something about all of the SNPs in the non-recombing portion of the Y chromsome in humans. You could first find these SNPs using `entrez_search`, using the "CHR" (chromosome) and "CPOS" (position in chromosome) to specify the region of interest. (The syntax for these search terms is described in the vignette and the documentation for `entrez_search`):
 
 ``` r
-snp_search <- entrez_search(db="snp", term="12[CHR] AND Homo[ORGN]")
+snp_search <- entrez_search(db="snp", 
+                            term="(Y[CHR] AND Homo[ORGN]) NOT 10001:2781479[CPOS]")
 snp_search
 ```
 
-    # Entrez search result with 7284111 hits (object contains 20 IDs and no web_history object)
-    #  Search term (as translated):  12[CHR] AND "Homo"[Organism]
+    # Entrez search result with 235255 hits (object contains 20 IDs and no web_history object)
+    #  Search term (as translated):  (Y[CHR] AND "Homo"[Organism]) NOT 10001[CHRPOS] :  ...
 
-When I wrote this that was a little over 300 000 SNPs. That's too many too download all of the IDs. Instead we can use the NCBI's Web History feature to store the matching IDs on the NCBI's servers and refer to them later using a `web_history` object in `rentrez`:
+When I wrote this that was a little over 200 000 SNPs. It's probably not a good idea to set `retmax` to 200 000 and just download all of those identifiers. Instead, we could store this list of IDs on the NCBI's server and refer to them in later calles to functions like `entrez_link` and `entrez_fetch` that accept a web history object.
 
 ``` r
-snp_search <- entrez_search(db="snp", term="y[CHR] AND Homo[ORGN]",  use_history=TRUE)
+snp_search <- entrez_search(db="snp", 
+                            term="(Y[CHR] AND Homo[ORGN]) NOT 10001:2781479[CPOS]", 
+                            use_history = TRUE)
 snp_search
 ```
 
-    # Entrez search result with 368846 hits (object contains 20 IDs and a web_history object)
-    #  Search term (as translated):  y[CHR] AND "Homo"[Organism]
+    # Entrez search result with 235255 hits (object contains 20 IDs and a web_history object)
+    #  Search term (as translated):  (Y[CHR] AND "Homo"[Organism]) NOT 10001[CHRPOS] :  ...
 
-\`\``We can now use the`web\_history`object to refer to all those IDs in later calls using`entrez\_link`or`entrez\_fetch\`. Here we will just fetch complete records of the first 5 SNPs in tabular "cluster report" format:
+As you can see, the result of the search now includes a `web_history` object. We can use that object to refer to these IDs in later calls. Heree we will just fetch complete records of the first 5 SNPs.
 
 ``` r
-recs <- entrez_fetch(db="snp", web_history=snp_search$web_history, retmax=5, rettype="rsr")
-cat(recs, "\n")
+recs <- entrez_fetch(db="snp", web_history=snp_search$web_history, retmax=5, rettype="xml", parsed=TRUE)
+class(recs)
 ```
 
-    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-    # -----------   -------------    ----------------------------------------
-    # 781782243 1556739404  1000GENOMES PHASE3_chrY_197777
-    # 
-    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-    # -----------   -------------    ----------------------------------------
-    # 781782114 1556776570  1000GENOMES PHASE3_chrY_234943
-    # 
-    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-    # -----------   -------------    ----------------------------------------
-    # 781781837 1694440247  EVA_EXAC    EXAC_0.3.X:g595429g>a
-    # 
-    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-    # -----------   -------------    ----------------------------------------
-    # 781781523 1536954443  DDI kw335948
-    # 781781523 1577678940  EVA_GENOME_DK   gatk.Y:g19138349cta>c
-    # 
-    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-    # -----------   -------------    ----------------------------------------
-    # 781780734 1553226422  1000GENOMES PHASE3_chrX_246
-    # 
-    # 
+    # [1] "XMLInternalDocument" "XMLAbstractDocument"
+
+The records come to us as parsed XML objects, which you could futher process with the `XML` library or write to disk for later use.
 
 ### Getting information about NCBI databases
 

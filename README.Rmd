@@ -130,9 +130,8 @@ An  we can extract specific elements from list of summary records with
 `extract_from_esummary`:
 
 ```{r extract}
-knitr::kable(
-   extract_from_esummary(katipo_summs, "title")
-)
+titles <- extract_from_esummary(katipo_summs, "title")
+unname(titles)
 ```
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
@@ -173,36 +172,50 @@ plot( root(tree, outgroup="Steatoda grossa" ), cex=0.8)
 
 ### web_history and big queries
 
-The NCBI provides search history features, which can be useful for dealing with large lists of IDs (which will not fit in a single URL) or repeated searches. 
-As an example, imagine you wanted to learn something about all of the SNPs on
-the Y-Chromosome in umans. You could first find these SNPs using `entrez_fetch`
+The NCBI provides search history features, which can be useful for dealing with 
+large lists of IDs or repeated searches. 
+
+As an example, imagine you wanted to learn something about all of the SNPs in 
+the non-recombing portion of the Y chromsome in humans. 
+You could first find these SNPs using `entrez_search`, using the "CHR"
+(chromosome) and "CPOS" (position in chromosome) to specify the region of
+interest. (The syntax for these search terms is described in the vignette and
+the documentation for `entrez_search`):
 
 
 ```{r snp_search}
-snp_search <- entrez_search(db="snp", term="12[CHR] AND Homo[ORGN]")
+snp_search <- entrez_search(db="snp", 
+                            term="(Y[CHR] AND Homo[ORGN]) NOT 10001:2781479[CPOS]")
 snp_search
 ```
 
-When I wrote this that was a little over 300 000 SNPs. That's too many too
-download all of the IDs. Instead we can use the NCBI's Web History feature to 
-store the matching IDs on the NCBI's servers and refer to them later using a
-`web_history` object in `rentrez`:
+When I wrote this that was a little over 200 000 SNPs. It's probably not a good
+idea to set `retmax` to 200 000 and just download all of those identifiers.
+Instead, we could store this list of IDs on the NCBI's server and refer to them
+in later calles to functions like `entrez_link` and `entrez_fetch` that accept
+a web history object. 
 
 
 
 ```{r snp_history}
-snp_search <- entrez_search(db="snp", term="y[CHR] AND Homo[ORGN]",  use_history=TRUE)
+snp_search <- entrez_search(db="snp", 
+                            term="(Y[CHR] AND Homo[ORGN]) NOT 10001:2781479[CPOS]", 
+                            use_history = TRUE)
 snp_search
 ```
-```
-We can now use the `web_history` object to refer to all those IDs in later calls
-using `entrez_link` or  `entrez_fetch`. Here we will just fetch complete records 
-of the first 5 SNPs in tabular "cluster report" format:
+
+As you can see, the result of the search now includes a `web_history` object. We can
+use that object to refer to these IDs in later calls. Heree we will just fetch 
+complete records of the first 5 SNPs.
 
 ```{r snp_fetch}
-recs <- entrez_fetch(db="snp", web_history=snp_search$web_history, retmax=5, rettype="rsr")
-cat(recs, "\n")
+recs <- entrez_fetch(db="snp", web_history=snp_search$web_history, retmax=5, rettype="xml", parsed=TRUE)
+class(recs)
 ```
+
+The records come to us as parsed XML objects, which you could futher process
+with the `XML` library or write to disk for later use.
+
 
 ###Getting information about NCBI databases
 
