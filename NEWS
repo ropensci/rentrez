@@ -1,14 +1,16 @@
 Version 1.0.0
 --------------------
-    * new function extract_from_esummary() for extracting like-elements
-      from a list esummary records
-    * Support for `cmd` opion in entrez_link (breaks backward compatability)
+    * new function extract_from_esummary() for extracting like-named elements
+      from a list esummary records (e.g. get all "Title" fields from a list of 
+      PubMed esummaries)
+    * Support for `cmd` option in entrez_link (breaks backward compatibility)
         * Allows discovery of external links from and use of web_history
-        * New helper function linkout_urls to get urls form external links
+        * New helper function linkout_urls to get URLs form external links
     * Support for 'by_id' mode for entrez_link. Pass a vector of IDs to
-      entrez_link, get a list on elink objects back (one per ID)
-    * web_history object makes using web history features easier
+      entrez_link, (optionally) get a list on elink objects back (one per ID)
+    * New web_history object makes using NCBI Web History features easier
     * All of these changes documented in new vignette
+    * Han Guangchun added as contributor for his pull requests 
     * New tests, minor bug fixes and extended documentation
 
 
