@@ -79,6 +79,10 @@ Now, what sorts of data are available from other NCBI database for this paper?
 ```{r links}
 hox_data <- entrez_link(db="all", id=hox_paper$ids, dbfrom="pubmed")
 hox_data
+```
+In this case all the data is in the `links` element:
+
+```
 hox_data$links
 ```
 
@@ -121,6 +125,11 @@ and we see what each one contains like so:
 ```{r summ}
 katipo_summs <- entrez_summary(db="popset", id=katipo_search$ids)
 katipo_summs
+```
+An  we can extract specific elements from list of summary records with
+`extract_from_esummary`:
+
+```{r extract}
 extract_from_esummary(katipo_summs, "title")
 ```
 
@@ -142,13 +151,19 @@ write(trnL, "Test/trnL.fasta")
 ```
 
 Once you've got the sequences you can do what you want with them, but I wanted
-a phylogeny so let's do that with ape:
+a phylogeny so let's do. To get a nice tree with legible tip labels I'm gong to
+use `stringr` to extract just the species names and `ape` to built and root and
+neighbor joining tree:
 
-```r
+```{r}
 library(ape)
-coi <- read.dna("Test/COI.fasta", "fasta")
-coi_aligned <- clustal(coi)
+tf <- tempfile()
+write(COI, tf)
+coi <- read.dna(tf, format="fasta")
+coi_aligned <- muscle(coi)
 tree <- nj(dist.dna(coi_aligned))
+tree$tip.labels <- stringr::str_extract(tr$tip.label, "Steatoda [a-z]+|Latrodectus [a-z]+")
+plot( root(tr, outgroup="Steatoda grossa" ))
 ```
 
 
@@ -175,7 +190,7 @@ store the matching IDs on the NCBI's servers and refer to them later using a
 ```{r snp_history}
 snp_search <- entrez_search(db="snp", term="y[CHR] AND Homo[ORGN]",  use_history=TRUE)
 snp_search
-snp_search$web_history
+```
 ```
 We can now use the `web_history` object to refer to all those IDs in later calls
 using `entrez_link` or  `entrez_fetch`. Here we will just fetch complete records 
@@ -183,9 +198,7 @@ of the first 5 SNPs in tabular "cluster report" format:
 
 ```{r snp_fetch}
 recs <- entrez_fetch(db="snp", web_history=snp_search$web_history, retmax=5, rettype="rsr")
-recs
-y_chrom_linked_disaese <- entrez_link(dbfrom="snp", db="omim", web_history=snp_search$web_history)
-
+cat(recs, "\n")
 ```
 
 ###Getting information about NCBI databases
