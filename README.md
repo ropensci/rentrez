@@ -218,7 +218,7 @@ entrez_db_summary("cdd")
     #  Description: Conserved Domain Database
     #  DbBuild: Build150814-1106.1
     #  Count: 50648
-    #  LastUpdate: 2015/08/14 18:42
+    #  LastUpdate: 2015/08/14 18:28
 
 `entrez_db_searchable()` lets you discover the fields available for search terms for a given database. You get back a named-list, with names are fields. Each element has additional information about each named search field (you can also use `as.data.frame` to create a dataframe, with one search-field per row):
 

@@ -157,7 +157,7 @@ To get a nice tree with legible tip labels I'm gong to
 use `stringr` to extract just the species names and `ape` to built and root and
 neighbor joining tree:
 
-```{r}
+```r
 library(ape)
 tf <- tempfile()
 write(COI, tf)
@@ -168,6 +168,7 @@ tree$tip.label <- stringr::str_extract(tree$tip.label, "Steatoda [a-z]+|Latrodec
 plot( root(tree, outgroup="Steatoda grossa" ), cex=0.8)
 ```
 
+![](http://i.imgur.com/8n9UeIi.png)
 
 
 ### web_history and big queries
