@@ -71,14 +71,14 @@ entrez_db_summary("cdd")
 ```
 
 ... or find out which search terms can be used with the Sequence Read Archive (SRA)
-database (which contains for raw data from sequencing projects):
+database (which contains raw data from sequencing projects):
 
 ```{r, sra_eg}
 entrez_db_searchable("sra")
 ```
 
 Just how these 'helper' functions might be useful will become clearer once
-you've started using the `rentrez`, so let's get started.
+you've started using `rentrez`, so let's get started.
 
 ## Searching databases: `entrez_search()`
 
@@ -109,9 +109,9 @@ are unique IDs contained in this object. That's because the optional argument
 `retmax`, which controls the maximum number of returned values has a default
 value of 20.
 
-The IDs are the most important thing returned by here. They
-allow you to fetch those records, gather summary data about them or find
-cross-linked records in other databases. We access the IDs as a vector using the
+The IDs are the most important thing returned here. They
+allow us to fetch records matching those IDs, gather summary data about them or find
+cross-referenced records in other databases. We access the IDs as a vector using the
 `$` operator:
 
 
@@ -133,8 +133,8 @@ search, we can use the NCBI's web history feature [described below](#web_history
 ### Building search terms
 
 The EUtils API uses a special syntax to build search terms. You can search a
-database against a specific term using the format `query[SEARCH TERM]`, and
-combine multiple such searches using the operators `AND`, `OR` and `NOT`.
+database against a specific term using the format `query[SEARCH FIELD]`, and
+combine multiple such searches using the boolean operators `AND`, `OR` and `NOT`.
 
 For instance, we can find next generation sequence datasets for the (amazing...) ciliate
 _Tetrahymena thermophila_ by using the organism ('ORGN') search field:
@@ -146,7 +146,7 @@ entrez_search(db="sra",
               retmax=0)
 ```
 
-We can marrow our focus to only those records that have been added recently (using the colon to 
+We can narrow our focus to only those records that have been added recently (using the colon to 
 specify a range of values):
 
 
@@ -189,8 +189,9 @@ entrez_search(db   = "pubmed",
               term = "(vivax malaria[MeSH]) AND (folic acid antagonists[MeSH])")
 ```
 
-The complete set of MeSH terms is available as a database containing detealied
-information about each term and inter-relations among terms. You can search 
+The complete set of MeSH terms is available as a database from the NCBI. That
+means it is possible to download detailed information about each term and find 
+the ways in which terms relate to each other using `rentrez`. You can search 
 for specific terms with `entrez_search(db="mesh", term =...)` and learn about the
 results of your search using the tools described below.
 
@@ -233,7 +234,7 @@ plaques that form in the brains of  Alzheimer's Disease patients).
 The function `entrez_link()` can be used to find cross-referenced records. In
 the most basic case we need to provide an ID (`id`), the database from which this
 ID comes (`dbfrom`) and the name of a database in which to find linked records (`db`).
-If we set this last argument to 'all' we can find links in multiple database:
+If we set this last argument to 'all' we can find links in multiple databases:
 
 ```{r elink0}
 all_the_links <- entrez_link(dbfrom='gene', id=351, db='all')
@@ -249,7 +250,7 @@ all_the_links$links
 ```
 The names of the list elements are in the format `[source_database]_[linked_database]` 
 and the elements themselves contain a vector of linked-IDs. So, if we want to
-find open access publications associated with gene we could get linked records
+find open access publications associated with this gene we could get linked records
 in PubMed Central:
 
 ```{r, elink_pmc}
@@ -265,10 +266,10 @@ all_the_links$links$gene_omim
 
 ###Narrowing our focus
 
-If we know beforehand what sort of links we'd like to find, it's a good idea
+If we know beforehand what sort of links we'd like to find , we can
 to use the `db` argument to narrow the focus of a call to `entrez_link`.
 
-For instance, say you were interested in knowing about all of the 
+For instance, say we are interested in knowing about all of the 
 RNA transcripts associated with the Amyloid Beta Precursor gene in humans. 
 Transcript sequences are stored in the nucleotide database (referred
 to as `nuccore` in EUtils), so to find transcripts associated with a given gene
@@ -304,15 +305,15 @@ paper_links <- entrez_link(dbfrom="pubmed", id=25500142, cmd="llinks")
 paper_links
 ```
 
-Instead of a `links` elements, the object returned has a list of `linkouts`.
-Each element in that list contains a URL for information about this paper:
+Each element of the `linkouts` object contains information about an external
+source of data on this paper:
 
 ```{r, urls}
 paper_links$linkouts
 ```
 
 Each of those linkout objects contains quite a lot of information, but the URL 
-itself is probably the most useful. For that reason, `rentrez` provides the
+is probably the most useful. For that reason, `rentrez` provides the
 function `linkout_urls` to make extracting just the URL simple:
 
 ```{r just_urls}
@@ -321,16 +322,16 @@ linkout_urls(paper_links)
 
 The full list of options for the `cmd` argument are given in in-line
 documentation (`?entrez_link`). If you are interested in finding full text
-articles for a large number of articles checkout the package 
+records for a large number of articles checkout the package 
 [fulltext](https://github.com/ropensci/fulltext) which makes use of multiple
-sources of full text articles.
+sources (including the NCBI) to discover the full text articles.
 
 ###Using more than one ID
 
 It is possible to pass more than one ID to `entrez_link()`. By default, doing so
 will give you a single elink object containing the complete set of links for 
 _all_ of the IDs that you specified. So, if you were looking for protein IDs
-related to specific genes youd could do:
+related to specific genes you could do:
 
 ```{r, multi_default}
 all_links_together  <- entrez_link(db="protein", dbfrom="gene", id=c("93100", "223646"))
@@ -352,7 +353,7 @@ lapply(all_links_sep, function(x) x$links$gene_protein)
 
 ## Getting summary data: `entrez_summary()`
 
-Having found the unique IDs for some records via`entrez_search` or `entrez_link()`, you are
+Having found the unique IDs for some records via `entrez_search` or `entrez_link()`, you are
 probably going to want to learn something about them. The `Eutils` API has two
 ways to get information about a record. `entrez_fetch()` returns 'full' records
 in varying formats and `entrez_summary()` returns less information about each
@@ -380,7 +381,7 @@ article identifier...
 ```{r, Summ_2}
 taxize_summ$articleids
 ```
-...or see how many times the article has been cited in Pubmed Central papers
+...or see how many times the article has been cited in PubMed Central papers
 
 ```{r, Summ_3}
 taxize_summ$pmcrefcount
