@@ -34,18 +34,20 @@ Let's say I've just read a paper on the evolution of Hox genes, [Di-Poi *et al*.
 library(rentrez)
 hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
 hox_paper$ids
-# [1] "20203609"
 ```
+
+    # [1] "20203609"
 
 Now, what sorts of data are available from other NCBI database for this paper?
 
 ``` r
 hox_data <- entrez_link(db="all", id=hox_paper$ids, dbfrom="pubmed")
 hox_data
-# elink object with contents:
-#  $links: IDs for linked records from NCBI
-# 
 ```
+
+    # elink object with contents:
+    #  $links: IDs for linked records from NCBI
+    # 
 
 In this case all the data is in the `links` element:
 
@@ -58,11 +60,12 @@ In this case we'll get the protein sequences as fasta files, using ' `entrez_fet
 ``` r
 hox_proteins <- entrez_fetch(db="protein", id=hox_data$links$pubmed_protein, rettype="fasta")
 cat(substr(hox_proteins, 1, 237))
-# >gi|290760438|gb|ADD54588.1| HOXA10, partial [Saiphos equalis]
-# MACSESPAANSFLVDSLISSASVRGEGGGGGGGGGGAGGGGGEGGGGGGGVYYPNNSSVYLPQTSELSYG
-# LPSYGLFPVLSKRNEGPSQSMVPASHTYMSGMEVWLDPPRSCRLEDPESPQATSCSFTPNIKEENSYCLY
-# DSDKGPKEATATDLSTFPRLTSEVCSMNNV
 ```
+
+    # >gi|290760438|gb|ADD54588.1| HOXA10, partial [Saiphos equalis]
+    # MACSESPAANSFLVDSLISSASVRGEGGGGGGGGGGAGGGGGEGGGGGGGVYYPNNSSVYLPQTSELSYG
+    # LPSYGLFPVLSKRNEGPSQSMVPASHTYMSGMEVWLDPPRSCRLEDPESPQATSCSFTPNIKEENSYCLY
+    # DSDKGPKEATATDLSTFPRLTSEVCSMNNV
 
 ### Retrieving datasets associated a particular organism.
 
@@ -74,40 +77,40 @@ The first step here is to use the function `entrez_search` to find datasets that
 library(rentrez)
 katipo_search <- entrez_search(db="popset", term="Latrodectus katipo[Organism]")
 katipo_search$count
-# [1] 6
 ```
+
+    # [1] 6
 
 In this search `count` is the total number of hits returned for the search term. We can use `entrez_summary` to learn a little about these datasets. `rentrez` will parse this xml into a list of `esummary` records, with each list entry corresponding to one of the IDs it is passed. In this case we get six records, and we see what each one contains like so:
 
 ``` r
 katipo_summs <- entrez_summary(db="popset", id=katipo_search$ids)
 katipo_summs
-# List of  6 esummary records. First record:
-# 
-#  $`167843272`
-# esummary result with 17 items:
-#  [1] uid        caption    title      extra      gi         settype   
-#  [7] createdate updatedate flags      taxid      authors    article   
-# [13] journal    strain     statistics properties oslt
 ```
+
+    # List of  6 esummary records. First record:
+    # 
+    #  $`167843272`
+    # esummary result with 17 items:
+    #  [1] uid        caption    title      extra      gi         settype   
+    #  [7] createdate updatedate flags      taxid      authors    article   
+    # [13] journal    strain     statistics properties oslt
 
 An we can extract specific elements from list of summary records with `extract_from_esummary`:
 
 ``` r
-extract_from_esummary(katipo_summs, "title")
-#                                                                                                                                                                                                                  167843272 
-# "Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
-#                                                                                                                                                                                                                  167843256 
-#                                                                                                                                  "Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
-#                                                                                                                                                                                                                  145206810 
-#        "Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence." 
-#                                                                                                                                                                                                                  145206746 
-#                                                                                                                                         "Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial." 
-#                                                                                                                                                                                                                   41350664 
-#                                                                                             "Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial." 
-#                                                                                                                                                                                                                   39980346 
-#                                                                                                                                         "Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial."
+knitr::kable(
+   extract_from_esummary(katipo_summs, "title")
+)
 ```
+
+|:----------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 167843272 | Latrodectus katipo 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence. |
+| 167843256 | Latrodectus katipo cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial.                                                                                                                                  |
+| 145206810 | Latrodectus 18S ribosomal RNA gene, partial sequence; internal transcribed spacer 1, 5.8S ribosomal RNA gene, and internal transcribed spacer 2, complete sequence; and 28S ribosomal RNA gene, partial sequence.        |
+| 145206746 | Latrodectus cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial.                                                                                                                                         |
+| 41350664  | Latrodectus tRNA-Leu (trnL) gene, partial sequence; and NADH dehydrogenase subunit 1 (ND1) gene, partial cds; mitochondrial.                                                                                             |
+| 39980346  | Theridiidae cytochrome oxidase subunit I (COI) gene, partial cds; mitochondrial.                                                                                                                                         |
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
 
@@ -125,7 +128,7 @@ write(COI, "Test/COI.fasta")
 write(trnL, "Test/trnL.fasta")
 ```
 
-Once you've got the sequences you can do what you want with them, but I wanted a phylogeny so let's do. To get a nice tree with legible tip labels I'm gong to use `stringr` to extract just the species names and `ape` to built and root and neighbor joining tree:
+Once you've got the sequences you can do what you want with them, but I wanted a phylogeny and we can do that entirly within R. To get a nice tree with legible tip labels I'm gong to use `stringr` to extract just the species names and `ape` to built and root and neighbor joining tree:
 
 ``` r
 library(ape)
@@ -134,11 +137,11 @@ write(COI, tf)
 coi <- read.dna(tf, format="fasta")
 coi_aligned <- muscle(coi)
 tree <- nj(dist.dna(coi_aligned))
-tree$tip.labels <- stringr::str_extract(tr$tip.label, "Steatoda [a-z]+|Latrodectus [a-z]+")
-plot( root(tr, outgroup="Steatoda grossa" ))
+tree$tip.label <- stringr::str_extract(tree$tip.label, "Steatoda [a-z]+|Latrodectus [a-z]+")
+plot( root(tree, outgroup="Steatoda grossa" ), cex=0.8)
 ```
 
-![](http://i.imgur.com/OanQIgx.png)
+![](http://i.imgur.com/vDJdXny.png)
 
 ### web\_history and big queries
 
@@ -147,47 +150,50 @@ The NCBI provides search history features, which can be useful for dealing with 
 ``` r
 snp_search <- entrez_search(db="snp", term="12[CHR] AND Homo[ORGN]")
 snp_search
-# Entrez search result with 7284111 hits (object contains 20 IDs and no web_history object)
-#  Search term (as translated):  12[CHR] AND "Homo"[Organism]
 ```
+
+    # Entrez search result with 7284111 hits (object contains 20 IDs and no web_history object)
+    #  Search term (as translated):  12[CHR] AND "Homo"[Organism]
 
 When I wrote this that was a little over 300 000 SNPs. That's too many too download all of the IDs. Instead we can use the NCBI's Web History feature to store the matching IDs on the NCBI's servers and refer to them later using a `web_history` object in `rentrez`:
 
 ``` r
 snp_search <- entrez_search(db="snp", term="y[CHR] AND Homo[ORGN]",  use_history=TRUE)
 snp_search
-# Entrez search result with 368846 hits (object contains 20 IDs and a web_history object)
-#  Search term (as translated):  y[CHR] AND "Homo"[Organism]
 ```
+
+    # Entrez search result with 368846 hits (object contains 20 IDs and a web_history object)
+    #  Search term (as translated):  y[CHR] AND "Homo"[Organism]
 
 \`\``We can now use the`web\_history`object to refer to all those IDs in later calls using`entrez\_link`or`entrez\_fetch\`. Here we will just fetch complete records of the first 5 SNPs in tabular "cluster report" format:
 
 ``` r
 recs <- entrez_fetch(db="snp", web_history=snp_search$web_history, retmax=5, rettype="rsr")
 cat(recs, "\n")
-# snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-# -----------   -------------    ----------------------------------------
-# 781782243 1556739404  1000GENOMES PHASE3_chrY_197777
-# 
-# snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-# -----------   -------------    ----------------------------------------
-# 781782114 1556776570  1000GENOMES PHASE3_chrY_234943
-# 
-# snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-# -----------   -------------    ----------------------------------------
-# 781781837 1694440247  EVA_EXAC    EXAC_0.3.X:g595429g>a
-# 
-# snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-# -----------   -------------    ----------------------------------------
-# 781781523 1536954443  DDI kw335948
-# 781781523 1577678940  EVA_GENOME_DK   gatk.Y:g19138349cta>c
-# 
-# snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
-# -----------   -------------    ----------------------------------------
-# 781780734 1553226422  1000GENOMES PHASE3_chrX_246
-# 
-# 
 ```
+
+    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
+    # -----------   -------------    ----------------------------------------
+    # 781782243 1556739404  1000GENOMES PHASE3_chrY_197777
+    # 
+    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
+    # -----------   -------------    ----------------------------------------
+    # 781782114 1556776570  1000GENOMES PHASE3_chrY_234943
+    # 
+    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
+    # -----------   -------------    ----------------------------------------
+    # 781781837 1694440247  EVA_EXAC    EXAC_0.3.X:g595429g>a
+    # 
+    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
+    # -----------   -------------    ----------------------------------------
+    # 781781523 1536954443  DDI kw335948
+    # 781781523 1577678940  EVA_GENOME_DK   gatk.Y:g19138349cta>c
+    # 
+    # snp_id(rs)    subsnp_id(ss)    submitter handle    submitter snp ID
+    # -----------   -------------    ----------------------------------------
+    # 781780734 1553226422  1000GENOMES PHASE3_chrX_246
+    # 
+    # 
 
 ### Getting information about NCBI databases
 
@@ -197,65 +203,69 @@ First up, `entrez_dbs()` gives you a list of database names
 
 ``` r
 entrez_dbs()
-#  [1] "pubmed"          "protein"         "nuccore"        
-#  [4] "nucleotide"      "nucgss"          "nucest"         
-#  [7] "structure"       "genome"          "gpipe"          
-# [10] "annotinfo"       "assembly"        "bioproject"     
-# [13] "biosample"       "blastdbinfo"     "books"          
-# [16] "cdd"             "clinvar"         "clone"          
-# [19] "gap"             "gapplus"         "grasp"          
-# [22] "dbvar"           "epigenomics"     "gene"           
-# [25] "gds"             "geoprofiles"     "homologene"     
-# [28] "medgen"          "mesh"            "ncbisearch"     
-# [31] "nlmcatalog"      "omim"            "orgtrack"       
-# [34] "pmc"             "popset"          "probe"          
-# [37] "proteinclusters" "pcassay"         "biosystems"     
-# [40] "pccompound"      "pcsubstance"     "pubmedhealth"   
-# [43] "seqannot"        "snp"             "sra"            
-# [46] "taxonomy"        "unigene"         "gencoll"        
-# [49] "gtr"
 ```
+
+    #  [1] "pubmed"          "protein"         "nuccore"        
+    #  [4] "nucleotide"      "nucgss"          "nucest"         
+    #  [7] "structure"       "genome"          "gpipe"          
+    # [10] "annotinfo"       "assembly"        "bioproject"     
+    # [13] "biosample"       "blastdbinfo"     "books"          
+    # [16] "cdd"             "clinvar"         "clone"          
+    # [19] "gap"             "gapplus"         "grasp"          
+    # [22] "dbvar"           "epigenomics"     "gene"           
+    # [25] "gds"             "geoprofiles"     "homologene"     
+    # [28] "medgen"          "mesh"            "ncbisearch"     
+    # [31] "nlmcatalog"      "omim"            "orgtrack"       
+    # [34] "pmc"             "popset"          "probe"          
+    # [37] "proteinclusters" "pcassay"         "biosystems"     
+    # [40] "pccompound"      "pcsubstance"     "pubmedhealth"   
+    # [43] "seqannot"        "snp"             "sra"            
+    # [46] "taxonomy"        "unigene"         "gencoll"        
+    # [49] "gtr"
 
 Some of the names are a little opaque, so you can get some more descriptive information about each with `entrez_db_summary()`
 
 ``` r
 entrez_db_summary("cdd")
-#  DbName: cdd
-#  MenuName: Conserved Domains
-#  Description: Conserved Domain Database
-#  DbBuild: Build150814-1106.1
-#  Count: 50648
-#  LastUpdate: 2015/08/14 18:49
 ```
+
+    #  DbName: cdd
+    #  MenuName: Conserved Domains
+    #  Description: Conserved Domain Database
+    #  DbBuild: Build150814-1106.1
+    #  Count: 50648
+    #  LastUpdate: 2015/08/14 18:42
 
 `entrez_db_searchable()` lets you discover the fields available for search terms for a given database. You get back a named-list, with names are fields. Each element has additional information about each named search field (you can also use `as.data.frame` to create a dataframe, with one search-field per row):
 
 ``` r
 search_fields <- entrez_db_searchable("pmc")
 search_fields$GRNT
-#  Name: GRNT
-#  FullName: Grant Number
-#  Description: NIH Grant Numbers
-#  TermCount: 2220915
-#  IsDate: N
-#  IsNumerical: N
-#  SingleToken: Y
-#  Hierarchy: N
-#  IsHidden: N
 ```
+
+    #  Name: GRNT
+    #  FullName: Grant Number
+    #  Description: NIH Grant Numbers
+    #  TermCount: 2220915
+    #  IsDate: N
+    #  IsNumerical: N
+    #  SingleToken: Y
+    #  Hierarchy: N
+    #  IsHidden: N
 
 Finally, `entrez_db_links` takes a database name, and returns a list of other NCBI databases which might contain linked-records.
 
 ``` r
 entrez_db_links("omim")
-# Databases with linked records for database 'omim'
-#  [1] biosample   biosystems  books       clinvar     dbvar      
-#  [6] gene        genetests   geoprofiles gtr         homologene 
-# [11] mapview     medgen      medgen      nuccore     nucest     
-# [16] nucgss      omim        pcassay     pccompound  pcsubstance
-# [21] pmc         protein     pubmed      pubmed      snp        
-# [26] snp         snp         sra         structure   unigene
 ```
+
+    # Databases with linked records for database 'omim'
+    #  [1] biosample   biosystems  books       clinvar     dbvar      
+    #  [6] gene        genetests   geoprofiles gtr         homologene 
+    # [11] mapview     medgen      medgen      nuccore     nucest     
+    # [16] nucgss      omim        pcassay     pccompound  pcsubstance
+    # [21] pmc         protein     pubmed      pubmed      snp        
+    # [26] snp         snp         sra         structure   unigene
 
 ### Trendy topics in genetics
 

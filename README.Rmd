@@ -8,7 +8,7 @@ output:
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
+  collapse = FALSE,
   comment = "#"
 )
 knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)  
@@ -130,7 +130,9 @@ An  we can extract specific elements from list of summary records with
 `extract_from_esummary`:
 
 ```{r extract}
-extract_from_esummary(katipo_summs, "title")
+knitr::kable(
+   extract_from_esummary(katipo_summs, "title")
+)
 ```
 
 Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
@@ -151,7 +153,8 @@ write(trnL, "Test/trnL.fasta")
 ```
 
 Once you've got the sequences you can do what you want with them, but I wanted
-a phylogeny so let's do. To get a nice tree with legible tip labels I'm gong to
+a phylogeny and we can do that entirly within R. 
+To get a nice tree with legible tip labels I'm gong to
 use `stringr` to extract just the species names and `ape` to built and root and
 neighbor joining tree:
 
@@ -162,8 +165,8 @@ write(COI, tf)
 coi <- read.dna(tf, format="fasta")
 coi_aligned <- muscle(coi)
 tree <- nj(dist.dna(coi_aligned))
-tree$tip.labels <- stringr::str_extract(tr$tip.label, "Steatoda [a-z]+|Latrodectus [a-z]+")
-plot( root(tr, outgroup="Steatoda grossa" ))
+tree$tip.label <- stringr::str_extract(tree$tip.label, "Steatoda [a-z]+|Latrodectus [a-z]+")
+plot( root(tree, outgroup="Steatoda grossa" ), cex=0.8)
 ```
 
 
