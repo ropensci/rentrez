@@ -1,6 +1,6 @@
 Package: rentrez
 Version: 1.0.0
-Date: 2015-03-16
+Date: 2015-09-22
 Title: Entrez in R
 Authors@R: c(
  person("David", "Winter", role=c("aut", "cre"), 
@@ -17,9 +17,9 @@ Imports:
 Suggests:
     testthat,
     knitr
-Description: Rentrez provides an R interact to the NCBI's EUtils API allowing
-    users to search databases like genbank and pubmed, process the resulting
-    files and pull data into their R sessions.
+Description: Provides an R interface to the NCBI's EUtils API 
+    allowing users to search databases like GenBank and PubMed, process the 
+    results of those searches and pull data into their R sessions.
 VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: MIT + file LICENSE
