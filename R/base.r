@@ -54,7 +54,7 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...
 
 id_or_webenv <- function(){
     args <- sys.frame(sys.parent())
-    msg <- "Must specify either (not both) 'id' or web history arguments 'WebEnv' and 'query_key'" 
+    msg <- "Must specify either (not both) 'id' or 'web_history' arguments" 
     if(!is.null(args$id)){
         if(!is.null(args$web_history)){
             stop(msg, call.=FALSE)
