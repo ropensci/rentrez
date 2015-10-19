@@ -19,7 +19,7 @@ knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)
 [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master)
 [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master)
 [![CRAN dowloads](http://cranlogs.r-pkg.org/badges/rentrez)]
-[!DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](http://dx.doi.org/10.5281/zenodo.32420)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](http://dx.doi.org/10.5281/zenodo.32420)
 
 
 #rentrez
