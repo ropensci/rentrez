@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master) [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master) [![CRAN dowloads](http://cranlogs.r-pkg.org/badges/rentrez)][![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](<http://dx.doi.org/10.5281/zenodo.32420>)
+[![Build Status](https://travis-ci.org/ropensci/rentrez.png)](https://travis-ci.org/ropensci/rentrez) [![Build status](https://ci.appveyor.com/api/projects/status/y8mq2v4mpgou8rhp/branch/master)](https://ci.appveyor.com/project/sckott/rentrez/branch/master) [![Coverage Status](https://coveralls.io/repos/ropensci/rentrez/badge.svg?branch=master)](https://coveralls.io/r/ropensci/rentrez?branch=master) [![CRAN](http://cranlogs.r-pkg.org/badges/rentrez)](http://cran.rstudio.com/web/packages/rentrez/index.html) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](http://dx.doi.org/10.5281/zenodo.32420)
 
 rentrez
 =======
@@ -229,7 +229,7 @@ entrez_db_summary("cdd")
     #  Description: Conserved Domain Database
     #  DbBuild: Build150814-1106.1
     #  Count: 50648
-    #  LastUpdate: 2015/08/14 18:28
+    #  LastUpdate: 2015/08/14 18:35
 
 `entrez_db_searchable()` lets you discover the fields available for search terms for a given database. You get back a named-list, with names are fields. Each element has additional information about each named search field (you can also use `as.data.frame` to create a dataframe, with one search-field per row):
 
