@@ -20,7 +20,8 @@
 #'documentation linked to in references for a complete list
 #'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_} 
 #'@param parsed boolean should entrez_fetch attempt to parse the resulting 
-#' file. Only works with rettype="xml" at present
+#' file. Only works with xml records (including those with rettypes other than
+#' "xml") at present
 #'@seealso \code{\link[httr]{config}} for available configs
 #'@return character string containing the file created
 #'@return XMLInternalDocument a parsed XML document if parsed=TRUE and
@@ -33,12 +34,12 @@
 #' kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
 #'
 
-entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="text", parsed=FALSE,
+entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="", parsed=FALSE,
                          config=NULL, ...){
     identifiers <- id_or_webenv()
     if(parsed){
-        if(rettype != "xml"){            
-          msg <- paste("Can't parse records of type", rettype)
+        if(!is_xml_record(rettype, retmode)){            
+          msg <- paste("At present, entrez_fetch can only parse XML records, got", rettype)
           stop(msg)
         }
     }
@@ -55,3 +56,11 @@ entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="text",
     }
     records
 }
+
+is_xml_record <- function(rettype, retmode){
+    if(rettype %in% c("xml", "native", "gpc","ipg")){
+        return(TRUE)
+    }
+    retmode == "xml"
+}
+

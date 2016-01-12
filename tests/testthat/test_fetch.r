@@ -17,7 +17,9 @@ test_that("Entrez_fetch record parsing works", {
      expect_that(xml_rec, is_a("XMLInternalDocument"))
      expect_error( 
        entrez_fetch(db="popset", id="307082412", rettype="fasta", parsed=TRUE), 
-       "Can't parse records of type fasta"
+       "At present, entrez_fetch can only parse XML records, got fasta"
      )
 })
+
+
 

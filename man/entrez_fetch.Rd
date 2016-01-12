@@ -4,7 +4,7 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "text",
+entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "",
   parsed = FALSE, config = NULL, ...)
 }
 \arguments{
@@ -19,7 +19,8 @@ entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "text",
 \item{retmode}{character, mode in which to receive data, defaults to 'text'}
 
 \item{parsed}{boolean should entrez_fetch attempt to parse the resulting
-file. Only works with rettype="xml" at present}
+file. Only works with xml records (including those with rettypes other than
+"xml") at present}
 
 \item{config}{vector, httr configuration options passed to httr::GET}
 
