@@ -33,7 +33,7 @@ omim_df <- as.data.frame(omim_links)
 
 test_that("We can retreive linked dbs", {
     expect_that(omim_links, is_a("eInfoLink"))
-    expect_named(omim_links$snp)    
+    expect_named(omim_links[[1]])    
     expect_that(omim_df, is_a("data.frame"))
     expect_equal(nrow(omim_df), length(omim_links))
 })
