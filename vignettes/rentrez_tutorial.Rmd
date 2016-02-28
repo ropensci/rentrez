@@ -350,7 +350,6 @@ all_links_sep
 lapply(all_links_sep, function(x) x$links$gene_protein)
 ```
 
-
 ## Getting summary data: `entrez_summary()`
 
 Having found the unique IDs for some records via `entrez_search` or `entrez_link()`, you are
@@ -581,8 +580,8 @@ So, we could repeat the last example (finding variants linked to asthma), but th
 time using the ID we uploaded earlier
 
 ```{r, asthma_links_upload}
-asthma_snps <- entrez_link(dbfrom="omim", db="clinvar", cmd="neighbor_history", web_history=upload)
-asthma_snps
+asthma_variants <- entrez_link(dbfrom="omim", db="clinvar", cmd="neighbor_history", web_history=upload)
+asthma_variants
 ```
 
 ... if we want to get some genetic information about these variants we need to
@@ -591,9 +590,9 @@ map our clinvar IDs to SNP IDs:
 
 ```{r, links}
 snp_links <- entrez_link(dbfrom="clinvar", db="snp", 
-                         web_history=asthma_snps$web_histories$omim_clinvar,
+                         web_history=asthma_variants$web_histories$omim_clinvar,
                          cmd="neighbor_history")
-snp_summ <- entrez_summary(db="snp", web_history=snp_links$web_histories$omim_snp)
+snp_summ <- entrez_summary(db="snp", web_history=snp_links$web_histories$clinvar_snp)
 knitr::kable(extract_from_esummary(snp_summ, c("chr", "fxn_class", "global_maf")))
 ```
 
