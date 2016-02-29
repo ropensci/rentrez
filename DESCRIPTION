@@ -16,7 +16,8 @@ Imports:
     jsonlite (>= 0.9)
 Suggests:
     testthat,
-    knitr
+    knitr,
+    rmarkdown
 Description: Provides an R interface to the NCBI's EUtils API 
     allowing users to search databases like GenBank and PubMed, process the 
     results of those searches and pull data into their R sessions.
