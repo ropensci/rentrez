@@ -283,7 +283,7 @@ find the total number of papers published in each year:
 
 
 ```r
-years <- 1990:2014
+years <- 1990:2015
 total_papers <- papers_by_year(years, "")
 omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))

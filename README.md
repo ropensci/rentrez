@@ -56,13 +56,13 @@ hox_data$links
 ```
 
     # elink result with information from 14 databases:
-    #  [1] pubmed_medgen              pubmed_mesh_major         
-    #  [3] pubmed_nuccore             pubmed_nucleotide         
-    #  [5] pubmed_pmc_refs            pubmed_protein            
-    #  [7] pubmed_pubmed              pubmed_pubmed_alsoviewed  
-    #  [9] pubmed_pubmed_citedin      pubmed_pubmed_combined    
-    # [11] pubmed_pubmed_five         pubmed_pubmed_reviews     
-    # [13] pubmed_pubmed_reviews_five pubmed_taxonomy_entrez
+    #  [1] pubmed_medgen              pubmed_pmc_refs           
+    #  [3] pubmed_pubmed              pubmed_pubmed_alsoviewed  
+    #  [5] pubmed_pubmed_citedin      pubmed_pubmed_combined    
+    #  [7] pubmed_pubmed_five         pubmed_pubmed_reviews     
+    #  [9] pubmed_pubmed_reviews_five pubmed_mesh_major         
+    # [11] pubmed_nuccore             pubmed_nucleotide         
+    # [13] pubmed_protein             pubmed_taxonomy_entrez
 
 Each of the character vectors in this object contain unique IDs for records in the named databases. These functions try to make the most useful bits of the returned files available to users, but they also return the original file in case you want to dive into the XML yourself.
 
@@ -70,6 +70,11 @@ In this case we'll get the protein sequences as fasta files, using ' `entrez_fet
 
 ``` r
 hox_proteins <- entrez_fetch(db="protein", id=hox_data$links$pubmed_protein, rettype="fasta")
+```
+
+    # No encoding supplied: defaulting to UTF-8.
+
+``` r
 cat(substr(hox_proteins, 1, 237))
 ```
 
@@ -127,8 +132,15 @@ Let's just get the two mitochondrial loci (COI and trnL), using `entrez_fetch`:
 COI_ids <- katipo_search$ids[c(2,6)]
 trnL_ids <- katipo_search$ids[5]
 COI <- entrez_fetch(db="popset", id=COI_ids, rettype="fasta")
+```
+
+    # No encoding supplied: defaulting to UTF-8.
+
+``` r
 trnL <- entrez_fetch(db="popset", id=trnL_ids, rettype="fasta")
 ```
+
+    # No encoding supplied: defaulting to UTF-8.
 
 The "fetched" results are fasta formatted characters, which can be written to disk easily:
 
@@ -164,7 +176,7 @@ snp_search <- entrez_search(db="snp",
 snp_search
 ```
 
-    # Entrez search result with 235255 hits (object contains 20 IDs and no web_history object)
+    # Entrez search result with 234154 hits (object contains 20 IDs and no web_history object)
     #  Search term (as translated):  (Y[CHR] AND "Homo"[Organism]) NOT 10001[CHRPOS] :  ...
 
 When I wrote this that was a little over 200 000 SNPs. It's probably not a good idea to set `retmax` to 200 000 and just download all of those identifiers. Instead, we could store this list of IDs on the NCBI's server and refer to them in later calles to functions like `entrez_link` and `entrez_fetch` that accept a web history object.
@@ -176,7 +188,7 @@ snp_search <- entrez_search(db="snp",
 snp_search
 ```
 
-    # Entrez search result with 235255 hits (object contains 20 IDs and a web_history object)
+    # Entrez search result with 234154 hits (object contains 20 IDs and a web_history object)
     #  Search term (as translated):  (Y[CHR] AND "Homo"[Organism]) NOT 10001[CHRPOS] :  ...
 
 As you can see, the result of the search now includes a `web_history` object. We can use that object to refer to these IDs in later calls. Heree we will just fetch complete records of the first 5 SNPs.
@@ -202,21 +214,20 @@ entrez_dbs()
 
     #  [1] "pubmed"          "protein"         "nuccore"        
     #  [4] "nucleotide"      "nucgss"          "nucest"         
-    #  [7] "structure"       "genome"          "gpipe"          
-    # [10] "annotinfo"       "assembly"        "bioproject"     
-    # [13] "biosample"       "blastdbinfo"     "books"          
-    # [16] "cdd"             "clinvar"         "clone"          
-    # [19] "gap"             "gapplus"         "grasp"          
-    # [22] "dbvar"           "epigenomics"     "gene"           
-    # [25] "gds"             "geoprofiles"     "homologene"     
-    # [28] "medgen"          "mesh"            "ncbisearch"     
-    # [31] "nlmcatalog"      "omim"            "orgtrack"       
-    # [34] "pmc"             "popset"          "probe"          
-    # [37] "proteinclusters" "pcassay"         "biosystems"     
-    # [40] "pccompound"      "pcsubstance"     "pubmedhealth"   
-    # [43] "seqannot"        "snp"             "sra"            
-    # [46] "taxonomy"        "unigene"         "gencoll"        
-    # [49] "gtr"
+    #  [7] "structure"       "genome"          "annotinfo"      
+    # [10] "assembly"        "bioproject"      "biosample"      
+    # [13] "blastdbinfo"     "books"           "cdd"            
+    # [16] "clinvar"         "clone"           "gap"            
+    # [19] "gapplus"         "grasp"           "dbvar"          
+    # [22] "epigenomics"     "gene"            "gds"            
+    # [25] "geoprofiles"     "homologene"      "medgen"         
+    # [28] "mesh"            "ncbisearch"      "nlmcatalog"     
+    # [31] "omim"            "orgtrack"        "pmc"            
+    # [34] "popset"          "probe"           "proteinclusters"
+    # [37] "pcassay"         "biosystems"      "pccompound"     
+    # [40] "pcsubstance"     "pubmedhealth"    "seqannot"       
+    # [43] "snp"             "sra"             "taxonomy"       
+    # [46] "unigene"         "gencoll"         "gtr"
 
 Some of the names are a little opaque, so you can get some more descriptive information about each with `entrez_db_summary()`
 
@@ -229,7 +240,7 @@ entrez_db_summary("cdd")
     #  Description: Conserved Domain Database
     #  DbBuild: Build150814-1106.1
     #  Count: 50648
-    #  LastUpdate: 2015/08/14 18:35
+    #  LastUpdate: 2015/08/14 18:42
 
 `entrez_db_searchable()` lets you discover the fields available for search terms for a given database. You get back a named-list, with names are fields. Each element has additional information about each named search field (you can also use `as.data.frame` to create a dataframe, with one search-field per row):
 
@@ -241,7 +252,7 @@ search_fields$GRNT
     #  Name: GRNT
     #  FullName: Grant Number
     #  Description: NIH Grant Numbers
-    #  TermCount: 2230658
+    #  TermCount: 2272841
     #  IsDate: N
     #  IsNumerical: N
     #  SingleToken: Y
@@ -259,8 +270,8 @@ entrez_db_links("omim")
     #  [6] gene        genetests   geoprofiles gtr         homologene 
     # [11] mapview     medgen      medgen      nuccore     nucest     
     # [16] nucgss      omim        pcassay     pccompound  pcsubstance
-    # [21] pmc         protein     pubmed      pubmed      snp        
-    # [26] snp         snp         sra         structure   unigene
+    # [21] pmc         protein     pubmed      pubmed      sra        
+    # [26] structure   unigene
 
 ### Trendy topics in genetics
 
@@ -276,7 +287,7 @@ Let's start by making a function that finds the number of records matching a giv
 With that we can fetch the data for each term and, by searching with no term, find the total number of papers published in each year:
 
 ``` r
-years <- 1990:2014
+years <- 1990:2015
 total_papers <- papers_by_year(years, "")
 omics <- c("genomic", "epigenomic", "metagenomic", "proteomic", "transcriptomic", "pharmacogenomic", "connectomic" )
 trend_data <- sapply(omics, function(t) papers_by_year(years, t))
