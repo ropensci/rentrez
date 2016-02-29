@@ -75,7 +75,7 @@ entrez_check  <- function(req){
   if (req$status_code == 414){
       stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the tutorial")
   }
-  message <- httr::content(req)
+  message <- httr::content(req, as="text")
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
 
