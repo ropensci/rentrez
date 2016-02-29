@@ -6,10 +6,11 @@ output:
     rmarkdown::html_vignette:
         toc: true
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Rentrez Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\usepackage[utf8]{inputenc}
 ---
+
 ```{r, count_recs, echo=FALSE}
 library(rentrez)
 count_recs <- function(db, denom) {
