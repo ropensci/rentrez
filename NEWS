@@ -1,3 +1,13 @@
+Version 1.0.1
+-------------------
+Bug fix release
+    * Properly format "by_id" mode URLS (bug exposed by httr 1.0.1)
+    * Handle case in which some IDs passed to "by_id" mode are invalide (thanks
+      Zachary Foster for report)
+    * Documentation updated to reflect OMIM->SNP links no longer possible
+    * Use Rmarkdown (not knitr) as vignette builder
+    * Return NCBI error messages are text when they exist
+
 Version 1.0.0
 --------------------
     * new function extract_from_esummary() for extracting like-named elements
