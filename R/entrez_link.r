@@ -65,7 +65,14 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
     response <- do.call(make_entrez_query,args)
     record <- parse_response(response, 'xml')
     Sys.sleep(0.33)
-    parse_elink(record, cmd=cmd, by_id=by_id)
+    res <- parse_elink(record, cmd=cmd, by_id=by_id)
+    if(!is.null(id) & by_id){
+        if(length(res) != length(id)){
+            msg <- paste( id[!(id %in% res)], ", ")
+            warning("Some IDs appear to be invalid. Result containg no information for the following IDs: ", msg)
+        }
+    }
+    res
 }
 
 #' Extract URLs from an elink object
@@ -96,7 +103,7 @@ linkout_urls <- function(elink){
 # means we we sometimes reuturn a list of elink objects, have applied the
 # relevant function to each "<LinkSet>" in the XML.
 #
-parse_elink <- function(x, cmd, by_id){
+parse_elink <- function(x, cmd, by_id, id){
     check_xml_errors(x)
     f <- make_elink_fxn(cmd)
     res <-  xpathApply(x, "//LinkSet",f)

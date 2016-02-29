@@ -38,13 +38,11 @@ test_that("elink printing behaves", {
 })
 
 
-# Removed following aparent change of policy by NCBI
-# who no longer provide error message in this case
-#test_that("We detect missing ids from elink results",{
-#   expect_warning(
-#    entrez_link(dbfrom="pubmed", db="all", id=c(20203609,2020360999999,20203610))
-#   )
-#})
+test_that("We detect missing ids from elink results",{
+   expect_warning(
+    entrez_link(dbfrom="pubmed", db="all", id=c(20203609,2020360999999,20203610), by_id=TRUE)
+   )
+})
 
 test_that("Elink sub-elements can be acessed and printed", {
     expect_output(all_the_commands[[3]][[1]], 
