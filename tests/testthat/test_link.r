@@ -31,9 +31,9 @@ test_that("by_id mode works for elinks", {
 })
 
 test_that("elink printing behaves", {
-    expect_output(elinks_by_id, "List of 2 elink objects,each containing")
+    expect_output(print(elinks_by_id), "List of 2 elink objects,each containing")
     for(ret in all_the_commands){
-        expect_output(ret, "elink object with contents:\\s+\\$[A-Za-z]+")
+        expect_output(print(ret), "elink object with contents:\\s+\\$[A-Za-z]+")
     }
 })
 
@@ -45,9 +45,9 @@ test_that("We detect missing ids from elink results",{
 })
 
 test_that("Elink sub-elements can be acessed and printed", {
-    expect_output(all_the_commands[[3]][[1]], 
+    expect_output(print(all_the_commands[[3]][[1]]), 
                   "elink result with information from \\d+ databases")
-    expect_output(all_the_commands[[8]]$linkouts[[1]],
+    expect_output(print(all_the_commands[[8]]$linkouts[[1]]),
                   "Linkout from [A-Za-z]+\\s+\\$Url")
 })
 

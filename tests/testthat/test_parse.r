@@ -30,14 +30,14 @@ test_that("pubmed file parsers work",{
 })
 
 test_that("we can print pubmed records", {
-    expect_output(parsed_rec, "Pubmed record")
-    expect_output(parsed_multi, "List of 4 pubmed records")
+    expect_output(print(parsed_rec), "Pubmed record")
+    expect_output(print(parsed_multi), "List of 4 pubmed records")
 })
 
 test_that("We warn about unknown pubmed record types", {
     rec = entrez_fetch(db="pubmed", id=25905152, rettype="xml")
     expect_warning(parsed_rec <- parse_pubmed_xml(rec))
-    expect_output(parsed_rec, "Pubmed record \\(empty\\)")
+    expect_output(print(parsed_rec), "Pubmed record \\(empty\\)")
 })
 
    

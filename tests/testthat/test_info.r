@@ -39,12 +39,12 @@ test_that("We can retreive linked dbs", {
 })
 
 test_that("We can prink elink objects", {
-    expect_output(omim_links, "Databases with linked records for database 'omim'")
-    expect_output(search_fields, "Searchable fields for database 'pmc'")
+    expect_output(print(omim_links), "Databases with linked records for database 'omim'")
+    expect_output(print(search_fields), "Searchable fields for database 'pmc'")
 })
 
 test_that("We can print elements from einfo object", {
-    expect_output(omim_links$gene, "Name: omim_gene\n")
-    expect_output(search_fields$GRNT, "Name: GRNT\n")
-    expect_output(cdd, "DbName: cdd")
+    expect_output(print(omim_links$gene), "Name: omim_gene\n")
+    expect_output(print(search_fields$GRNT), "Name: GRNT\n")
+    expect_output(print(cdd), "DbName: cdd")
 })

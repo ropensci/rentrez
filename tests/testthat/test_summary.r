@@ -25,7 +25,7 @@ test_that("Functions to fetch summaries work", {
 test_that("List elements in XML are parsable", {
          rec <- entrez_summary(db="pubmed", id=25696867, version="1.0")
          expect_named(rec$History)
-         expect_more_than(length(rec$History), 0)
+         expect_gt(length(rec$History), 0)
 })
          
 
@@ -45,10 +45,10 @@ test_that("JSON and XML objects are similar", {
 })
 
 test_that("We can print summary records", {
-      expect_output(pop_summ_json, "List of  4 esummary records")        
-      expect_output(pop_summ_json[[1]], "esummary result with \\d+ items")        
-      expect_output(pop_summ_xml, "List of  4 esummary records")        
-      expect_output(pop_summ_xml[[1]], "esummary result with \\d+ items")        
+      expect_output(print(pop_summ_json), "List of  4 esummary records")        
+      expect_output(print(pop_summ_json[[1]]), "esummary result with \\d+ items")        
+      expect_output(print(pop_summ_xml), "List of  4 esummary records")        
+      expect_output(print(pop_summ_xml[[1]]), "esummary result with \\d+ items")        
 })
 
 test_that("We can detect errors in esummary records", {

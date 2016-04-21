@@ -29,6 +29,6 @@ test_that("Entrez query works just as well with xml/json",{
 
 
 test_that("we can print search results", {
-    expect_output(pubmed_search, "Entrez search result with \\d+ hits")
-    expect_output(json_search,   "Entrez search result with \\d+ hits")
+    expect_output(print(pubmed_search), "Entrez search result with \\d+ hits")
+    expect_output(print(json_search),   "Entrez search result with \\d+ hits")
 })
