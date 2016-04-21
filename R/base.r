@@ -44,7 +44,7 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...
     }
     response <- httr::GET(uri, query=args, config= config)
     entrez_check(response)
-    return(httr::content(response, as="text"))
+    httr::content(response, as="text", encoding="UTF-8")
 }
 
 ##
@@ -75,10 +75,9 @@ entrez_check  <- function(req){
   if (req$status_code == 414){
       stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the tutorial")
   }
-  message <- httr::content(req, as="text")
+  message <- httr::content(req, as="text", encoding="UTF-8")
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
-
 
 
 #Does  a parsed-xml object contains ERRORs as reported by NCBI
