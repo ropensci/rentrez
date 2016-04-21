@@ -1,5 +1,5 @@
 Package: rentrez
-Version: 1.0.1
+Version: 1.0.2
 Date: 2016-02-28
 Title: Entrez in R
 Authors@R: c(
@@ -18,9 +18,10 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-Description: Provides an R interface to the NCBI's EUtils API 
-    allowing users to search databases like GenBank and PubMed, process the 
+Description: Provides an R interface to the NCBI's EUtils API
+    allowing users to search databases like GenBank and PubMed, process the
     results of those searches and pull data into their R sessions.
 VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: MIT + file LICENSE
+RoxygenNote: 5.0.1

@@ -1,3 +1,11 @@
+Version 1.0.2
+-------------------
+Bug fix release
+    * Tests now work with testthat 1.0.0 
+    * All calls to ncbi specify encoding is UTF-8 (saving error messages)
+    * HTTP Error codes associated with large requests now give the user a hint
+      to check out the documentation for web-history features
+
 Version 1.0.1
 -------------------
 Bug fix release
