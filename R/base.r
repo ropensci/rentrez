@@ -73,7 +73,10 @@ entrez_check  <- function(req){
       return(invisible())
   }
   if (req$status_code == 414){
-      stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the tutorial")
+      stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the rentrez tutorial")
+  }
+  if (req$status_code == 502){
+      stop("HTTP failure: 502, bad gateway. This error code is often returned when trying to download many records in a single request.  Try using web history as described in the rentrez tutorial")
   }
   message <- httr::content(req, as="text", encoding="UTF-8")
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
