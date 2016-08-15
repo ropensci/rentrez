@@ -31,7 +31,7 @@ entrez_tool <- function() 'rentrez'
 
 
 make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...){
-    uri <- paste0("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
+    uri <- paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     args <- list(..., email=entrez_email(), tool=entrez_tool())
     if(by_id){
         ids_string <- paste0("id=", args$id, collapse="&")
