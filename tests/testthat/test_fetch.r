@@ -4,8 +4,8 @@ context("fetching records")
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
 coi <- entrez_fetch(db = "popset", id = pop_ids[1], 
                     rettype = "fasta")
-xml_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="xml", parsed=TRUE)
-raw_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="xml")
+xml_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", parsed=TRUE)
+raw_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native")
 
 test_that("httr does no warn about inferred encoding", {
     expect_message( entrez_fetch(db = "popset", id=pop_ids[1], rettype="uilist"), NA)
