@@ -5,9 +5,14 @@
 #' or a \code{web_history} object as returned by 
 #' \code{\link{entrez_link}}, \code{\link{entrez_search}} or 
 #' \code{\link{entrez_post}}. See Table 1 in the linked reference for the set of 
-#' formats available for each database.
+#' formats available for each database. In particular, note that sequence
+#' databases (nuccore, protein and their relatives) use specific format names
+#' (eg "native", "ipg") for different flavours of xml.
 #'
-#' 
+#' For the most part, this function returns a character vector containing the 
+#' fetched records. For XML records (including 'native', 'ipg', 'gbc' sequence
+#' records), setting \code{parsed} to \code{TRUE} will return an
+#' \code{XMLInternalDocument},
 #'
 #'@export
 #'@param db character, name of the database to use
@@ -25,14 +30,16 @@
 #'@seealso \code{\link[httr]{config}} for available configs
 #'@return character string containing the file created
 #'@return XMLInternalDocument a parsed XML document if parsed=TRUE and
-#'rettype='xml'
+#'rettype is a flavour of XML.
 #
 #' @examples
-#' 
+#' \dontrun{
 #' katipo <- "Latrodectus katipo[Organism]"
 #' katipo_search <- entrez_search(db="nuccore", term=katipo)
 #' kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="fasta")
-#'
+#' #xml
+#' kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="native")
+#'}
 
 entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="", parsed=FALSE,
                          config=NULL, ...){
