@@ -1,3 +1,12 @@
+Version 1.0.3
+------------------  
+Update to only use https
+    * NCBI is goinh all https, rentrez will only use https from now on.
+    * Added links to repo/bug reporting to DESCRIPTION 
+    * Documented changes to sequence database XML records
+    * Allow automatic parsing of XML flavours
+
+
 Version 1.0.2
 -------------------
 Bug fix release
