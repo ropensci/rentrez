@@ -19,7 +19,7 @@ Suggests:
     knitr,
     rmarkdown
 URL: http://github.com/ropensci/rentrez
-BugReports: https://github.com/ropensci/rentrez/issue
+BugReports: https://github.com/ropensci/rentrez/issues
 Description: Provides an R interface to the NCBI's EUtils API
     allowing users to search databases like GenBank and PubMed, process the
     results of those searches and pull data into their R sessions.
