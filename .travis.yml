@@ -5,7 +5,7 @@ r_packages:
     - jsonlite
     - rmarkdown
     - covr
-    - robustr
+    - withr
 #r_github_packages:
 #    - jimhester/robustr
 #    - jimhester/covr
