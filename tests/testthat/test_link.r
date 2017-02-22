@@ -48,7 +48,7 @@ test_that("Elink sub-elements can be acessed and printed", {
     expect_output(print(all_the_commands[[3]][[1]]), 
                   "elink result with information from \\d+ databases")
     expect_output(print(all_the_commands[[8]]$linkouts[[1]]),
-                  "Linkout from [A-Za-z]+\\s+\\$Url")
+                  "Linkout from [ A-Za-z]+\\s+\\$Url")
 })
 
 
