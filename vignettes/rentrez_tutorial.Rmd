@@ -177,7 +177,7 @@ entrez_db_searchable("sra")
 ### Using the Filter field
 
 "Filter" is a special field that, as the names suggests, allows you to limit 
-records returned by a search to set of filtering criteria. There is no programatic 
+records returned by a search to set of filtering criteria. There is no programmatic 
 way to find the particular terms that can be used with the Filter field. 
 However, the NCBI's website provides an "advanced search" tool for some 
 databases that can be used to discover these terms. 
@@ -510,9 +510,9 @@ tax_list$Taxon$GeneticCode
 
 For more complex records, which generate deeply-nested lists, you can use
 [XPath expressions](https://en.wikipedia.org/wiki/XPath) along with the function 
-`XML::xpathSApply` or the extraction operatord `[` and `[[` to extract specific parts of the
-file. For instance, we can get the scientific name of each taxon in _T.
-thermophila_'s lineage by specifying a path through the XML
+`XML::xpathSApply` or the extraction operatord `[` and `[[` to extract specific 
+parts of the file. For instance, we can get the scientific name of each taxon 
+in _T. thermophila_'s lineage by specifying a path through the XML
 
 ```{r, Tt_path}
 tt_lineage <- tax_rec["//LineageEx/Taxon/ScientificName"]
@@ -550,6 +550,11 @@ upload
 ```
 The NCBI sends you back some information you can use to refer to the posted IDs. 
 In `rentrez`, that information is represented as a `web_history` object. 
+
+Note that if you have a very long list of IDs you may receive a 414 error when
+you try to upload them. If you have such a list (and they come from an external
+sources rather than a search that can be save to a `web_history` object), you
+may have to 'chunk' the IDs into smaller sets that can processed. 
 
 ###Get a `web_history` object from `entrez_search` or `entrez_link()`
 
