@@ -38,7 +38,9 @@ A set of unique identifiers mush be specified with either the \code{db}
 argument (which directly specifies the IDs as a numeric or character vector)
 or a \code{web_history} object as returned by 
 \code{\link{entrez_link}}, \code{\link{entrez_search}} or 
-\code{\link{entrez_post}}. See Table 1 in the linked reference for the set of 
+\code{\link{entrez_post}}. See
+\href{https://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/}{Table 1} 
+in the linked reference for the set of 
 formats available for each database. In particular, note that sequence
 databases (nuccore, protein and their relatives) use specific format names
 (eg "native", "ipg") for different flavours of xml.
