@@ -77,3 +77,11 @@ test_that("We can get a list of one element if we ask for it", {
     expect_that(entrez_summary(db="popset", id=307075396, always_return_list=TRUE), is_a("list"))
     expect_that(entrez_summary(db="popset", id=307075396), is_a("esummary"))
 })
+
+
+test_that("We can fetch summaries on versioned sequences", {
+    old_rec = entrez_summary(db="nuccore", id="AF123456.1")
+    new_rec = entrez_summary(db="nuccore", id="AF123456.2")
+    expect_match(old_rec$title, "testis-specific mRNA")
+    expect_match(new_rec$title, "doublesex and mab-3 related transcription factor")    
+})

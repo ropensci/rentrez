@@ -10,7 +10,9 @@ entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "",
 \arguments{
 \item{db}{character, name of the database to use}
 
-\item{id}{vector (numeric or character), unique ID(s) for records in database \code{db}}
+\item{id}{vector (numeric or character), unique ID(s) for records in database
+\code{db}. In the case of sequence databases these IDs can take form of an
+NCBI accession followed by a version number (eg AF123456.1 or AF123456.2).}
 
 \item{web_history, }{a web_history object}
 
@@ -64,6 +66,6 @@ kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="native"
 \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_}
 }
 \seealso{
-\code{\link[httr]{config}} for available configs
+\code{\link[httr]{config}} for available '\code{httr}` configs
 }
 

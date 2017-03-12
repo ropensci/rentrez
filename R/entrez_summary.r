@@ -27,7 +27,9 @@
 #'
 #'@export
 #'@param db character Name of the database to search for
-#'@param id vector with unique ID(s) for records in database \code{db}. 
+#'@param id vector with unique ID(s) for records in database \code{db}.
+#' In the case of sequence databases these IDs can take form of an
+#' NCBI accession followed by a version number (eg AF123456.1 or AF123456.2)
 #'@param web_history A web_history object 
 #'@param always_return_list logical, return a list  of esummary objects even
 #'when only one ID is provided (see description for a note about this option)

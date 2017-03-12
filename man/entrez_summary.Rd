@@ -10,7 +10,9 @@ entrez_summary(db, id = NULL, web_history = NULL, version = c("2.0",
 \arguments{
 \item{db}{character Name of the database to search for}
 
-\item{id}{vector with unique ID(s) for records in database \code{db}.}
+\item{id}{vector with unique ID(s) for records in database \code{db}.
+In the case of sequence databases these IDs can take form of an
+NCBI accession followed by a version number (eg AF123456.1 or AF123456.2)}
 
 \item{web_history}{A web_history object}
 

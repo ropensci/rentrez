@@ -18,7 +18,9 @@
 #'
 #'@export
 #'@param db character, name of the database to use
-#'@param id vector (numeric or character), unique ID(s) for records in database \code{db} 
+#'@param id vector (numeric or character), unique ID(s) for records in database
+#'\code{db}. In the case of sequence databases these IDs can take form of an
+#' NCBI accession followed by a version number (eg AF123456.1 or AF123456.2).
 #'@param web_history, a web_history object 
 #'@param rettype character, format in which to get data (eg, fasta, xml...)
 #'@param retmode character, mode in which to receive data, defaults to 'text'
@@ -29,7 +31,7 @@
 #'@param parsed boolean should entrez_fetch attempt to parse the resulting 
 #' file. Only works with xml records (including those with rettypes other than
 #' "xml") at present
-#'@seealso \code{\link[httr]{config}} for available configs
+#'@seealso \code{\link[httr]{config}} for available '\code{httr}` configs
 #'@return character string containing the file created
 #'@return XMLInternalDocument a parsed XML document if parsed=TRUE and
 #'rettype is a flavour of XML.
