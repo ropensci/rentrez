@@ -53,6 +53,10 @@ Review[PTYP])'' in PubMed would identify articles matching the gene APP in
 humans, and exclude review articles. More examples of the use of these search
 terms, and the more specific MeSH terms for precise searching, 
 is given in the package vignette.
+
+The\code{rentrez} tutorial provides some tips on how to make the most of 
+searches to the NCBI. In particular, the sections on uses of the "Filter"
+field and MeSH terms may in formulating precise searches.
 }
 \examples{
 \dontrun{

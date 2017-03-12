@@ -174,6 +174,22 @@ of available terms or any given data base with `entrez_db_searchable()`
 entrez_db_searchable("sra")
 ```
 
+### Using the Filter field
+
+"Filter" is a special field that, as the names suggests, allows you to limit 
+records returned by a search to set of filtering criteria. There is no programatic 
+way to find the particular terms that can be used with the Filter field. 
+However, the NCBI's website provides an "advanced search" tool for some 
+databases that can be used to discover these terms. 
+
+
+For example, to find the list of possible to find all of the terms that can be
+used to filter searches to the nucleotide database using the 
+[advanced search for that databse](https://www.ncbi.nlm.nih.gov/nuccore/advanced).
+On that page selecting "Filter" from the first drop-down box then clicking 
+"Show index list" will allow the user to scroll through possible filtering
+terms.
+
 ###Precise queries using MeSH terms
 
 In addition to the search terms described above, the NCBI allows searches using

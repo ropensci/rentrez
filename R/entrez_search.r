@@ -12,6 +12,10 @@
 #' humans, and exclude review articles. More examples of the use of these search
 #' terms, and the more specific MeSH terms for precise searching, 
 #' is given in the package vignette.
+#'
+#' The\code{rentrez} tutorial provides some tips on how to make the most of 
+#' searches to the NCBI. In particular, the sections on uses of the "Filter"
+#' field and MeSH terms may in formulating precise searches. 
 #' 
 #'@export
 #'@param db character, name of the database to search for.
