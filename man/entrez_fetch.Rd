@@ -68,4 +68,3 @@ kaitpo_seqs <- entrez_fetch(db="nuccore", id=katipo_search$ids, rettype="native"
 \seealso{
 \code{\link[httr]{config}} for available '\code{httr}` configs
 }
-

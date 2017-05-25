@@ -27,4 +27,3 @@ recs <- entrez_fetch(db="pubmed",
 parse_pubmed_xml(recs)
 
 }
-

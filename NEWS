@@ -1,3 +1,13 @@
+Version 1.0.5
+------------------
+Pass on error messages from NCBI when too many records are requested from 
+`entrez_summary`
+
+Version 1.0.4
+------------------
+Update to documentation and tests to accommodate versioned accessions now
+available from NCBI (see ?entrez_fetch and the vignette)
+
 Version 1.0.3
 ------------------  
 Update to only use https

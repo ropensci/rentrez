@@ -19,4 +19,3 @@ Extract URLs from an elink object
 \seealso{
 entrez_link
 }
-

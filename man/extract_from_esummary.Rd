@@ -19,4 +19,3 @@ List or vector containing requested elements
 \description{
 Extract elements from a list of esummary records
 }
-

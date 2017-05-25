@@ -78,4 +78,3 @@ set for the \code{cmd} argument. Printing the returned object lists the names
 
 \code{entrez_db_links}
 }
-

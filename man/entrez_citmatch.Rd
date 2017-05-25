@@ -37,4 +37,3 @@ entrez_citmatch(ex_cites)
 \seealso{
 \code{\link[httr]{config}} for available configs
 }
-

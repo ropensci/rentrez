@@ -39,4 +39,3 @@ second <- entrez_fetch(db="nuccore", file_format="fasta", web_history=upload,
 \seealso{
 \code{\link[httr]{config}} for available httr configurations
 }
-

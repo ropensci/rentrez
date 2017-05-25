@@ -26,4 +26,3 @@ NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
 \seealso{
 \code{\link[httr]{config}} for available configs
 }
-

@@ -4,6 +4,7 @@
 \name{rentrez}
 \alias{rentrez}
 \alias{rentrez-package}
+\alias{rentrez-package}
 \title{rentrez}
 \description{
 rentrez provides functions to search for, discover and download data from
@@ -20,4 +21,3 @@ The NCBI will ban IPs that don't use EUtils within their \href{http://www.ncbi.n
  /item  For large requests use the web history method (see examples for \code{\link{entrez_search}} or use \code{\link{entrez_post}} to upload IDs)
 }
 }
-

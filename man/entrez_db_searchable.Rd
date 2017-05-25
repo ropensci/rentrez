@@ -38,4 +38,3 @@ Other einfo: \code{\link{entrez_db_links}},
   \code{\link{entrez_db_summary}},
   \code{\link{entrez_dbs}}, \code{\link{entrez_info}}
 }
-

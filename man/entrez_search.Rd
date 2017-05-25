@@ -87,4 +87,3 @@ entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
 \code{\link{entrez_db_searchable}} to get a set of search fields that
 can be used in \code{term} for any database
 }
-
