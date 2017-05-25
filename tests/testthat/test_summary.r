@@ -1,12 +1,13 @@
 context("fetching and parsing summary recs")
 
-
+fake_ids <- sample(1e5, 501)
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
 pop_summ_xml <- entrez_summary(db="popset", 
                                id=pop_ids, version="1.0")
 pop_summ_json <- entrez_summary(db="popset", 
                                 id=pop_ids, version="2.0")
-
+pop_summ_xml2 <- entrez_summary(db="popset", 
+                               id=pop_ids, version="1.0", retmode="xml")
 
 test_that("Functions to fetch summaries work", {
           #tests
@@ -29,6 +30,12 @@ test_that("List elements in XML are parsable", {
 })
          
 
+test_that("Version 2 xml records can be fetched and parsed", {
+    sapply(pop_summ_xml2, function(x)
+                 expect_that(x[["Title"]], matches("Muraenidae")))
+    expect_that(length(pop_summ_xml2[[1]]), is_more_than(12))
+})
+
 test_that("JSON and XML objects are similar", {
           #It would be nice to test whether the xml and json records
           # have the same data in them, but it turns out they don't
@@ -42,6 +49,13 @@ test_that("JSON and XML objects are similar", {
           expect_that(length(pop_summ_xml[[1]]), is_more_than(12))
           expect_that(length(pop_summ_json[[1]]), is_more_than(12))
           
+})
+
+
+test_that("Error whent tring to fetch 1.0 summaries as json", {
+      expect_error(
+        entrez_summary("pubmed", id = fake_ids[1:10], version="1.0", retmode="json")
+      )
 })
 
 test_that("We can print summary records", {
@@ -60,9 +74,16 @@ test_that("We can detect errors in esummary records", {
     )
 })
                          
+test_that("We can detect errors in esummary returns", {
+    expect_error(
+       entrez_summary(db="pmc", id=fake_ids, version="2.0")       
+    )
+})
+
 test_that("We can extract elements from esummary object", {
     expect_that(extract_from_esummary(pop_summ_xml, c("Title", "TaxId")), is_a("matrix"))
     expect_that(extract_from_esummary(pop_summ_xml, c("Title", "TaxId"), simplify=FALSE), is_a("list"))
+    expect_that(extract_from_esummary(pop_summ_xml2, c("Title", "TaxId"), simplify=FALSE), is_a("list"))
     expect_that(extract_from_esummary(pop_summ_json, "title"), is_a("character"))
    
 })
