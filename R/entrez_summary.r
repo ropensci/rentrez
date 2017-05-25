@@ -111,8 +111,18 @@ check_json_errs <- function(rec){
 
 parse_esummary.list <- function(x, always_return_list){
     #already parsed by jsonlite, just add check for errors, then re-class
-    res <- x$result[2: length(x$result)]
-    sapply(res, check_json_errs)
+    #First make sure the file doesn't have an error at the root
+    if(!is.null(x[["error"]])){
+        warning("Esummary includes error message: ", x[["error"]], call.=FALSE)
+    }
+    res <- x$result[-1] #remove UIDs from result (they are already names of sub-elements)    
+    # Make sure there are some records in this file
+    if(length(res) == 0){
+        stop("No esummary records found in file", call.=FALSE)
+    }
+    #Finally check for errors _within_ each recods
+    sapply(res, check_json_errs)    
+    #OK: all clear, return the records
     res <- lapply(res, add_class, new_class="esummary")
     if(length(res)==1 & !always_return_list){
         return(res[[1]])
