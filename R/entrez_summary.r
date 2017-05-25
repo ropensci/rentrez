@@ -37,6 +37,8 @@
 #'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to \code{httr::GET}
 #'@param version either 1.0 or 2.0 see above for description
+#'@param retmode either "xml" or "json". By default, xml will be used for
+#'version 1.0 records, json for version 2.0.
 #'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_} 
 #'@seealso \code{\link[httr]{config}} for available configs 
 #'@seealso \code{\link{extract_from_esummary}} which can be used to extract
@@ -62,14 +64,19 @@
 #'  extract_from_esummary(cv, "gene_sort") 
 #' }
 entrez_summary <- function(db, id=NULL, web_history=NULL, 
-                           version=c("2.0", "1.0"), always_return_list = FALSE, config=NULL, ...){
+                           version=c("2.0", "1.0"), always_return_list = FALSE, retmode=NULL, config=NULL, ...){
     identifiers <- id_or_webenv()
-    v <-match.arg(version)
-    retmode <- if(v == "2.0") "json" else "xml"
+    v <-match.arg(version) 
+    if( is.null(retmode)) {
+        retmode <- if( v == "1.0" ) "xml" else "json"
+    }
+    if (retmode == "json" & v == "1.0"){
+        stop("Version 1.0 records are only available as xml, not json")
+    }
     args <- c(list("esummary", db=db, config=config, retmode=retmode, version=v, ...), identifiers)
     response  <- do.call(make_entrez_query, args)
     whole_record <- parse_response(response, retmode)
-    parse_esummary(whole_record, always_return_list)
+    parse_esummary(whole_record, v, always_return_list)
 }
 
 #' Extract elements from a list of esummary records
@@ -97,7 +104,7 @@ extract_from_esummary.esummary_list <- function(esummaries, elements, simplify=T
 
 
 
-parse_esummary <- function(x, always_return_list) UseMethod("parse_esummary")
+parse_esummary <- function(x, version, always_return_list) UseMethod("parse_esummary")
 
 
 check_json_errs <- function(rec){
@@ -109,7 +116,7 @@ check_json_errs <- function(rec){
 }
 
 
-parse_esummary.list <- function(x, always_return_list){
+parse_esummary.list <- function(x, version, always_return_list){
     #already parsed by jsonlite, just add check for errors, then re-class
     #First make sure the file doesn't have an error at the root
     if(!is.null(x[["error"]])){
@@ -141,24 +148,34 @@ parse_esummary.list <- function(x, always_return_list){
 
 #
 #@export
-parse_esummary.XMLInternalDocument  <- function(x, always_return_list){
+parse_esummary.XMLInternalDocument  <- function(x, version, always_return_list){
     check_xml_errors(x)
-    recs <- x["//DocSum"]
-    if(length(recs)==0){
-       stop("Esummary document contains no DocSums, try 'version=2.0'?)")
+    #Version 2.0 records have no type information (int, list etc) so we 
+    # can onyl return them as characters
+    if(version == "2.0"){
+        res <- lapply(x["//DocumentSummary"], xmlToList)
+        res <- lapply(res, add_class, "esummary")
+        names(res) <- sapply(res, function(x) x[[".attrs"]]["uid"])
     }
-    per_rec <- function(r){
-        res <- xpathApply(r, "Item", parse_node)
-        names(res) <- xpathApply(r, "Item", xmlGetAttr, "Name")
-        res <- c(res, file=x)
-        class(res) <- c("esummary", class(res))
-        return(res)
-    } 
-    if(length(recs)==1 & !always_return_list){
-        return(per_rec(recs[[1]]))
-    } 
-    res <- lapply(recs, per_rec)
-    names(res) <-  xpathSApply(x, "//DocSum/Id", xmlValue)
+    else{
+        recs <- x["//DocSum"] 
+
+        if(length(recs)==0){
+           stop("Esummary document contains no DocSums, try 'version=2.0'?)")
+        }
+        per_rec <- function(r){
+            res <- xpathApply(r, "Item", parse_node)
+            names(res) <- xpathApply(r, "Item", xmlGetAttr, "Name")
+            res <- c(res, file=x)
+            class(res) <- c("esummary", class(res))
+            return(res)
+        } 
+        if(length(recs)==1 & !always_return_list){
+            return(per_rec(recs[[1]]))
+        } 
+        res <- lapply(recs, per_rec)
+        names(res) <-  xpathSApply(x, "//DocSum/Id", xmlValue)
+    }
     class(res) <- c("esummary_list", "list")
     res
 }
