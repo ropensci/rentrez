@@ -19,30 +19,35 @@ entrez_tool <- function() 'rentrez'
 #Create a URL for the EUtils API. 
 #
 # This function is used by all the API-querying functions in rentrez to build
-# the appropriate url. Required arguments for each rentrez are handled in each
-# function. Those arguments that either ID(s) or are WebEnv cookie can be set
-# by passing a string or two argument names to `make_entrez_query`
+# the appropriate url. Required arguments for each endpoint are handled by
+# specific funcitons. All of these functions can use the id_or_webenv() function
+# (below) to ensure that at least on of these arguments are provided.
 #
-#
-# efetch_url <- make_entrez_query("efetch", require_one_of=c("id", "WebEnv"), 
-#                                 id=c(23310964,23310965), db="pubmed",
-#                                 rettype="xml")
-#
+
+
+
 
 
 make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...){
     uri <- paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     args <- list(..., email=entrez_email(), tool=entrez_tool())
-    if(by_id){
-        ids_string <- paste0("id=", args$id, collapse="&")
-        args$id <- NULL
-        uri <- paste0(uri, ids_string)
-    }else{
-        if("id" %in% names(args)){
-            args$id <- paste(args$id, collapse=",")      
+    unsent_flag <- TRUE
+    if("id" %in% names(args)){
+        if(by_id){
+            ids_string <- paste0("id=", args$id, collapse="&")
+            args$id <- NULL
+            uri <- paste0(uri, ids_string)
+        } else {
+            args$id <- paste(args$id, collapse=",")
         }
+    if(length(args$id) > 200){ 
+        response <- httr::POST(uri, body=args, config= config)
+            unsent_flag <- FALSE
+        }
+    }    
+    if (unsent_flag) {
+        response <- httr::GET(uri, query=args, config= config) 
     }
-    response <- httr::GET(uri, query=args, config= config)
     entrez_check(response)
     httr::content(response, as="text", encoding="UTF-8")
 }
