@@ -43,4 +43,7 @@ test_that("Query building functions work", {
 })
 
 
-
+test_that("We give a useful error when an empty ID vector is passed", {
+    ET <- entrez_search(db="taxonomy", term="Extraterrestrial[Organism]")
+    expect_error(entrez_fetch(db="taxonomy", id= ET$ids, rettype="uilist"))              
+})

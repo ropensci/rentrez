@@ -64,6 +64,9 @@ id_or_webenv <- function(){
         if(!is.null(args$web_history)){
             stop(msg, call.=FALSE)
         }
+        if (length(args$id) == 0){
+            stop("Vector of IDs to send to NCBI is empty, perhaps entrez_search or entrez_link found no hits?", call.=FALSE)        
+        }
         return(list(id=args$id))
     }
     if(is.null(args$web_history)){

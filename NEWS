@@ -4,11 +4,12 @@ Version 1.1.0
 As of this release, rentrez will use httr::POST when sending > 200 ids to the
 NCBI. This should make working with large ID sets easier (thanks to the NCBI for
 supporing the POST methods, Reed Cartwright and Chris Stubben for pushing me on
-the issue). 
+issue #89). 
 
 Other minor changes:
     * Pass on error messages from NCBI when too many records are requested from 
-      `entrez_summary`
+      `entrez_summary` (Issue #106)
+    * Useful error message when trying to send an empty ID set to NCBI (Issue #107)
 
 Version 1.0.4
 ------------------
