@@ -1,12 +1,15 @@
 Package: rentrez
-Version: 1.1.0
+Version: 1.1.1
 Date: 2017-05-22
 Title: Entrez in R
 Authors@R: c(
  person("David", "Winter", role=c("aut", "cre"), 
-        email = "david.winter@gmail.com"),
- person("Scott", "Chamberlain", role="ctb", email = "myrmecocystus@gmail.com"),
- person("Han","Guangchun", role=c("ctb"),email="hanguangchun@gmail.com")
+        email = "david.winter@gmail.com", 
+        comment = c("ORCID = 0000-0002-6165-0029")),
+ person("Scott", "Chamberlain", role="ctb", email = "myrmecocystus@gmail.com",
+        comment = c("ORCID = 0000-0003-1444-9135")),
+ person("Han","Guangchun", role=c("ctb"),email="hanguangchun@gmail.com",
+        comment = c("ORCID = 0000-0001-9277-2507"))
  )
 Depends:
     R (>= 2.6.0)
