@@ -16,36 +16,19 @@
 entrez_email <- function() 'david.winter@gmail.com'
 entrez_tool <- function() 'rentrez'
 
-
-#set_entrez_key <- function(key){
-#    Sys.setenv(ENTREZ_KEY=key)
-#
-#}
-
-#is_entrez_key_set <- function(){
-#   !identical(Sys.getenv('ENTREZ_KEY'), "")
-#}
-
-
-
 #Create a URL for the EUtils API. 
 #
 # This function is used by all the API-querying functions in rentrez to build
 # the appropriate url. Required arguments for each endpoint are handled by
 # specific funcitons. All of these functions can use the id_or_webenv() function
-# (below) to ensure that at least on of these arguments are provided.
+# (below) to ensure that at least on of these arguments are provided and the
+# sleep_time() function to set the approrate time to wait between requests.
 #
+# if debug_mode is set to TRUE the function returns a list with the URL and 
+# arguments that would have been passed to GET or POST (useful for debugging 
+# and used in the test suite).
 
-
-
-sleep_time <- function(argument_list){
-    if("api_key" %in% argument_list){
-        return(0.1)
-    }
-    1/3
-}
-
-make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...){
+make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, debug_mode=FALSE, ...){
     uri <- paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     args <- list(..., email=entrez_email(), tool=entrez_tool())
     if(!("api_key" %in% names(args))){ #no api key set, try to use the sytem var
@@ -62,6 +45,10 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...
             args$id <- paste(args$id, collapse=",")
         }
     }
+    if(debug_mode){
+        return( list(uri = uri, args=args ) )
+    }
+    
     if(length(args$id) > 200){ 
         response <- httr::POST(uri, body=args, config= config)
     } else {
@@ -72,6 +59,15 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...
     httr::content(response, as="text", encoding="UTF-8")
 }
 
+
+#set the sleep time, depending on presence of api_key in the arguments. Used by
+# make_entrez_query
+sleep_time <- function(argument_list){
+    if("api_key" %in% names(argument_list)){
+        return(0.1)
+    }
+    1/3
+}
 ##
 # Check for that we have either the ID or the web-history functions are 
 # specified for those functions that need one.
