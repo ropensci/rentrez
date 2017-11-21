@@ -56,8 +56,6 @@ entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="", par
     }
     args <- c(list("efetch", db=db, rettype=rettype, config=config, ...), identifiers) 
     records <- do.call(make_entrez_query, args) 
-    #NCBI limits requests to three per second
-    Sys.sleep(0.33)
     if(parsed){
         #At the moment, this is just a long-winded way to call
         #XML::xmlTreeParse, but we already use this approach to parse

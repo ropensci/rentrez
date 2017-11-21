@@ -35,8 +35,6 @@ entrez_post <- function(db, id=NULL, web_history=NULL, config=NULL, ...){
     result <- xpathApply(record, "/ePostResult/*", XML::xmlValue)
     names(result) <- c("QueryKey", "WebEnv")
     class(result) <- c("web_history", "list")
-    #NCBI limits requests to three per second
-    Sys.sleep(0.33)
     return(result)
 }
 
