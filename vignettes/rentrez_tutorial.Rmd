@@ -635,7 +635,47 @@ for( seq_start in seq(1,200,50)){
 }
 ```
 
-##What next ?
+## Using API Keys
+
+By default, the NCBI limits users to only making 3 requests per second (and
+`rentrez` enforces that limit). If this restriction makes an analysis you want to run too
+slow, you can register to get an "API key". This key is associated with a
+personal account at the NCBI, and allows you to make up to 10 requests per
+second. After signing up for the NCBI account you can register a key in the
+[account settings page](https://www.ncbi.nlm.nih.gov/account/settings/)
+
+
+If you have an API key, rentrez will allow you to take advantage of it. For 
+one-off cases, this is as simple as adding the `api_key` argument to a function
+call. (Not these examples are not executed as part of this document, as the 
+API key used here not a real one).
+
+```r
+entrez_link(db="protein", dbfrom="gene", id=93100, api_key ="ABCD123")
+```
+
+It most cases you will want to use your API for each of several calls to the
+NCBI. `rentrez` makes this easy by using the value and an environment variable
+,`ENTREZ_KEY` as the key for all requests you sent to the NCBI. This can be set
+for a given R session using the function `set_entrez_key()`
+
+```{r, set_key}
+set_entrez_key("ABCD123")
+Sys.getenv("ENTREZ_KEY")
+```
+
+If you use rentrez often, you should edit your `.Renviron` file (see `r
+help(Startup)` for description of this file)  to include your key in all
+requests.
+
+```ini
+ENTREZ_KEY=ABCD123
+```
+
+As long as an API key is set by one of these methods, `rentrez` will allow you
+to make up to ten requests per second.
+
+## What next ?
 
 This tutorial has introduced you to the core functions of `rentrez`, there are
 almost limitless ways that you could put them together. [Check out the wiki](https://github.com/ropensci/rentrez/wiki)
