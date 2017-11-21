@@ -1,0 +1,15 @@
+
+bibentry(
+    header = "To cite rotl in publications use:",
+    bibtype = "Article",
+    title        = "{rentrez}: an R package for the NCBI eUtils API",
+    author       = as.person("David J. Winter"),
+    journal      = "The R Journal",
+    year         = "2017",
+    volume       = "2",
+    pages        = "xx",
+    textVersion  =
+        paste("Winter, D. J. (2017), 
+             {rentrez}: an R package for the NCBI eUtils API",            
+             "The R Journal (in press)")
+)
