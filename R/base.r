@@ -16,6 +16,18 @@
 entrez_email <- function() 'david.winter@gmail.com'
 entrez_tool <- function() 'rentrez'
 
+
+#set_entrez_key <- function(key){
+#    Sys.setenv(ENTREZ_KEY=key)
+#
+#}
+
+#is_entrez_key_set <- function(){
+#   !identical(Sys.getenv('ENTREZ_KEY'), "")
+#}
+
+
+
 #Create a URL for the EUtils API. 
 #
 # This function is used by all the API-querying functions in rentrez to build
@@ -26,12 +38,21 @@ entrez_tool <- function() 'rentrez'
 
 
 
-
+sleep_time <- function(argument_list){
+    if("api_key" %in% argument_list){
+        return(0.1)
+    }
+    1/3
+}
 
 make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...){
     uri <- paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     args <- list(..., email=entrez_email(), tool=entrez_tool())
-    unsent_flag <- TRUE
+    if(!("api_key" %in% names(args))){ #no api key set, try to use the sytem var
+        if(is_entrez_key_set()){
+            args$api_key <- Sys.getenv('ENTREZ_KEY')
+        }
+    }
     if("id" %in% names(args)){
         if(by_id){
             ids_string <- paste0("id=", args$id, collapse="&")
@@ -40,15 +61,14 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, ...
         } else {
             args$id <- paste(args$id, collapse=",")
         }
+    }
     if(length(args$id) > 200){ 
         response <- httr::POST(uri, body=args, config= config)
-            unsent_flag <- FALSE
-        }
-    }    
-    if (unsent_flag) {
+    } else {
         response <- httr::GET(uri, query=args, config= config) 
     }
     entrez_check(response)
+    Sys.sleep(sleep_time(args))
     httr::content(response, as="text", encoding="UTF-8")
 }
 
