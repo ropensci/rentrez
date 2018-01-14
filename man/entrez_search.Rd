@@ -10,7 +10,9 @@ entrez_search(db, term, config = NULL, retmode = "xml",
 \arguments{
 \item{db}{character, name of the database to search for.}
 
-\item{term}{character, the search term.}
+\item{term}{character, the search term. The syntax used in making these
+searches is described in the Destails of this help message, the package
+vingette and reference given below.}
 
 \item{config}{vector configuration options passed to httr::GET}
 
@@ -40,19 +42,23 @@ resulting from the returned JSON file being parsed with
 \code{\link[jsonlite]{fromJSON}}.
 }
 \description{
+Search a given NCBI database with a particular query.
+}
+\details{
 The NCBI uses a search term syntax where search terms can be associated with 
 a specific search field with square brackets. So, for instance ``Homo[ORGN]''
 denotes a search for Homo in the ``Organism'' field. The names and
 definitions of these fields can be identified using
 \code{\link{entrez_db_searchable}}.
-}
-\details{
+
 Searches can make use of several fields by combining them via the boolean
 operators AND, OR and NOT. So, using the search term``((Homo[ORGN] AND APP[GENE]) NOT
 Review[PTYP])'' in PubMed would identify articles matching the gene APP in
 humans, and exclude review articles. More examples of the use of these search
 terms, and the more specific MeSH terms for precise searching, 
-is given in the package vignette.
+is given in the package vignette. \code{rentrez} handles special characters
+and URL encoding (e.g. replacing spaces with plus signs) on the client side,
+so there is no need to include these in search term
 
 The\code{rentrez} tutorial provides some tips on how to make the most of 
 searches to the NCBI. In particular, the sections on uses of the "Filter"
