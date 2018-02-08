@@ -64,7 +64,6 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
     } 
     response <- do.call(make_entrez_query,args)
     record <- parse_response(response, 'xml')
-    Sys.sleep(0.33)
     res <- parse_elink(record, cmd=cmd, by_id=by_id)
     if(!is.null(id) & by_id){
         if(length(res) != length(id)){

@@ -25,7 +25,6 @@ entrez_global_query <- function(term, config=NULL, ...){
         res <- as.numeric(xpathSApply(record, path, xmlValue))
     }
     #NCBI limits requests to three per second
-    Sys.sleep(0.33)
     res <- structure(sapply(db_names, get_Ids), names=db_names)
     return(res)
 }
