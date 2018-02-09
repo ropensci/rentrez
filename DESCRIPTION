@@ -1,6 +1,6 @@
 Package: rentrez
-Version: 1.1.1
-Date: 2017-05-22
+Version: 1.2
+Date: 2017-02-09
 Title: Entrez in R
 Authors@R: c(
  person("David", "Winter", role=c("aut", "cre"), 
