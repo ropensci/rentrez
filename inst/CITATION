@@ -6,10 +6,11 @@ bibentry(
     author       = as.person("David J. Winter"),
     journal      = "The R Journal",
     year         = "2017",
-    volume       = "2",
-    pages        = "xx",
+    volume       = "9",
+    issue        = "2",
+    pages        = "520--526",
     textVersion  =
-        paste("Winter, D. J. (2017), 
-             {rentrez}: an R package for the NCBI eUtils API",            
-             "The R Journal (in press)")
+        paste("Winter, D. J. (2017)", 
+             "rentrez: an R package for the NCBI eUtils API",            
+             "The R Journal 9(2):520-526")
 )
