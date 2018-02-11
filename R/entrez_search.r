@@ -24,13 +24,13 @@
 #'@export
 #'@param db character, name of the database to search for.
 #'@param term character, the search term. The syntax used in making these
-#'searches is described in the Destails of this help message, the package
-#'vingette and reference given below.
+#'searches is described in the Details of this help message, the package
+#'vignette and reference given below.
 #'@param use_history logical. If TRUE return a web_history object for use in 
 #' later calls to the NCBI
 #'@param retmode character, one of json (default) or xml. This will make no
 #' difference in most cases.
-#'@param \dots characte, additional terms to add to the request, see NCBI
+#'@param \dots character, additional terms to add to the request, see NCBI
 #'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to httr::GET  
 #'@seealso \code{\link[httr]{config}} for available httr configurations 
