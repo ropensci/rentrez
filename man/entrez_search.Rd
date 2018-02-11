@@ -11,8 +11,8 @@ entrez_search(db, term, config = NULL, retmode = "xml",
 \item{db}{character, name of the database to search for.}
 
 \item{term}{character, the search term. The syntax used in making these
-searches is described in the Destails of this help message, the package
-vingette and reference given below.}
+searches is described in the Details of this help message, the package
+vignette and reference given below.}
 
 \item{config}{vector configuration options passed to httr::GET}
 
@@ -22,7 +22,7 @@ difference in most cases.}
 \item{use_history}{logical. If TRUE return a web_history object for use in 
 later calls to the NCBI}
 
-\item{\dots}{characte, additional terms to add to the request, see NCBI
+\item{\dots}{character, additional terms to add to the request, see NCBI
 documentation linked to in references for a complete list}
 }
 \value{

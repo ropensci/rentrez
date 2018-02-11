@@ -18,7 +18,7 @@ entrez_link(dbfrom, web_history = NULL, id = NULL, db = NULL,
 search all databases available for \code{db}. \code{entrez_db_links} allows you
 to discover databases that might have linked information (see examples).}
 
-\item{cmd}{link function to use. Allowled values include
+\item{cmd}{link function to use. Allowed values include
 \itemize{
   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
   input IDs in \code{dbfrom}.
@@ -35,7 +35,7 @@ to discover databases that might have linked information (see examples).}
   each ID.
 }}
 
-\item{by_id}{logial If FALSE (default) return a single 
+\item{by_id}{logical If FALSE (default) return a single 
 \code{elink} objects containing links for all of the provided \code{id}s. 
 Alternatively, if TRUE return a list of \code{elink} objects, one for each 
 ID in \code{id}.}

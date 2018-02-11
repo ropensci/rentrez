@@ -1,3 +1,16 @@
+Version 1.2.0
+------------------
+
+rentrez updated to reflect NCBIs new API policy, allowing more requests from
+users with registered keys. (Issues #115 -- #117).
+
+CITATION updated to reflect publication in The R Journal.
+
+Minor changes
+   * clarification of search syntax in docs (issue #120)
+   * ORCID ids added for all authors (issue #118)
+   
+
 Version 1.1.0
 ------------------
 
