@@ -1,5 +1,5 @@
 Package: rentrez
-Version: 1.1.0
+Version: 1.1.1
 Date: 2017-05-22
 Title: Entrez in R
 Authors@R: c(
