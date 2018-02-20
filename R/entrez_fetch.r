@@ -54,7 +54,7 @@ entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="", par
           stop(msg)
         }
     }
-    args <- c(list("efetch", db=db, rettype=rettype, config=config, ...), identifiers) 
+    args <- c(list("efetch", db=db, rettype=rettype, config=config, retmode=retmode, ...), identifiers) 
     records <- do.call(make_entrez_query, args) 
     if(parsed){
         #At the moment, this is just a long-winded way to call
