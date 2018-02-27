@@ -17,7 +17,7 @@ test_that("Functions to fetch summaries work", {
           expect_that(pop_summ_xml[[4]], is_a("esummary"))
           expect_that(pop_summ_json[[4]], is_a("esummary"))
           sapply(pop_summ_json, function(x)
-                 expect_that(x[["title"]], matches("Muraenidae"))
+                 expect_match(x[["title"]], "Muraenidae")
           )         
 })  
 
@@ -32,7 +32,7 @@ test_that("List elements in XML are parsable", {
 
 test_that("Version 2 xml records can be fetched and parsed", {
     sapply(pop_summ_xml2, function(x)
-                 expect_that(x[["Title"]], matches("Muraenidae")))
+                 expect_match(x[["Title"]], "Muraenidae"))
     expect_that(length(pop_summ_xml2[[1]]), is_more_than(12))
 })
 
@@ -42,9 +42,9 @@ test_that("JSON and XML objects are similar", {
           # when they leave the NCBI, so let's ensure we can get some
           # info from each file, even if they won't be exactly the same
           sapply(pop_summ_xml, function(x)
-                 expect_that(x[["Title"]], matches("Muraenidae")))
+                 expect_match(x[["Title"]], "Muraenidae"))
           sapply(pop_summ_json, function(x)
-                 expect_that(x[["title"]], matches("Muraenidae")))
+                 expect_match(x[["title"]], "Muraenidae"))
           
           expect_that(length(pop_summ_xml[[1]]), is_more_than(12))
           expect_that(length(pop_summ_json[[1]]), is_more_than(12))

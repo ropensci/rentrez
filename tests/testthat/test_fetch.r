@@ -4,8 +4,8 @@ context("fetching records")
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
 coi <- entrez_fetch(db = "popset", id = pop_ids[1], 
                     rettype = "fasta")
-xml_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", parsed=TRUE)
-raw_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native")
+xml_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", retmode="xml", parsed=TRUE)
+raw_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", retmode="xml")
 
 acc_old = "AF123456.1"
 acc_new = "AF123456.2"
