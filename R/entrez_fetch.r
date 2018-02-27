@@ -1,11 +1,17 @@
 #' Download data from NCBI databases
 #'
-#' A set of unique identifiers mush be specified with either the \code{db}
+#' Pass unique identifiers to an NCBI database and receive data files in a
+#' variety of formats.
+#
+#' A set of unique identifiers mustbe specified with either the \code{db}
 #' argument (which directly specifies the IDs as a numeric or character vector)
 #' or a \code{web_history} object as returned by 
 #' \code{\link{entrez_link}}, \code{\link{entrez_search}} or 
-#' \code{\link{entrez_post}}. See
-#' \href{https://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/}{Table 1} 
+#' \code{\link{entrez_post}}. 
+#' 
+#' The format for returned records is set by that arguments \code{rettype} (for
+#' a particular format) and \code{retmode} for a general format (JSON, XML text
+#' etc). See  \href{https://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/}{Table 1} 
 #' in the linked reference for the set of 
 #' formats available for each database. In particular, note that sequence
 #' databases (nuccore, protein and their relatives) use specific format names
@@ -23,7 +29,8 @@
 #' NCBI accession followed by a version number (eg AF123456.1 or AF123456.2).
 #'@param web_history, a web_history object 
 #'@param rettype character, format in which to get data (eg, fasta, xml...)
-#'@param retmode character, mode in which to receive data, defaults to 'text'
+#'@param retmode character, mode in which to receive data, defaults to an empty
+#'string (corresponding to the default mode for rettype).
 #'@param config vector, httr configuration options passed to httr::GET
 #'@param \dots character, additional terms to add to the request, see NCBI
 #'documentation linked to in references for a complete list

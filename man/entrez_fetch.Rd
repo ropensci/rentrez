@@ -18,7 +18,8 @@ NCBI accession followed by a version number (eg AF123456.1 or AF123456.2).}
 
 \item{rettype}{character, format in which to get data (eg, fasta, xml...)}
 
-\item{retmode}{character, mode in which to receive data, defaults to 'text'}
+\item{retmode}{character, mode in which to receive data, defaults to an empty
+string (corresponding to the default mode for rettype).}
 
 \item{parsed}{boolean should entrez_fetch attempt to parse the resulting 
 file. Only works with xml records (including those with rettypes other than
@@ -36,18 +37,23 @@ XMLInternalDocument a parsed XML document if parsed=TRUE and
 rettype is a flavour of XML.
 }
 \description{
-A set of unique identifiers mush be specified with either the \code{db}
+Pass unique identifiers to an NCBI database and receive data files in a
+variety of formats.
+A set of unique identifiers mustbe specified with either the \code{db}
 argument (which directly specifies the IDs as a numeric or character vector)
 or a \code{web_history} object as returned by 
 \code{\link{entrez_link}}, \code{\link{entrez_search}} or 
-\code{\link{entrez_post}}. See
-\href{https://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/}{Table 1} 
+\code{\link{entrez_post}}.
+}
+\details{
+The format for returned records is set by that arguments \code{rettype} (for
+a particular format) and \code{retmode} for a general format (JSON, XML text
+etc). See  \href{https://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/}{Table 1} 
 in the linked reference for the set of 
 formats available for each database. In particular, note that sequence
 databases (nuccore, protein and their relatives) use specific format names
 (eg "native", "ipg") for different flavours of xml.
-}
-\details{
+
 For the most part, this function returns a character vector containing the 
 fetched records. For XML records (including 'native', 'ipg', 'gbc' sequence
 records), setting \code{parsed} to \code{TRUE} will return an
