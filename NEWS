@@ -1,3 +1,13 @@
+Version 1.2.1
+------------------
+
+Bug fix release. Thanks @gmbecker for pointing out a problem with the way
+retmode was being used in entrez_fetch (PR #121). 
+
+Also updates documentation to make this clear.
+Removes depricated verbs from testthat code.
+
+
 Version 1.2.0
 ------------------
 
