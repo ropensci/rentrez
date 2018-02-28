@@ -11,3 +11,4 @@
 ^README-*\.png$
 ^CONDUCT\.md$
 ^.github$
+^revdep$/
