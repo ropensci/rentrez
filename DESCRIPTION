@@ -1,7 +1,7 @@
 Package: rentrez
 Version: 1.2.1
 Date: 2018-02-12
-Title: Entrez in R
+Title: 'Entrez' in R
 Authors@R: c(
  person("David", "Winter", role=c("aut", "cre"), 
         email = "david.winter@gmail.com", 
@@ -23,10 +23,11 @@ Suggests:
     rmarkdown
 URL: http://github.com/ropensci/rentrez
 BugReports: https://github.com/ropensci/rentrez/issues
-Description: Provides an R interface to the NCBI's 'EUtils' API, allowing users 
-to search databases like GenBank <https://www.ncbi.nlm.nih.gov/genbank/>and 
-PubMed <https://www.ncbi.nlm.nih.gov/pubmed/>, process the results of those 
-searches and pull data into their R sessions.
+Description: Provides an R interface to the NCBI's 'EUtils' API, 
+    allowing users to search databases like 'GenBank' 
+    <https://www.ncbi.nlm.nih.gov/genbank/> and 'PubMed' 
+    <https://www.ncbi.nlm.nih.gov/pubmed/>, process the 
+    results of those searches and pull data into their R sessions.
 VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: MIT + file LICENSE
