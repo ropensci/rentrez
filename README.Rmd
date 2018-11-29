@@ -51,7 +51,7 @@ takes care of limiting the number of requests per second, and setting the
 appropriate entrez tool name in each request).
 
 Hopefully this README, and the package's vignette and in-line documentation,
-, provide you with enough information to get started with `rentrez`. If you need
+provide you with enough information to get started with `rentrez`. If you need
 more help, or if you discover a bug in `rentrez` please let us know, either through
 one of the [contact methods described here](http://ropensci.org/contact.html),
 or [by filing an issue](https://github.com/ropensci/rentrez/issues)
