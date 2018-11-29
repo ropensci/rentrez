@@ -241,7 +241,7 @@ type are connected to  other records within the NCBI or to external data
 sources. The function `entrez_link()` allows users to discover these links
 between records.
 
-###My god, it's full of links
+### My god, it's full of links
 
 To get an idea of the degree to which records in the NCBI are cross-linked we
 can find all NCBI data associated with a single gene (in this case the 
@@ -281,7 +281,7 @@ all_the_links$links$gene_clinvar
 
 ```
 
-###Narrowing our focus
+### Narrowing our focus
 
 If we know beforehand what sort of links we'd like to find , we can
 to use the `db` argument to narrow the focus of a call to `entrez_link`.
@@ -308,7 +308,7 @@ nuc_links$links$gene_nuccore_refseqrna
 We can use these ids in calls to `entrez_fetch()` or `entrez_summary()` to learn
 more about the transcripts they represent. 
 
-###External links
+### External links
 
 In addition to finding data within the NCBI, `entrez_link` can turn up
 connections to external databases. Perhaps the most interesting example is
@@ -343,7 +343,7 @@ records for a large number of articles checkout the package
 [fulltext](https://github.com/ropensci/fulltext) which makes use of multiple
 sources (including the NCBI) to discover the full text articles.
 
-###Using more than one ID
+### Using more than one ID
 
 It is possible to pass more than one ID to `entrez_link()`. By default, doing so
 will give you a single elink object containing the complete set of links for 
@@ -378,7 +378,7 @@ you are after, so `rentrez` provides functions to parse and summarise summary
 records.
 
 
-###The summary record
+### The summary record
 
 `entrez_summary()` takes a vector of unique IDs for the samples you want to get
 summary information from. Let's start by finding out something about the paper
@@ -403,7 +403,7 @@ taxize_summ$articleids
 taxize_summ$pmcrefcount
 ```
 
-###Dealing with many records
+### Dealing with many records
 
 If you give `entrez_summary()` a vector with more than one ID you'll get a
 list of summary records back. Let's get those _Plasmodium vivax_ papers we found
@@ -429,14 +429,14 @@ date_and_cite <- extract_from_esummary(multi_summs, c("pubdate", "pmcrefcount", 
 knitr::kable(head(t(date_and_cite)), row.names=FALSE)
 ```
 
-##Fetching full records: `entrez_fetch()`
+## Fetching full records: `entrez_fetch()`
 
 As useful as the summary records are, sometimes they just don't have the
 information that you need. If you want a complete representation of a record you
 can use `entrez_fetch`, using the argument `rettype` to specify the format you'd
 like the record in.
 
-###Fetch DNA sequences in fasta format
+### Fetch DNA sequences in fasta format
 
 Let's extend the example given in the `entrez_link()` section about finding
 transcript for a given gene. This time we will fetch cDNA sequences of those
@@ -484,7 +484,7 @@ write(all_recs, temp)
 parsed_recs <- ape::read.dna(all_recs, temp)
 ```
 
-###Fetch a parsed XML document
+### Fetch a parsed XML document
 
 Most of the NCBI's databases can return records in XML format. In additional to
 downloading the text-representation of these files, `entrez_fetch()` can return
@@ -531,7 +531,7 @@ There are a few more complex examples of using `XPath` [on the rentrez wiki](htt
 
 <a name="web_history"></a>
 
-##Using NCBI's Web History features
+## Using NCBI's Web History features
 
 When you are dealing with very large queries it can be time  consuming to pass
 long vectors of unique IDs to and from the NCBI. To avoid this problem, the NCBI
@@ -556,7 +556,7 @@ you try to upload them. If you have such a list (and they come from an external
 sources rather than a search that can be save to a `web_history` object), you
 may have to 'chunk' the IDs into smaller sets that can processed. 
 
-###Get a `web_history` object from `entrez_search` or `entrez_link()`
+### Get a `web_history` object from `entrez_search` or `entrez_link()`
 
 In addition to directly uploading IDs to the NCBI, you can use the web history
 features with `entrez_search` and `entrez_link`. For instance, imagine you wanted to
@@ -591,7 +591,7 @@ asthma_clinvar$web_histories
 As you can see, instead of returning lists of IDs for each linked database (as
 it would be default), `entrez_link()` now  returns a list of web_histories.
 
-###Use a `web_history` object
+### Use a `web_history` object
 
 Once you have those IDs stored on the NCBI's servers, you are going to want to
 do something with them. The functions `entrez_fetch()` `entrez_summary()` and
