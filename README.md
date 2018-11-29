@@ -19,7 +19,7 @@ The EUtils API
 
 Each of the functions exported by `rentrez` is documented, and this README and the package vignette provide examples of how to use the functions together as part of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Be sure to read the official documentation to get the most out of API. In particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times (`rentrez` takes care of limiting the number of requests per second, and setting the appropriate entrez tool name in each request).
 
-Hopefully this README, and the package's vignette and in-line documentation, , provide you with enough information to get started with `rentrez`. If you need more help, or if you discover a bug in `rentrez` please let us know, either through one of the [contact methods described here](http://ropensci.org/contact.html), or [by filing an issue](https://github.com/ropensci/rentrez/issues)
+Hopefully this README, and the package's vignette and in-line documentation, provide you with enough information to get started with `rentrez`. If you need more help, or if you discover a bug in `rentrez` please let us know, either through one of the [contact methods described here](http://ropensci.org/contact.html), or [by filing an issue](https://github.com/ropensci/rentrez/issues)
 
 Examples
 --------
