@@ -49,6 +49,23 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
         return( list(uri = uri, args=args ) )
     }
     
+    #Seemingly, NCBI moved to https but not http v2.0?
+    # (thatnks Jeff Hammerbacher for report/solution)
+    #
+    # if no httr::config was passed we will add one
+    if(is.null(config)){
+         config = httr::config(http_version = 2)
+    # otherwise add http version, checkign we aren't overwriting something
+    # passed in (seems unlikely, but worth checking?)
+    # 
+    } else {
+        if ("http_version" %in% names(config$options)) {
+            warn("Over-writing httr config options for 'http_version', as NCBI servers require v1.1")
+        }
+        config$options$http_version <- 2        
+    }
+
+    
     if(length(args$id) > 200){ 
         response <- httr::POST(uri, body=args, config= config)
     } else {
