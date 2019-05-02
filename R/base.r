@@ -60,7 +60,7 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
     # 
     } else {
         if ("http_version" %in% names(config$options)) {
-            warn("Over-writing httr config options for 'http_version', as NCBI servers require v1.1")
+            warning("Over-writing httr config options for 'http_version', as NCBI servers require v1.1")
         }
         config$options$http_version <- 2        
     }
