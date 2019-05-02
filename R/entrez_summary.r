@@ -81,9 +81,11 @@ entrez_summary <- function(db, id=NULL, web_history=NULL,
 
 #' Extract elements from a list of esummary records
 #'@export
-#'@param esummaries A list of esummary objects
+#'@param esummaries Either an esummary or an esummary_list (as returned by
+#' entrez_summary).
 #'@param elements the names of the element to extract
 #'@param simplify logical, if possible return a vector
+#'@seealso \code{\link{entrez_summary}} for examples of this function in action.
 #'@return List or vector containing requested elements 
 extract_from_esummary <- function(esummaries, elements, simplify=TRUE){
     UseMethod("extract_from_esummary", esummaries)
