@@ -7,7 +7,8 @@
 extract_from_esummary(esummaries, elements, simplify = TRUE)
 }
 \arguments{
-\item{esummaries}{A list of esummary objects}
+\item{esummaries}{Either an esummary or an esummary_list (as returned by
+entrez_summary).}
 
 \item{elements}{the names of the element to extract}
 
@@ -18,4 +19,7 @@ List or vector containing requested elements
 }
 \description{
 Extract elements from a list of esummary records
+}
+\seealso{
+\code{\link{entrez_summary}} for examples of this function in action.
 }

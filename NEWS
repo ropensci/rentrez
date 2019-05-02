@@ -1,3 +1,14 @@
+Version 1.2.2
+------------------
+Maintenance release containing a number of bug fixes. 
+
+* A fix #127 forces curl to use http/1.1, as NCBI produces errors when sing http/2
+  (thanks @hammer for bug report and fix)
+* fix #131 stops pubmed records with reference sections production > 1
+  value for the 'pmid' field. Thanks @agbarnett for the report.
+* Added clarification around the expectd input for `extract_from_esummary` to
+  the docs.
+
 Version 1.2.1
 ------------------
 

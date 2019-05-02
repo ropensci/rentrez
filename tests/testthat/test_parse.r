@@ -10,6 +10,10 @@ parsed_raw <- parse_pubmed_xml(raw_rec)
 parsed_rec <- parse_pubmed_xml(xml_rec)
 parsed_multi <- parse_pubmed_xml(multi_rec)
 
+multi_pmid_eg <- parse_pubmed_xml(
+       entrez_fetch(db="pubmed", id='29743284', rettype="xml")
+)
+
 test_that("pubmed file parsers work",{
     expect_that(raw_rec, is_a("character"))
 
@@ -26,6 +30,12 @@ test_that("pubmed file parsers work",{
     # record in an xml file in each parsed record. If that error is
     # re-introduced there will be 25 authors in each record and this will fail
     expect_that(length(parsed_multi[[1]]$authors), equals(1))
+
+    # Bug #131 related to extracting all PMIDs from a pubmed xml that contained
+    # references, not just the one true pm od teh artcle. Testing we don't
+    # regress 
+
+    expect_that(length(multi_pmid_eg$pmid), equals(1))
 
 })
 

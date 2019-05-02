@@ -58,8 +58,8 @@ parse_one_pubmed <- function(paper){
     res$issue <- get_value(".//JournalIssue/Issue")
     res$pages <- get_value(".//MedlinePgn")
     res$key_words <- get_value(".//DescriptorName")
-    res$doi <- get_value(".//ArticleId[@IdType='doi']")
-    res$pmid <- get_value(".//ArticleId[@IdType='pubmed']")
+    res$doi <- get_value(".//PubmedData/ArticleIdList/ArticleId[@IdType='doi']")
+    res$pmid <- get_value(".//PubmedData/ArticleIdList/ArticleId[@IdType='pubmed']")
     res$abstract <- get_value(".//AbstractText")
     
     structure(res, class="pubmed_record", empty=FALSE) 
