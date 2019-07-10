@@ -9,6 +9,6 @@
 ^CONTRIBUTING\.md$
 ^README\.Rmd$
 ^README-*\.png$
-^CONDUCT\.md$
+^CODE_OF_CONDUCT\.md$
 ^.github$
 ^revdep$/
