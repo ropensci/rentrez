@@ -21,7 +21,8 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-URL: http://github.com/ropensci/rentrez
+URL: https://docs.ropensci.org/rentrez (website)
+    http://github.com/ropensci/rentrez
 BugReports: https://github.com/ropensci/rentrez/issues
 Description: Provides an R interface to the NCBI's 'EUtils' API, 
     allowing users to search databases like 'GenBank' 
