@@ -83,7 +83,7 @@ sleep_time <- function(argument_list){
     if("api_key" %in% names(argument_list)){
         return(0.1)
     }
-    1/3
+    0.34 
 }
 ##
 # Check for that we have either the ID or the web-history functions are 
