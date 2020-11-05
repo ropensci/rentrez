@@ -78,12 +78,13 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
 
 
 #set the sleep time, depending on presence of api_key in the arguments. Used by
-# make_entrez_query
+# make_entrez_query. These add a little extra time as we still frequently hit
+# the rate-limit when using 1/10 and 1/3 as times
 sleep_time <- function(argument_list){
     if("api_key" %in% names(argument_list)){
-        return(0.1)
+        return(0.13)
     }
-    1/3
+    0.35
 }
 ##
 # Check for that we have either the ID or the web-history functions are 
