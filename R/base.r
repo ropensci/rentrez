@@ -121,6 +121,11 @@ entrez_check  <- function(req){
       stop("HTTP failure: 502, bad gateway. This error code is often returned when trying to download many records in a single request.  Try using web history as described in the rentrez tutorial")
   }
   message <- httr::content(req, as="text", encoding="UTF-8")
+  if (req$status_code == 429){
+     #too many requests. First sleep to precent us racking up more
+     Sys.sleep(0.3)
+     stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rentrez tutorial. NCBI message:\n", message)) 
+  }
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
 
