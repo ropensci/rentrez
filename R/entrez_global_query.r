@@ -10,8 +10,9 @@
 #'@return a named vector with counts for each a database
 #'
 #' @examples
-#' 
+#'\dontrun{ 
 #' NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
+#'}
 
 entrez_global_query <- function(term, config=NULL, ...){
     response <- make_entrez_query("egquery", 
