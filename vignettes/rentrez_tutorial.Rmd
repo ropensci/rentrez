@@ -46,8 +46,6 @@ short). This package provides functions to use that API, allowing users to
 gather and combine data from multiple NCBI databases in the comfort of an R
 session or script.
 
-```
-
 ## Getting started with the rentrez
 
 To make the most of all the data the NCBI shares you need to know a little about

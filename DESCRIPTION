@@ -30,6 +30,7 @@ Description: Provides an R interface to the NCBI's 'EUtils' API,
     <https://www.ncbi.nlm.nih.gov/pubmed/>, process the 
     results of those searches and pull data into their R sessions.
 VignetteBuilder: knitr
-Roxygen: list(wrap = FALSE)
 License: MIT + file LICENSE
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
+Encoding: UTF-8
+
