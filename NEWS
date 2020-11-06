@@ -1,3 +1,8 @@
+Version 1.2.3
+-----------------
+Maintanence release, mostly to prevent issues with rate-limiting errors when the
+package is tested in CRAN
+
 Version 1.2.2
 ------------------
 Maintenance release containing a number of bug fixes. 
