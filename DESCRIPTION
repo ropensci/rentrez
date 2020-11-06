@@ -21,7 +21,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-URL: https://docs.ropensci.org/rentrez (website)
+URL: https://docs.ropensci.org/rentrez/ (website)
     https://github.com/ropensci/rentrez
 BugReports: https://github.com/ropensci/rentrez/issues
 Description: Provides an R interface to the NCBI's 'EUtils' API, 
