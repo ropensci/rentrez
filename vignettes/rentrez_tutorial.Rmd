@@ -12,8 +12,16 @@ vignette: >
 ---
 
 ```{r, count_recs, echo=FALSE}
+#are we on CRAN?
+library(testthat)
+build_this <- identical(Sys.getenv("BUILD_RENTREZ_VIGNETTE"), "true")
+
+knitr::opts_chunk$set(eval = build_this) 
+
+
 library(rentrez)
 count_recs <- function(db, denom) {
+    Sys.sleep(0.3)
     nrecs <-  rentrez::entrez_db_summary(db)["Count"]
     round(as.integer(nrecs)/denom, 1)
 }
@@ -21,30 +29,32 @@ count_recs <- function(db, denom) {
 ## Introduction: The NCBI, entrez and `rentrez`.
 
 The NCBI shares a _lot_ of data. At the time this document was compiled, there
-were `r count_recs("pubmed",1e6)` million papers in [PubMed](http://www.ncbi.nlm.nih.gov/pubmed/),
-including `r count_recs("pmc", 1e6)` million full-text records available in [PubMed Central](http://www.ncbi.nlm.nih.gov/pubmed/).
-[The NCBI Nucleotide Database](http://www.ncbi.nlm.nih.gov/nuccore) (which includes GenBank) has data for `r count_recs("nuccore", 1e6)`
-million different sequences, and [dbSNP](http://www.ncbi.nlm.nih.gov/snp/) describes
+were `r count_recs("pubmed",1e6)` million papers in [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/),
+including `r count_recs("pmc", 1e6)` million full-text records available in [PubMed Central](https://www.ncbi.nlm.nih.gov/pubmed/).
+[The NCBI Nucleotide Database](https://www.ncbi.nlm.nih.gov/nuccore) (which includes GenBank) has data for `r count_recs("nuccore", 1e6)`
+million different sequences, and [dbSNP](https://www.ncbi.nlm.nih.gov/snp/) describes
 `r count_recs("snp", 1e6)` million different genetic variants. All of these
 records can be cross-referenced with the  `r round(entrez_search(db="taxonomy", term='species[RANK]')$count/1e6,2)` million
-species in the [NCBI taxonomy](www.ncbi.nlm.nih.gov/taxonomy) or `r count_recs("omim", 1e3)` thousand disease-associated records
-in [OMIM](http://www.ncbi.nlm.nih.gov/omim).
+species in the [NCBI taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) or `r count_recs("omim", 1e3)` thousand disease-associated records
+in [OMIM](https://www.ncbi.nlm.nih.gov/omim).
 
 
-The NCBI makes this data available through a [web interface](http://www.ncbi.nlm.nih.gov/),
+The NCBI makes this data available through a [web interface](https://www.ncbi.nlm.nih.gov/),
 an [FTP server](ftp://ftp.ncbi.nlm.nih.gov/) and through a REST API called the
-[Entrez Utilities](http://www.ncbi.nlm.nih.gov/books/NBK25500/) (`Eutils` for
+[Entrez Utilities](https://www.ncbi.nlm.nih.gov/books/NBK25500/) (`Eutils` for
 short). This package provides functions to use that API, allowing users to
 gather and combine data from multiple NCBI databases in the comfort of an R
 session or script.
+
+```
 
 ## Getting started with the rentrez
 
 To make the most of all the data the NCBI shares you need to know a little about
 their databases, the records they contain and the ways you can find those
 records. The [NCBI provides extensive documentation for each of their
-databases](http://www.ncbi.nlm.nih.gov/home/documentation.shtml) and for the
-[EUtils API that `rentrez` takes advantage of](http://www.ncbi.nlm.nih.gov/books/NBK25501/).
+databases](https://www.ncbi.nlm.nih.gov/home/documentation.shtml) and for the
+[EUtils API that `rentrez` takes advantage of](https://www.ncbi.nlm.nih.gov/books/NBK25501/).
 There are also some helper functions in `rentrez` that help users learn their
 way around the NCBI's databases. 
 
@@ -102,7 +112,7 @@ r_search
 
 There are a few things to note here. First, the NCBI's server has worked out
 that we meant R as a programming language, and so included the
-['MeSH' term](http://www.ncbi.nlm.nih.gov/mesh) term associated with programming
+['MeSH' term](https://www.ncbi.nlm.nih.gov/mesh) term associated with programming
 languages. We'll worry about MeSH terms and other special queries later, for now
 just note that you can use this feature to check that your search term was interpreted in the way
 you intended. Second, there are many more 'hits' for this search than there
@@ -193,7 +203,7 @@ terms.
 ###Precise queries using MeSH terms
 
 In addition to the search terms described above, the NCBI allows searches using
-[Medical Subject Heading (MeSH)](http://www.ncbi.nlm.nih.gov/mesh) terms. These
+[Medical Subject Heading (MeSH)](https://www.ncbi.nlm.nih.gov/mesh) terms. These
 terms create a 'controlled vocabulary',  and allow users to make very finely
 controlled queries of databases.
 
@@ -298,7 +308,7 @@ nuc_links
 nuc_links$links
 ```
 The object we get back contains links to the nucleotide database generally, but
-also to special subsets of that database like [refseq](http://www.ncbi.nlm.nih.gov/refseq/). 
+also to special subsets of that database like [refseq](https://www.ncbi.nlm.nih.gov/refseq/). 
 We can take advantage of this narrower set of links to find IDs that match unique
 transcripts from our gene of interest.
 
@@ -451,7 +461,7 @@ head(linked_transripts)
 ```
 
 Now we can get our sequences with `entrez_fetch`, setting `rettype` to "fasta"
-(the list of formats available for [each database is give in this table](http://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/)):
+(the list of formats available for [each database is give in this table](https://www.ncbi.nlm.nih.gov/books/NBK25499/table/chapter4.T._valid_values_of__retmode_and/)):
 
 ```{r fetch_fasta}
 all_recs <- entrez_fetch(db="nuccore", id=linked_transripts, rettype="fasta")
@@ -635,7 +645,7 @@ for( seq_start in seq(1,200,50)){
 }
 ```
 
-## Using API Keys
+## Rate-limiting and API Keys
 
 By default, the NCBI limits users to making only 3 requests per second (and
 `rentrez` enforces that limit). Users who register for an "API key" are able to
@@ -675,6 +685,16 @@ ENTREZ_KEY=ABCD123
 
 As long as an API key is set by one of these methods, `rentrez` will allow you
 to make up to ten requests per second.
+
+### Slowing rentrez down when you hit the rate-limit
+
+`rentrez` won't let you _send_ requests to the NCBI at a rate higher than the
+rate-limit, but it is sometimes possible that they will _arrive_ too close
+together an produce errors. If you are using `rentrez` functions in a for loop
+and find rate-limiting errors are occuring, you may consider adding a call to
+`Sys.sleep(0.1)` before each message sent to the NCBI. This will ensure you stay
+beloe the rate limit.
+
 
 ## What next ?
 
