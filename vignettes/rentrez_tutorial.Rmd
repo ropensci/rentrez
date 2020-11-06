@@ -29,13 +29,13 @@ count_recs <- function(db, denom) {
 ## Introduction: The NCBI, entrez and `rentrez`.
 
 The NCBI shares a _lot_ of data. At the time this document was compiled, there
-were `r count_recs("pubmed",1e6)` million papers in [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/),
-including `r count_recs("pmc", 1e6)` million full-text records available in [PubMed Central](https://www.ncbi.nlm.nih.gov/pubmed/).
-[The NCBI Nucleotide Database](https://www.ncbi.nlm.nih.gov/nuccore) (which includes GenBank) has data for `r count_recs("nuccore", 1e6)`
+were 31.7 million papers in [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/),
+including 6.6 million full-text records available in [PubMed Central](https://www.ncbi.nlm.nih.gov/pubmed/).
+[The NCBI Nucleotide Database](https://www.ncbi.nlm.nih.gov/nuccore) (which includes GenBank) has data for 432
 million different sequences, and [dbSNP](https://www.ncbi.nlm.nih.gov/snp/) describes
-`r count_recs("snp", 1e6)` million different genetic variants. All of these
-records can be cross-referenced with the  `r round(entrez_search(db="taxonomy", term='species[RANK]')$count/1e6,2)` million
-species in the [NCBI taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) or `r count_recs("omim", 1e3)` thousand disease-associated records
+702 million different genetic variants. All of these
+records can be cross-referenced with the  1.86 million
+species in the [NCBI taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) or 27 thousand disease-associated records
 in [OMIM](https://www.ncbi.nlm.nih.gov/omim).
 
 
