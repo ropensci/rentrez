@@ -124,7 +124,7 @@ entrez_check  <- function(req){
   if (req$status_code == 429){
      #too many requests. First sleep to precent us racking up more
      Sys.sleep(0.3)
-     stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rentrez tutorial. NCBI message:\n", message)) 
+     stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rate-limiting section of rentrez tutorial. NCBI message:\n", message)) 
   }
   stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
 }
