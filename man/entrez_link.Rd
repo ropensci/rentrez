@@ -4,8 +4,16 @@
 \alias{entrez_link}
 \title{Get links to datasets related to records from an NCBI database}
 \usage{
-entrez_link(dbfrom, web_history = NULL, id = NULL, db = NULL,
-  cmd = "neighbor", by_id = FALSE, config = NULL, ...)
+entrez_link(
+  dbfrom,
+  web_history = NULL,
+  id = NULL,
+  db = NULL,
+  cmd = "neighbor",
+  by_id = FALSE,
+  config = NULL,
+  ...
+)
 }
 \arguments{
 \item{dbfrom}{character Name of database from which the Id(s) originate}
@@ -59,7 +67,7 @@ set for the \code{cmd} argument. Printing the returned object lists the names
 , and provides a brief description, of the elements included in the object.
 }
 \examples{
-\donttest{
+\dontrun{
  pubmed_search <- entrez_search(db = "pubmed", term ="10.1016/j.ympev.2010.07.013[doi]")
  linked_dbs <- entrez_db_links("pubmed")
  linked_dbs

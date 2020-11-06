@@ -20,8 +20,9 @@ a named vector with counts for each a database
 Find the number of records that match a given term across all NCBI Entrez databases
 }
 \examples{
-
+\dontrun{ 
 NCBI_data_on_best_butterflies_ever <- entrez_global_query(term="Heliconius")
+}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs

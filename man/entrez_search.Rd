@@ -4,8 +4,14 @@
 \alias{entrez_search}
 \title{Search the NCBI databases using EUtils}
 \usage{
-entrez_search(db, term, config = NULL, retmode = "xml",
-  use_history = FALSE, ...)
+entrez_search(
+  db,
+  term,
+  config = NULL,
+  retmode = "xml",
+  use_history = FALSE,
+  ...
+)
 }
 \arguments{
 \item{db}{character, name of the database to search for.}
@@ -73,7 +79,7 @@ field and MeSH terms may in formulating precise searches.
    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
                              file_format = "fasta", retmax = 10)
 }
-\donttest{
+\dontrun{
 
 fly_id <- entrez_search(db="taxonomy", term="Drosophila")
 #Oh, right. There is a genus and a subgenus name Drosophila...

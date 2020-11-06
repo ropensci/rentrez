@@ -16,13 +16,15 @@ character vector listing available dbs
 Retrieves the names of  databases available through the EUtils API
 }
 \examples{
-\donttest{
+\dontrun{
 entrez_dbs()
 }
 }
 \seealso{
-Other einfo: \code{\link{entrez_db_links}},
-  \code{\link{entrez_db_searchable}},
-  \code{\link{entrez_db_summary}},
-  \code{\link{entrez_info}}
+Other einfo: 
+\code{\link{entrez_db_links}()},
+\code{\link{entrez_db_searchable}()},
+\code{\link{entrez_db_summary}()},
+\code{\link{entrez_info}()}
 }
+\concept{einfo}

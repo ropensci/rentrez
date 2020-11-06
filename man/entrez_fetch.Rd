@@ -4,8 +4,16 @@
 \alias{entrez_fetch}
 \title{Download data from NCBI databases}
 \usage{
-entrez_fetch(db, id = NULL, web_history = NULL, rettype, retmode = "",
-  parsed = FALSE, config = NULL, ...)
+entrez_fetch(
+  db,
+  id = NULL,
+  web_history = NULL,
+  rettype,
+  retmode = "",
+  parsed = FALSE,
+  config = NULL,
+  ...
+)
 }
 \arguments{
 \item{db}{character, name of the database to use}

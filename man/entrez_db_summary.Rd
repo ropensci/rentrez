@@ -30,10 +30,15 @@ LastUpdate Date of most recent update to database
 Retrieve summary information about an NCBI database
 }
 \examples{
+\dontrun{
 entrez_db_summary("pubmed")
 }
-\seealso{
-Other einfo: \code{\link{entrez_db_links}},
-  \code{\link{entrez_db_searchable}},
-  \code{\link{entrez_dbs}}, \code{\link{entrez_info}}
 }
+\seealso{
+Other einfo: 
+\code{\link{entrez_db_links}()},
+\code{\link{entrez_db_searchable}()},
+\code{\link{entrez_dbs}()},
+\code{\link{entrez_info}()}
+}
+\concept{einfo}

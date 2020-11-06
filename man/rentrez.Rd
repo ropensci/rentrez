@@ -4,7 +4,6 @@
 \name{rentrez}
 \alias{rentrez}
 \alias{rentrez-package}
-\alias{rentrez-package}
 \title{rentrez}
 \description{
 rentrez provides functions to search for, discover and download data from

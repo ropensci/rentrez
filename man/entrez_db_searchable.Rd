@@ -21,7 +21,7 @@ Fetch a list of search fields that can be used with a given database. Fields
 can be used as part of the \code{term} argument to \code{\link{entrez_search}}
 }
 \examples{
-\donttest{
+\dontrun{
 pmc_fields <- entrez_db_searchable("pmc")
 pmc_fields[["AFFL"]]
 entrez_search(db="pmc", term="Otago[AFFL]", retmax=0)
@@ -34,7 +34,10 @@ as.data.frame(sra_fields)
 \seealso{
 \code{\link{entrez_search}}
 
-Other einfo: \code{\link{entrez_db_links}},
-  \code{\link{entrez_db_summary}},
-  \code{\link{entrez_dbs}}, \code{\link{entrez_info}}
+Other einfo: 
+\code{\link{entrez_db_links}()},
+\code{\link{entrez_db_summary}()},
+\code{\link{entrez_dbs}()},
+\code{\link{entrez_info}()}
 }
+\concept{einfo}

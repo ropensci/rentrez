@@ -4,8 +4,16 @@
 \alias{entrez_summary}
 \title{Get summaries of objects in NCBI datasets from a unique ID}
 \usage{
-entrez_summary(db, id = NULL, web_history = NULL, version = c("2.0",
-  "1.0"), always_return_list = FALSE, retmode = NULL, config = NULL, ...)
+entrez_summary(
+  db,
+  id = NULL,
+  web_history = NULL,
+  version = c("2.0", "1.0"),
+  always_return_list = FALSE,
+  retmode = NULL,
+  config = NULL,
+  ...
+)
 }
 \arguments{
 \item{db}{character Name of the database to search for}
@@ -63,7 +71,7 @@ named elements from a list of esummary objects, and is designed to work on
 single objects as well as lists.
 }
 \examples{
-\donttest{
+\dontrun{
  pop_ids = c("307082412", "307075396", "307075338", "307075274")
  pop_summ <- entrez_summary(db="popset", id=pop_ids)
  extract_from_esummary(pop_summ, "title")

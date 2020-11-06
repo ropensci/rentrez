@@ -24,7 +24,7 @@ cross-referenced records. The names of these records can be used as the
 \code{db} argument in \code{\link{entrez_link}}
 }
 \examples{
-\donttest{
+\dontrun{
 taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
 tax_links <- entrez_db_links("taxonomy")
 tax_links
@@ -37,7 +37,10 @@ as.data.frame(sra_links)
 \seealso{
 \code{\link{entrez_link}}
 
-Other einfo: \code{\link{entrez_db_searchable}},
-  \code{\link{entrez_db_summary}},
-  \code{\link{entrez_dbs}}, \code{\link{entrez_info}}
+Other einfo: 
+\code{\link{entrez_db_searchable}()},
+\code{\link{entrez_db_summary}()},
+\code{\link{entrez_dbs}()},
+\code{\link{entrez_info}()}
 }
+\concept{einfo}
