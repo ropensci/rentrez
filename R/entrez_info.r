@@ -60,7 +60,9 @@ entrez_dbs <- function(config=NULL){
 #'@return LastUpdate Date of most recent update to database
 #'@family einfo
 #'@examples
+#'\donttest{
 #'entrez_db_summary("pubmed")
+#'}
 #'@export
 
 entrez_db_summary <- function(db, config=NULL){
