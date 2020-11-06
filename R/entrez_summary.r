@@ -50,7 +50,7 @@
 #'@importFrom XML xpathApply xmlSApply xmlGetAttr xmlValue
 #'@importFrom jsonlite fromJSON
 #' @examples
-#'\donttest{
+#'\dontrun{
 #'  pop_ids = c("307082412", "307075396", "307075338", "307075274")
 #'  pop_summ <- entrez_summary(db="popset", id=pop_ids)
 #'  extract_from_esummary(pop_summ, "title")

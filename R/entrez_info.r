@@ -39,7 +39,7 @@ entrez_info <- function(db=NULL, config=NULL){
 #'@return character vector listing available dbs
 #'@export
 #'@examples
-#'\donttest{
+#'\dontrun{
 #' entrez_dbs()
 #'}
 entrez_dbs <- function(config=NULL){
@@ -60,7 +60,7 @@ entrez_dbs <- function(config=NULL){
 #'@return LastUpdate Date of most recent update to database
 #'@family einfo
 #'@examples
-#'\donttest{
+#'\dontrun{
 #'entrez_db_summary("pubmed")
 #'}
 #'@export
@@ -91,7 +91,7 @@ entrez_db_summary <- function(db, config=NULL){
 #'@family einfo
 #'@seealso \code{\link{entrez_link}}
 #'@examples
-#' \donttest{
+#' \dontrun{
 #'taxid <- entrez_search(db="taxonomy", term="Osmeriformes")$ids
 #'tax_links <- entrez_db_links("taxonomy")
 #'tax_links
@@ -126,7 +126,7 @@ entrez_db_links <- function(db, config=NULL){
 #'@seealso \code{\link{entrez_search}}
 #'@family einfo
 #'@examples
-#'\donttest{
+#'\dontrun{
 #' pmc_fields <- entrez_db_searchable("pmc")
 #' pmc_fields[["AFFL"]]
 #' entrez_search(db="pmc", term="Otago[AFFL]", retmax=0)

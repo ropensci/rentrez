@@ -55,7 +55,7 @@
 #'    snail_coi <- entrez_fetch(db = "nuccore", WebEnv = cookie, query_key = qk,
 #'                              file_format = "fasta", retmax = 10)
 #'}
-#'\donttest{
+#'\dontrun{
 #' 
 #' fly_id <- entrez_search(db="taxonomy", term="Drosophila")
 #' #Oh, right. There is a genus and a subgenus name Drosophila...
