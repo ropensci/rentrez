@@ -29,8 +29,8 @@ count_recs <- function(db, denom) {
 ## Introduction: The NCBI, entrez and `rentrez`.
 
 The NCBI shares a _lot_ of data. At the time this document was compiled, there
-were 31.7 million papers in [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/),
-including 6.6 million full-text records available in [PubMed Central](https://www.ncbi.nlm.nih.gov/pubmed/).
+were 31.7 million papers in [PubMed](https://pubmed.ncbi.nlm.nih.gov/),
+including 6.6 million full-text records available in [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/).
 [The NCBI Nucleotide Database](https://www.ncbi.nlm.nih.gov/nuccore) (which includes GenBank) has data for 432
 million different sequences, and [dbSNP](https://www.ncbi.nlm.nih.gov/snp/) describes
 702 million different genetic variants. All of these
@@ -51,7 +51,7 @@ session or script.
 To make the most of all the data the NCBI shares you need to know a little about
 their databases, the records they contain and the ways you can find those
 records. The [NCBI provides extensive documentation for each of their
-databases](https://www.ncbi.nlm.nih.gov/home/documentation.shtml) and for the
+databases](https://www.ncbi.nlm.nih.gov/home/documentation/) and for the
 [EUtils API that `rentrez` takes advantage of](https://www.ncbi.nlm.nih.gov/books/NBK25501/).
 There are also some helper functions in `rentrez` that help users learn their
 way around the NCBI's databases. 
