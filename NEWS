@@ -1,7 +1,17 @@
 Version 1.2.3
 -----------------
-Maintanence release, mostly to prevent issues with rate-limiting errors when the
-package is tested in CRAN
+Maintenance release, mostly to prevent issues with rate-limiting errors when the
+package is tested in CRAN. 
+
+* The sleep commands for rate-limiting are slightly increased
+
+* As of this release, the vignette is NOT build by default (to avoid issues with
+  automated tests on CRAN). This will not affect most users, but a developers
+  may want to read a wiki page describing how to build the vignette:
+
+https://github.com/ropensci/rentrez/wiki/Building-the-rentrez-tutorial-vignette.
+
+
 
 Version 1.2.2
 ------------------
