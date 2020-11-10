@@ -34,7 +34,7 @@ second <- entrez_fetch(db="nuccore", file_format="fasta", web_history=upload,
 }
 }
 \references{
-\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EPost_}
+\url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EPost_}
 }
 \seealso{
 \code{\link[httr]{config}} for available httr configurations

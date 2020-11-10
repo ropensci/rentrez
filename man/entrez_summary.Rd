@@ -86,7 +86,7 @@ single objects as well as lists.
 }
 }
 \references{
-\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_}
+\url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESummary_}
 }
 \seealso{
 \code{\link[httr]{config}} for available configs

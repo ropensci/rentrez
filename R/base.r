@@ -1,12 +1,12 @@
 #What's going on under the hood. As far as possible we are following the best
 #practices for API packages suggested by hadly/httr:
 #
-#  http://cran.r-project.org/web/packages/httr/vignettes/api-packages.html
+#  https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html
 #
 #and also conforming to the NBCI's requirements about rate limiting and 
 #adding identifiers to each request:
 #
-# http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requirements
+# https://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requirements
 #
 
 
@@ -49,13 +49,13 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
         return( list(uri = uri, args=args ) )
     }
     
-    #Seemingly, NCBI moved to https but not http v2.0?
+    #Seemingly, NCBI moved to https but not https v2.0?
     # (thatnks Jeff Hammerbacher for report/solution)
     #
     # if no httr::config was passed we will add one
     if(is.null(config)){
          config = httr::config(http_version = 2)
-    # otherwise add http version, checkign we aren't overwriting something
+    # otherwise add https version, checkign we aren't overwriting something
     # passed in (seems unlikely, but worth checking?)
     # 
     } else {

@@ -45,7 +45,7 @@
 #'\code{\link[XML]{xmlTreeParse}} or, if \code{retmode} was set to json a list
 #' resulting from the returned JSON file being parsed with
 #' \code{\link[jsonlite]{fromJSON}}.
-#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_} 
+#'@references \url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_} 
 #'@examples
 #' \dontrun{
 #'    query <- "Gastropoda[Organism] AND COI[Gene]"

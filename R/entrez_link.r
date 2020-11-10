@@ -41,7 +41,7 @@
 #'(if by_id=FALSE) or a list of such object (if by_id=TRUE).
 #'@return file XMLInternalDocument xml file resulting from search, parsed with
 #'\code{\link{xmlTreeParse}}
-#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
+#'@references \url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}
 #'@importFrom XML xmlToList
 #' @examples
 #' \dontrun{

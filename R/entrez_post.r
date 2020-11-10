@@ -10,7 +10,7 @@
 #'@param \dots character Additional terms to add to the request, see NCBI
 #'documentation linked to in references for a complete list
 #'@param config vector of configuration options passed to httr::GET  
-#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EPost_} 
+#'@references \url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EPost_} 
 #'@seealso \code{\link[httr]{config}} for available httr configurations
 #'@importFrom XML xmlTreeParse
 #' @examples

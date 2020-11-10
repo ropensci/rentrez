@@ -91,7 +91,7 @@ entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
 }
 }
 \references{
-\url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_}
+\url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ESearch_}
 }
 \seealso{
 \code{\link[httr]{config}} for available httr configurations

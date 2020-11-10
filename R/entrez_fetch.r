@@ -34,7 +34,7 @@
 #'@param config vector, httr configuration options passed to httr::GET
 #'@param \dots character, additional terms to add to the request, see NCBI
 #'documentation linked to in references for a complete list
-#'@references \url{http://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_} 
+#'@references \url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_EFetch_} 
 #'@param parsed boolean should entrez_fetch attempt to parse the resulting 
 #' file. Only works with xml records (including those with rettypes other than
 #' "xml") at present
