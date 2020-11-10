@@ -15,10 +15,10 @@ test_that("Rate limiting changes when API key set", {
     # with key = 10 per sec 
     set_entrez_key("ABC")
     payload <- make_entrez_query(util="test", config=list(), id=100, debug_mode=TRUE)
-    expect_equal(sleep_time(payload$args), 0.1)
+    expect_equal(sleep_time(payload$args), 0.13)
     # No key = 3 per sec
     set_entrez_key("")
     payload <- make_entrez_query(util="test", config=list(), id=100, debug_mode=TRUE)
-    expect_equal(sleep_time(payload$args), 1/3)
+    expect_equal(sleep_time(payload$args), 0.35)
 })
 
