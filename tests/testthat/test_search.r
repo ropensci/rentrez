@@ -12,7 +12,9 @@ test_that("Global query works",{
     #global query
     expect_that(gsearch, is_a("numeric"))
     expect_that(names(gsearch), is_a("character"))
-    expect_true(sum(gsearch) > 0 )
+    #now includes 'database error' for some databaes
+    #these are made NA in entrez_global_query, which seems reasonable
+    expect_true(sum(gsearch, na.rm=TRUE) > 0 )
 })
 
 test_that("Entrez query works",{
