@@ -31,5 +31,5 @@ test_that("Example works", {
 
 test_that("We can print a post result", {
     expect_output(print(ret),
-     "\\(QueryKey = \\d+, WebEnv = [A-Z0-9_]+\\.\\.\\.\\)") 
+     "\\(QueryKey = \\d+, WebEnv = [A-Z0-9_a-z]+\\.\\.\\.\\)") 
 })
