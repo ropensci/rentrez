@@ -66,7 +66,7 @@ entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="", par
     if(parsed){
         #At the moment, this is just a long-winded way to call
         #XML::xmlTreeParse, but we already use this approach to parse
-        #esummaries,and this is more flexible if NCBI starts sharing more
+        #esummaries, and this is more flexible if NCBI starts sharing more
         #records in JSON.
         return(parse_response(records, rettype))
     }

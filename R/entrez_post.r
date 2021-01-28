@@ -38,4 +38,3 @@ entrez_post <- function(db, id=NULL, web_history=NULL, config=NULL, ...){
     return(result)
 }
 
-

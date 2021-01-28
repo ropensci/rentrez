@@ -1,11 +1,10 @@
 #' Get links to datasets related to records from an NCBI database
 #'
-#' Discover records related to a set of unique identifiers from
-#' an NCBI database. The object returned by this function depends on the value
-#' set for the \code{cmd} argument. Printing the returned object lists the names
-#' , and provides a brief description, of the elements included in the object.
+#' Discover records related to a set of unique identifiers from an NCBI
+#' database. The object returned by this function depends on the value set for
+#' the \code{cmd} argument. Printing the returned object lists the names, and
+#' provides a brief description, of the elements included in the object.
 #'
-#'@export
 #'@param db character Name of the database to search for links (or use "all" to 
 #' search all databases available for \code{db}. \code{entrez_db_links} allows you
 #' to discover databases that might have linked information (see examples).
@@ -53,9 +52,7 @@
 #'  res <- entrez_link(dbfrom="pubmed", db="", cmd="llinks", id=pubmed_search$ids)
 #'  linkout_urls(res)
 #'}
-#'
-
-
+#'@export
 entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbor', by_id=FALSE, config=NULL, ...){
     identifiers <- id_or_webenv()
     args <- c(list("elink", db=db, dbfrom=dbfrom, cmd=cmd, config=config, by_id=by_id, ...), identifiers)
@@ -202,7 +199,6 @@ parse_linkouts <- function(x){
 
 
 #' @export
-
 print.elink_list <- function(x, ...){
     payload <- attr(x[[1]], "content")
     cat("List of", length(x), "elink objects,each containing\n", payload)
@@ -213,7 +209,6 @@ print.elink <- function(x, ...){
     payload <- attr(x, "content")
     cat("elink object with contents:\n", payload, "\n",sep="")
 }
-
 
 #' @export
 print.linkout <- function(x,...){

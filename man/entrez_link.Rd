@@ -61,10 +61,10 @@ file XMLInternalDocument xml file resulting from search, parsed with
 \code{\link{xmlTreeParse}}
 }
 \description{
-Discover records related to a set of unique identifiers from
-an NCBI database. The object returned by this function depends on the value
-set for the \code{cmd} argument. Printing the returned object lists the names
-, and provides a brief description, of the elements included in the object.
+Discover records related to a set of unique identifiers from an NCBI
+database. The object returned by this function depends on the value set for
+the \code{cmd} argument. Printing the returned object lists the names, and
+provides a brief description, of the elements included in the object.
 }
 \examples{
 \dontrun{
@@ -76,7 +76,6 @@ set for the \code{cmd} argument. Printing the returned object lists the names
  res <- entrez_link(dbfrom="pubmed", db="", cmd="llinks", id=pubmed_search$ids)
  linkout_urls(res)
 }
-
 }
 \references{
 \url{https://www.ncbi.nlm.nih.gov/books/NBK25499/#_chapter4_ELink_}

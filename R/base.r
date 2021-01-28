@@ -20,7 +20,7 @@ entrez_tool <- function() 'rentrez'
 #
 # This function is used by all the API-querying functions in rentrez to build
 # the appropriate url. Required arguments for each endpoint are handled by
-# specific funcitons. All of these functions can use the id_or_webenv() function
+# specific functions. All of these functions can use the id_or_webenv() function
 # (below) to ensure that at least on of these arguments are provided and the
 # sleep_time() function to set the approrate time to wait between requests.
 #
@@ -156,7 +156,7 @@ parse_response <- function(x, type=NULL){
     return(res)
 }
 
-#contsructor for web history objects
+#constructor for web history objects
 web_history <- function(WebEnv, QueryKey){
     res <- list(WebEnv=WebEnv, QueryKey=QueryKey)
     class(res) <- list("web_history", "list")
@@ -168,8 +168,6 @@ print.web_history <- function(x, ...){
     cat("Web history object (QueryKey = ", x$QueryKey,
         ", WebEnv = ", substr(x$WebEnv, 1, 12), "...", ")\n",sep="")    
 }
-
-
 
 add_class <- function(x, new_class){
     class(x) <- c(new_class, class(x))
