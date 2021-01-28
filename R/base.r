@@ -20,15 +20,15 @@ entrez_tool <- function() 'rentrez'
 #
 # This function is used by all the API-querying functions in rentrez to build
 # the appropriate url. Required arguments for each endpoint are handled by
-# specific funcitons. All of these functions can use the id_or_webenv() function
+# specific functions. All of these functions can use the id_or_webenv() function
 # (below) to ensure that at least on of these arguments are provided and the
-# sleep_time() function to set the approrate time to wait between requests.
+# sleep_time() function to set the appropriate time to wait between requests.
 #
 # if debug_mode is set to TRUE the function returns a list with the URL and 
 # arguments that would have been passed to GET or POST (useful for debugging 
 # and used in the test suite).
 
-make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, debug_mode=FALSE, ...){
+make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, debug_mode=FALSE, use_post=FALSE, ...){
     uri <- paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
     args <- list(..., email=entrez_email(), tool=entrez_tool())
     if(!("api_key" %in% names(args))){ #no api key set, try to use the sytem var
@@ -50,12 +50,12 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
     }
     
     #Seemingly, NCBI moved to https but not https v2.0?
-    # (thatnks Jeff Hammerbacher for report/solution)
+    # (thanks Jeff Hammerbacher for report/solution)
     #
     # if no httr::config was passed we will add one
     if(is.null(config)){
          config = httr::config(http_version = 2)
-    # otherwise add https version, checkign we aren't overwriting something
+    # otherwise add https version, checking we aren't overwriting something
     # passed in (seems unlikely, but worth checking?)
     # 
     } else {
@@ -65,8 +65,7 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
         config$options$http_version <- 2        
     }
 
-    
-    if(length(args$id) > 200){ 
+    if(use_post | (length(args$id) > 200)) { 
         response <- httr::POST(uri, body=args, config= config)
     } else {
         response <- httr::GET(uri, query=args, config= config) 
@@ -122,7 +121,7 @@ entrez_check  <- function(req){
   }
   message <- httr::content(req, as="text", encoding="UTF-8")
   if (req$status_code == 429){
-     #too many requests. First sleep to precent us racking up more
+     #too many requests. First sleep to prevent us racking up more
      Sys.sleep(0.3)
      stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rate-limiting section of rentrez tutorial. NCBI message:\n", message)) 
   }
