@@ -74,6 +74,7 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", use_history=FALS
                                   config=config,
                                   retmode=retmode, 
                                   usehistory=usehistory,
+                                  use_post=TRUE,
                                   ...)
     parsed <- parse_response(response, retmode)
     parse_esearch(parsed, history=use_history)
