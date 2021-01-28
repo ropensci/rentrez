@@ -22,4 +22,3 @@ set_entrez_key <- function(key){
 is_entrez_key_set <- function(){
     !identical(Sys.getenv('ENTREZ_KEY'), "")
 }
-

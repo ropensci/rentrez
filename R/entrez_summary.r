@@ -140,7 +140,7 @@ parse_esummary.list <- function(x, version, always_return_list){
     res
 }
 
-# Prase a summary XML 
+# Parse a summary XML 
 #
 # Logic goes like this
 # 1. Define functions parse_esumm_* to handle all data types
@@ -148,8 +148,6 @@ parse_esummary.list <- function(x, version, always_return_list){
 # 3. wrap it all up in function parse_summary that 
 #
 
-#
-#@export
 parse_esummary.XMLInternalDocument  <- function(x, version, always_return_list){
     check_xml_errors(x)
     #Version 2.0 records have no type information (int, list etc) so we 

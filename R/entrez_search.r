@@ -79,7 +79,6 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", use_history=FALS
     parse_esearch(parsed, history=use_history)
 }
 
-
 parse_esearch <- function(x, history) UseMethod("parse_esearch")
    
 parse_esearch.XMLInternalDocument <- function(x, history){
@@ -125,6 +124,3 @@ print.esearch <- function(x, ...){
                 "web_history object)\n Search term (as translated): "  , display_term, "\n")
     cat(msg)
 }
-
-
- c("//IdList/Id", "/eSearchResult/Count", "/eSearchResult/RetMax", "/eSearchResult/QueryTranslation")

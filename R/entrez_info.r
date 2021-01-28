@@ -1,7 +1,7 @@
 #' Get information about EUtils databases
 #'
 #' Gather information about EUtils generally, or a given Eutils database.
-#'Note: The most common uses-cases for the einfo util are finding the list of
+#' Note: The most common uses-cases for the einfo util are finding the list of
 #' search fields available for a given database or the other NCBI databases to
 #' which records in a given database might be linked. Both these use cases
 #' are implemented in higher-level functions that return just this information
