@@ -36,6 +36,7 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
             args$api_key <- Sys.getenv('ENTREZ_KEY')
         }
     }
+    id_length <- length(args$id)
     if("id" %in% names(args)){
         if(by_id){
             ids_string <- paste0("id=", args$id, collapse="&")
@@ -66,7 +67,7 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
     }
 
     
-    if(length(args$id) > 200){ 
+    if(id_length > 200){
         response <- httr::POST(uri, body=args, config= config)
     } else {
         response <- httr::GET(uri, query=args, config= config) 
