@@ -20,7 +20,7 @@ entrez_summary(
 
 \item{id}{vector with unique ID(s) for records in database \code{db}.
 In the case of sequence databases these IDs can take form of an
-NCBI accession followed by a version number (eg AF123456.1 or AF123456.2)}
+NCBI accession followed by a version number (e.g. AF123456.1 or AF123456.2)}
 
 \item{web_history}{A web_history object}
 
@@ -39,7 +39,7 @@ documentation linked to in references for a complete list}
 }
 \value{
 A list of esummary records (if multiple IDs are passed and
-always_return_list if FALSE) or a single record.
+always_return_list is FALSE) or a single record.
 
 file XMLInternalDocument xml file containing the entire record
 returned by the NCBI.

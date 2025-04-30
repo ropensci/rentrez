@@ -47,7 +47,7 @@ rettype is a flavour of XML.
 \description{
 Pass unique identifiers to an NCBI database and receive data files in a
 variety of formats.
-A set of unique identifiers mustbe specified with either the \code{db}
+A set of unique identifiers must be specified with either the \code{db}
 argument (which directly specifies the IDs as a numeric or character vector)
 or a \code{web_history} object as returned by 
 \code{\link{entrez_link}}, \code{\link{entrez_search}} or 

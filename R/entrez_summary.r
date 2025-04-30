@@ -29,7 +29,7 @@
 #'@param db character Name of the database to search for
 #'@param id vector with unique ID(s) for records in database \code{db}.
 #' In the case of sequence databases these IDs can take form of an
-#' NCBI accession followed by a version number (eg AF123456.1 or AF123456.2)
+#' NCBI accession followed by a version number (e.g. AF123456.1 or AF123456.2)
 #'@param web_history A web_history object 
 #'@param always_return_list logical, return a list  of esummary objects even
 #'when only one ID is provided (see description for a note about this option)
@@ -44,7 +44,7 @@
 #'@seealso \code{\link{extract_from_esummary}} which can be used to extract
 #'elements from a list of esummary records
 #'@return A list of esummary records (if multiple IDs are passed and
-#'always_return_list if FALSE) or a single record.
+#'always_return_list is FALSE) or a single record.
 #'@return file XMLInternalDocument xml file containing the entire record
 #'returned by the NCBI.
 #'@importFrom XML xpathApply xmlSApply xmlGetAttr xmlValue
@@ -163,7 +163,7 @@ parse_esummary.XMLInternalDocument  <- function(x, version, always_return_list){
         recs <- x["//DocSum"] 
 
         if(length(recs)==0){
-           stop("Esummary document contains no DocSums, try 'version=2.0'?)")
+           stop("Esummary document contains no DocSums, try 'version=2.0'?")
         }
         per_rec <- function(r){
             res <- xpathApply(r, "Item", parse_node)

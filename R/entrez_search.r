@@ -19,7 +19,7 @@
 #'
 #' The\code{rentrez} tutorial provides some tips on how to make the most of 
 #' searches to the NCBI. In particular, the sections on uses of the "Filter"
-#' field and MeSH terms may in formulating precise searches. 
+#' field and MeSH terms may help in formulating precise searches.
 #' 
 #'@export
 #'@param db character, name of the database to search for.
@@ -61,7 +61,7 @@
 #' #Oh, right. There is a genus and a subgenus name Drosophila...
 #' #how can we limit this search
 #' (tax_fields <- entrez_db_searchable("taxonomy"))
-#' #"RANK" loots promising
+#' #"RANK" looks promising
 #' tax_fields$RANK
 #' entrez_search(db="taxonomy", term="Drosophila & Genus[RANK]")
 #'}

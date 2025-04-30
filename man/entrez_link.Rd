@@ -23,28 +23,28 @@ entrez_link(
 \item{id}{vector with unique ID(s) for records in database \code{db}.}
 
 \item{db}{character Name of the database to search for links (or use "all" to 
-search all databases available for \code{db}. \code{entrez_db_links} allows you
+search all databases available for \code{db}). \code{entrez_db_links} allows you
 to discover databases that might have linked information (see examples).}
 
 \item{cmd}{link function to use. Allowed values include
 \itemize{
   \item neighbor (default). Returns a set of IDs in \code{db} linked to the
   input IDs in \code{dbfrom}.
-  \item neighbor_score. As `neighbor'', but additionally returns similarity scores.
-  \item neighbor_history. As `neighbor', but returns web history objects.
+  \item neighbor_score. As `neighbor`, but additionally returns similarity scores.
+  \item neighbor_history. As `neighbor`, but returns web history objects.
   \item acheck. Returns a list of linked databases available from NCBI for a set of IDs.
   \item ncheck. Checks for the existence of links within a single database.
   \item lcheck. Checks for external (i.e. outside NCBI) links.
   \item llinks. Returns a list of external links for each ID, excluding links
   provided by libraries.
-  \item llinkslib. As 'llinks' but additionally includes links provided by
+  \item llinkslib. As `llinks` but additionally includes links provided by
   libraries.
-  \item prlinks. As 'llinks' but returns only the primary external link for
+  \item prlinks. As `llinks` but returns only the primary external link for
   each ID.
 }}
 
 \item{by_id}{logical If FALSE (default) return a single 
-\code{elink} objects containing links for all of the provided \code{id}s. 
+\code{elink} object containing links for all of the provided \code{id}s. 
 Alternatively, if TRUE return a list of \code{elink} objects, one for each 
 ID in \code{id}.}
 
