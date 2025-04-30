@@ -9,14 +9,14 @@ We love collaboration.
 
 ## Code/Documentation contributions
 
-###Scope 
+### Scope 
 
 We would love to have your help in developing `rentrez`. Bear in mind, `rentrez`
 is intended to be a general-purpose wrapper for the `Eutils` API. Functions that
 make use of `rentrez` to perform more specific tasks should be added to existing
 packages, or form the basis of new ones. 
 
-###Perferred way to contribute code
+### Perferred way to contribute code
 
 * Fork this repo to your Github account
 * Clone your version on your account down to your machine from your account, e.g,. `git clone https://github.com/<yourgithubusername>/rentrez.git`
