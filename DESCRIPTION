@@ -1,6 +1,6 @@
 Package: rentrez
-Version: 1.2.3
-Date: 2020-11-06
+Version: 1.2.4
+Date: 2025-06-11
 Title: 'Entrez' in R
 Authors@R: c(
  person("David", "Winter", role=c("aut", "cre"), 
@@ -21,8 +21,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-URL: https://docs.ropensci.org/rentrez/ (website)
-    https://github.com/ropensci/rentrez/
+URL: https://github.com/ropensci/rentrez/
 BugReports: https://github.com/ropensci/rentrez/issues/
 Description: Provides an R interface to the NCBI's 'EUtils' API, 
     allowing users to search databases like 'GenBank' 
@@ -31,6 +30,5 @@ Description: Provides an R interface to the NCBI's 'EUtils' API,
     results of those searches and pull data into their R sessions.
 VignetteBuilder: knitr
 License: MIT + file LICENSE
-RoxygenNote: 7.1.1
 Encoding: UTF-8
-
+RoxygenNote: 7.3.2

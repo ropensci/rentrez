@@ -30,7 +30,7 @@ count_recs <- function(db, denom) {
 
 The NCBI shares a _lot_ of data. At the time this document was compiled, there
 were 31.7 million papers in [PubMed](https://pubmed.ncbi.nlm.nih.gov/),
-including 6.6 million full-text records available in [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/).
+including 6.6 million full-text records available in [PubMed Central](https://pmc.ncbi.nlm.nih.gov/)).
 [The NCBI Nucleotide Database](https://www.ncbi.nlm.nih.gov/nuccore) (which includes GenBank) has data for 432
 million different sequences, and [dbSNP](https://www.ncbi.nlm.nih.gov/snp/) describes
 702 million different genetic variants. All of these
@@ -348,7 +348,7 @@ linkout_urls(paper_links)
 The full list of options for the `cmd` argument are given in in-line
 documentation (`?entrez_link`). If you are interested in finding full text
 records for a large number of articles checkout the package 
-[fulltext](https://github.com/ropensci/fulltext) which makes use of multiple
+[fulltext](https://github.com/ropensci-archive/fulltext) which makes use of multiple
 sources (including the NCBI) to discover the full text articles.
 
 ### Using more than one ID
@@ -649,8 +649,8 @@ By default, the NCBI limits users to making only 3 requests per second (and
 `rentrez` enforces that limit). Users who register for an "API key" are able to
 make up to ten requests per second. Getting one of these keys is simple, you
 just need to [register for "my ncbi"
-account](https://www.ncbi.nlm.nih.gov/account/) then click on a button in the
-[account settings page](https://www.ncbi.nlm.nih.gov/account/settings/).
+account](https://account.ncbi.nlm.nih.gov/) then click on a button in the
+[account settings page](https://account.ncbi.nlm.nih.gov/settings/).
 
 
 Once you have an API key, rentrez will allow you to take advantage of it. For 

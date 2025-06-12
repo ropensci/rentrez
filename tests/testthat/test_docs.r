@@ -6,7 +6,7 @@ context("documentation")
 test_that("Examples in documentation work", {
     #setup
     hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
-    katipo_search <- entrez_search(db="popset", 
+    katipo_search <- entrez_search(term="Latrodectus katipo[Organism]", 
                                    term="Latrodectus katipo[Organism]")
     
 

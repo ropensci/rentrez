@@ -81,7 +81,8 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", use_history=FALS
 
 
 parse_esearch <- function(x, history) UseMethod("parse_esearch")
-   
+
+#'@exportS3Method   
 parse_esearch.XMLInternalDocument <- function(x, history){
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
                  count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
@@ -98,6 +99,7 @@ parse_esearch.XMLInternalDocument <- function(x, history){
     return(res)
 }
 
+#'@exportS3Method   
 parse_esearch.list <- function(x, history){
     #for consitancy between xml/json records we are going to change the
     #file names from lower -> CamelCase

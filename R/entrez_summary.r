@@ -118,6 +118,7 @@ check_json_errs <- function(rec){
 }
 
 
+#' @exportS3Method
 parse_esummary.list <- function(x, version, always_return_list){
     #already parsed by jsonlite, just add check for errors, then re-class
     #First make sure the file doesn't have an error at the root
@@ -149,7 +150,8 @@ parse_esummary.list <- function(x, version, always_return_list){
 #
 
 #
-#@export
+#' @exportS3Method
+
 parse_esummary.XMLInternalDocument  <- function(x, version, always_return_list){
     check_xml_errors(x)
     #Version 2.0 records have no type information (int, list etc) so we 

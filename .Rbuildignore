@@ -12,3 +12,5 @@
 ^CONDUCT\.md$
 ^.github$
 ^revdep$/
+^doc$
+^Meta$
