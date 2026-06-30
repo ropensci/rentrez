@@ -45,7 +45,7 @@ test_that("elink printing behaves", {
 test_that("We detect missing ids from elink results",{
    skip_if(!ncbi_ok, "NCBI not available")
    expect_warning(
-    entrez_link(dbfrom="pubmed", db="all", id=c(20203609,2020360999999,20203610), by_id=TRUE)
+    net(entrez_link(dbfrom="pubmed", db="all", id=c(20203609,2020360999999,20203610), by_id=TRUE))
    )
 })
 

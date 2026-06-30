@@ -34,7 +34,7 @@ test_that("Functions to fetch summaries work", {
 
 test_that("List elements in XML are parsable", {
          skip_if(!ncbi_ok, "NCBI not available")
-         rec <- entrez_summary(db="pubmed", id=25696867, version="1.0")
+         rec <- net(entrez_summary(db="pubmed", id=25696867, version="1.0"))
          expect_named(rec$History)
          expect_gt(length(rec$History), 0)
 })
@@ -82,10 +82,10 @@ test_that("We can print summary records", {
 test_that("We can detect errors in esummary records", {
     skip_if(!ncbi_ok, "NCBI not available")
     expect_warning(
-       entrez_summary(db="pmc", id=c(4318541212,4318541), version="1.0")
+       net(entrez_summary(db="pmc", id=c(4318541212,4318541), version="1.0"))
     )
     expect_warning(
-       entrez_summary(db="pmc", id=c(4318541212,4318541))
+       net(entrez_summary(db="pmc", id=c(4318541212,4318541)))
     )
 })
 
@@ -114,15 +114,15 @@ test_that("We can extract elements from a single esummary", {
 
 test_that("We can get a list of one element if we ask for it", {
     skip_if(!ncbi_ok, "NCBI not available")
-    expect_that(entrez_summary(db="popset", id=307075396, always_return_list=TRUE), is_a("list"))
-    expect_that(entrez_summary(db="popset", id=307075396), is_a("esummary"))
+    expect_that(net(entrez_summary(db="popset", id=307075396, always_return_list=TRUE)), is_a("list"))
+    expect_that(net(entrez_summary(db="popset", id=307075396)), is_a("esummary"))
 })
 
 
 test_that("We can fetch summaries on versioned sequences", {
     skip_if(!ncbi_ok, "NCBI not available")
-    old_rec = entrez_summary(db="nuccore", id="AF123456.1")
-    new_rec = entrez_summary(db="nuccore", id="AF123456.2")
+    old_rec = net(entrez_summary(db="nuccore", id="AF123456.1"))
+    new_rec = net(entrez_summary(db="nuccore", id="AF123456.2"))
     expect_match(old_rec$title, "testis-specific mRNA")
     expect_match(new_rec$title, "doublesex and mab-3 related transcription factor")
 })

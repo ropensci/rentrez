@@ -21,9 +21,9 @@ test_that("we can post ids", {
 
 test_that("we can add to WebEnv", {
     skip_if(!ncbi_ok, "NCBI not available")
-    ret2 <- entrez_post(id=119703751, db="protein", web_history=ret)
-    first <- entrez_summary(db="protein", web_history=ret)
-    second <- entrez_summary(db="protein", web_history=ret2)
+    ret2 <- net(entrez_post(id=119703751, db="protein", web_history=ret))
+    first <- net(entrez_summary(db="protein", web_history=ret))
+    second <- net(entrez_summary(db="protein", web_history=ret2))
     expect_equal(ret2$QueryKey, "2")
     expect_equal(ret2$WebEnv, ret$WebEnv)
     expect_equal(length(first), 2)
@@ -32,10 +32,10 @@ test_that("we can add to WebEnv", {
 
 test_that("Example works", {
      skip_if(!ncbi_ok, "NCBI not available")
-     so_many_snails <- entrez_search(db="nuccore",
-                           "Gastropoda[Organism] AND COI[Gene]", retmax=200)
-     upload <- entrez_post(db="nuccore", id=so_many_snails$ids)
-     first <- entrez_fetch(db="nuccore", rettype="fasta", web_history=upload, retstart=0, retmax=4)
+     so_many_snails <- net(entrez_search(db="nuccore",
+                           "Gastropoda[Organism] AND COI[Gene]", retmax=200))
+     upload <- net(entrez_post(db="nuccore", id=so_many_snails$ids))
+     first <- net(entrez_fetch(db="nuccore", rettype="fasta", web_history=upload, retstart=0, retmax=4))
      nrecs <-  length(gregexpr(">", first)[[1]])
      expect_equal(nrecs, 4)
 })
