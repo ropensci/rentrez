@@ -84,6 +84,10 @@ parse_esearch <- function(x, history) UseMethod("parse_esearch")
 
 #'@exportS3Method   
 parse_esearch.XMLInternalDocument <- function(x, history){
+    check_xml_errors(x)
+    if(length(x["/eSearchResult/Count"]) == 0){
+        stop("ESearch document contains no result (see warning for the NCBI message)", call.=FALSE)
+    }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
                  count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
                  retmax   = as.integer(xmlValue(x[["/eSearchResult/RetMax"]])),
