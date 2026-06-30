@@ -32,6 +32,10 @@ jobs:
       # rate limit from 3 to 10 requests/second and reduces HTTP 429 failures
       # when matrix jobs run in parallel. Add ENTREZ_KEY as a repository secret.
       ENTREZ_KEY: ${{ secrets.ENTREZ_KEY }}
+      # The \donttest{} examples in man/ make live NCBI calls. Running them
+      # during R CMD check couples CI to NCBI uptime, so skip them here (CRAN
+      # still runs them). The test suite covers the same code paths.
+      _R_CHECK_DONTTEST_EXAMPLES_: false
 
     steps:
       - uses: actions/checkout@v6
