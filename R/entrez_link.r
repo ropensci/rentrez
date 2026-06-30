@@ -106,7 +106,8 @@ parse_elink <- function(x, cmd, by_id, id){
     check_xml_errors(x)
     f <- make_elink_fxn(cmd)
     res <-  xpathApply(x, "//LinkSet",f)
-    if(length(res) > 1){
+    #in by_id mode always return a list, one elink per id, even for a single id
+    if(by_id || length(res) > 1){
         class(res) <- c("elink_list", "list")
         return(res)
     }

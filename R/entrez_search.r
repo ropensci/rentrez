@@ -88,10 +88,13 @@ parse_esearch.XMLInternalDocument <- function(x, history){
     if(length(x["/eSearchResult/Count"]) == 0){
         stop("ESearch document contains no result (see warning for the NCBI message)", call.=FALSE)
     }
+    #some responses (e.g. rettype="count") omit RetMax/QueryTranslation, so
+    #pull the scalar fields safely rather than indexing a missing node
+    get1 <- function(xpath){ node <- x[xpath]; if(length(node)) xmlValue(node[[1]]) else NA }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
-                 count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
-                 retmax   = as.integer(xmlValue(x[["/eSearchResult/RetMax"]])),
-                 QueryTranslation   = xmlValue(x[["/eSearchResult/QueryTranslation"]]),
+                 count    = as.integer(get1("/eSearchResult/Count")),
+                 retmax   = as.integer(get1("/eSearchResult/RetMax")),
+                 QueryTranslation   = get1("/eSearchResult/QueryTranslation"),
                  file     = x)
     if(history){
         res$web_history = web_history(
