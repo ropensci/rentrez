@@ -23,3 +23,13 @@ test_that("entrez_check reports the query URL on an HTTP failure", {
     expect_error(rentrez:::entrez_check(fake_response),
                  "https://eutils.ncbi.nlm.nih.gov/bad")
 })
+
+# A count-only response (rettype="count") has a Count but no RetMax/IdList,
+# which used to crash the parser. No network needed.
+test_that("parse_esearch handles a count-only response", {
+    doc <- XML::xmlTreeParse("<eSearchResult><Count>5648701</Count></eSearchResult>",
+                             useInternalNodes = TRUE)
+    res <- rentrez:::parse_esearch(doc, history = FALSE)
+    expect_equal(res$count, 5648701L)
+    expect_true(is.na(res$retmax))
+})
