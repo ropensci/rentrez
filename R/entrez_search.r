@@ -138,6 +138,18 @@ parse_esearch.list <- function(x, history){
     if(!is.null(x$esearchresult$ERROR) || is.null(x$esearchresult$count)){
         stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
     }
+    result_names <- names(x$esearchresult)
+    count_only <- !any(c("idlist", "retmax", "querytranslation") %in% result_names)
+    if(count_only){
+        res <- list(count = as.integer(x$esearchresult$count), file = x)
+        if(history){
+            warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
+                    "web history is attached. A count-only search carries none.",
+                    call.=FALSE)
+        }
+        class(res) <- c("esearch", "list")
+        return(res)
+    }
     #for consitancy between xml/json records we are going to change the
     #file names from lower -> CamelCase
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querytranslation") ]
