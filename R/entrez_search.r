@@ -84,8 +84,16 @@ parse_esearch <- function(x, history) UseMethod("parse_esearch")
 
 #'@exportS3Method   
 parse_esearch.XMLInternalDocument <- function(x, history){
+    count <- as.integer(xmlValue(x[["/eSearchResult/Count"]]))
+    count_only <- length(xpathSApply(x, "/eSearchResult/RetMax", xmlValue)) == 0 &&
+                  length(xpathSApply(x, "/eSearchResult/QueryTranslation", xmlValue)) == 0
+    if(count_only){
+        res <- list(count = count, file = x)
+        class(res) <- c("esearch", "list")
+        return(res)
+    }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
-                 count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
+                 count    = count,
                  retmax   = as.integer(xmlValue(x[["/eSearchResult/RetMax"]])),
                  QueryTranslation   = xmlValue(x[["/eSearchResult/QueryTranslation"]]),
                  file     = x)
@@ -101,6 +109,14 @@ parse_esearch.XMLInternalDocument <- function(x, history){
 
 #'@exportS3Method   
 parse_esearch.list <- function(x, history){
+    result_names <- names(x$esearchresult)
+    count_only <- "count" %in% result_names &&
+                  !any(c("idlist", "retmax", "querytranslation") %in% result_names)
+    if(count_only){
+        res <- list(count = as.integer(x$esearchresult$count), file = x)
+        class(res) <- c("esearch", "list")
+        return(res)
+    }
     #for consitancy between xml/json records we are going to change the
     #file names from lower -> CamelCase
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querytranslation") ]
@@ -118,6 +134,10 @@ parse_esearch.list <- function(x, history){
 
 #'@export
 print.esearch <- function(x, ...){
+    if(is.null(x$QueryTranslation)){
+        cat(paste("Entrez search result with", x$count, "hits\n"))
+        return(invisible(x))
+    }
     display_term <- if(nchar(x$QueryTranslation) > 50){
         paste(substr(x$QueryTranslation, 1, 50), "...")
     } else x$QueryTranslation
