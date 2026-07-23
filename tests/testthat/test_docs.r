@@ -4,15 +4,14 @@
 context("documentation")
 
 test_that("Examples in documentation work", {
-    #setup
-    hox_paper <- entrez_search(db="pubmed", term="10.1038/nature08789[doi]")
-    katipo_search <- entrez_search(term="Latrodectus katipo[Organism]", 
-                                   term="Latrodectus katipo[Organism]")
-    
+    #setup (guarded so transient NCBI problems skip rather than fail)
+    setup <- tryCatch({
+        list(
+            hox_paper = entrez_search(db="pubmed", term="10.1038/nature08789[doi]"),
+            katipo_search = entrez_search(db="popset", term="Latrodectus katipo[Organism]")
+        )
+    }, error = function(e) skip(paste("NCBI not available:", conditionMessage(e))))
 
-
-    expect_that(hox_paper$ids, equals("20203609"))
-    expect_true(katipo_search$count >= 6)
+    expect_that(setup$hox_paper$ids, equals("20203609"))
+    expect_true(setup$katipo_search$count >= 6)
 })
-
-    

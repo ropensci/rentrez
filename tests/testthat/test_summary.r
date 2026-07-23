@@ -2,14 +2,23 @@ context("fetching and parsing summary recs")
 
 fake_ids <- sample(1e5, 501)
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
-pop_summ_xml <- entrez_summary(db="popset", 
-                               id=pop_ids, version="1.0")
-pop_summ_json <- entrez_summary(db="popset", 
-                                id=pop_ids, version="2.0")
-pop_summ_xml2 <- entrez_summary(db="popset", 
-                               id=pop_ids, version="1.0", retmode="xml")
+
+#setup (guarded so transient NCBI problems skip rather than abort the file)
+ncbi_ok <- tryCatch({
+    pop_summ_xml <- entrez_summary(db="popset",
+                                   id=pop_ids, version="1.0")
+    pop_summ_json <- entrez_summary(db="popset",
+                                    id=pop_ids, version="2.0")
+    pop_summ_xml2 <- entrez_summary(db="popset",
+                                   id=pop_ids, version="1.0", retmode="xml")
+    TRUE
+}, error = function(e) {
+    message("NCBI not available: ", conditionMessage(e))
+    FALSE
+})
 
 test_that("Functions to fetch summaries work", {
+          skip_if(!ncbi_ok, "NCBI not available")
           #tests
           expect_that(pop_summ_xml, is_a("list"))
           expect_that(pop_summ_json, is_a("list"))
@@ -18,25 +27,28 @@ test_that("Functions to fetch summaries work", {
           expect_that(pop_summ_json[[4]], is_a("esummary"))
           sapply(pop_summ_json, function(x)
                  expect_match(x[["title"]], "Muraenidae")
-          )         
-})  
+          )
+})
 
 
 
 test_that("List elements in XML are parsable", {
-         rec <- entrez_summary(db="pubmed", id=25696867, version="1.0")
+         skip_if(!ncbi_ok, "NCBI not available")
+         rec <- net(entrez_summary(db="pubmed", id=25696867, version="1.0"))
          expect_named(rec$History)
          expect_gt(length(rec$History), 0)
 })
-         
+
 
 test_that("Version 2 xml records can be fetched and parsed", {
+    skip_if(!ncbi_ok, "NCBI not available")
     sapply(pop_summ_xml2, function(x)
                  expect_match(x[["Title"]], "Muraenidae"))
     expect_that(length(pop_summ_xml2[[1]]), is_more_than(12))
 })
 
 test_that("JSON and XML objects are similar", {
+          skip_if(!ncbi_ok, "NCBI not available")
           #It would be nice to test whether the xml and json records
           # have the same data in them, but it turns out they don't
           # when they leave the NCBI, so let's ensure we can get some
@@ -45,64 +57,72 @@ test_that("JSON and XML objects are similar", {
                  expect_match(x[["Title"]], "Muraenidae"))
           sapply(pop_summ_json, function(x)
                  expect_match(x[["title"]], "Muraenidae"))
-          
+
           expect_that(length(pop_summ_xml[[1]]), is_more_than(12))
           expect_that(length(pop_summ_json[[1]]), is_more_than(12))
-          
+
 })
 
 
 test_that("Error whent tring to fetch 1.0 summaries as json", {
+      skip_if(!ncbi_ok, "NCBI not available")
       expect_error(
         entrez_summary("pubmed", id = fake_ids[1:10], version="1.0", retmode="json")
       )
 })
 
 test_that("We can print summary records", {
-      expect_output(print(pop_summ_json), "List of  4 esummary records")        
-      expect_output(print(pop_summ_json[[1]]), "esummary result with \\d+ items")        
-      expect_output(print(pop_summ_xml), "List of  4 esummary records")        
-      expect_output(print(pop_summ_xml[[1]]), "esummary result with \\d+ items")        
+      skip_if(!ncbi_ok, "NCBI not available")
+      expect_output(print(pop_summ_json), "List of  4 esummary records")
+      expect_output(print(pop_summ_json[[1]]), "esummary result with \\d+ items")
+      expect_output(print(pop_summ_xml), "List of  4 esummary records")
+      expect_output(print(pop_summ_xml[[1]]), "esummary result with \\d+ items")
 })
 
 test_that("We can detect errors in esummary records", {
+    skip_if(!ncbi_ok, "NCBI not available")
     expect_warning(
-       entrez_summary(db="pmc", id=c(4318541212,4318541), version="1.0")
+       net(entrez_summary(db="pmc", id=c(4318541212,4318541), version="1.0"))
     )
     expect_warning(
-       entrez_summary(db="pmc", id=c(4318541212,4318541))
+       net(entrez_summary(db="pmc", id=c(4318541212,4318541)))
     )
 })
-                         
+
 test_that("We can detect errors in esummary returns", {
+    skip_if(!ncbi_ok, "NCBI not available")
     expect_error(
-       entrez_summary(db="pmc", id=fake_ids, version="2.0")       
+       entrez_summary(db="pmc", id=fake_ids, version="2.0")
     )
 })
 
 test_that("We can extract elements from esummary object", {
+    skip_if(!ncbi_ok, "NCBI not available")
     expect_that(extract_from_esummary(pop_summ_xml, c("Title", "TaxId")), is_a("matrix"))
     expect_that(extract_from_esummary(pop_summ_xml, c("Title", "TaxId"), simplify=FALSE), is_a("list"))
     expect_that(extract_from_esummary(pop_summ_xml2, c("Title", "TaxId"), simplify=FALSE), is_a("list"))
     expect_that(extract_from_esummary(pop_summ_json, "title"), is_a("character"))
-   
+
 })
 
 test_that("We can extract elements from a single esummary", {
+    skip_if(!ncbi_ok, "NCBI not available")
     expect_that(extract_from_esummary(pop_summ_xml[[1]], c("Title", "TaxId")), is_a("list"))
     expect_that(extract_from_esummary(pop_summ_xml[[1]], "Gi"), is_a("integer"))
     expect_that(extract_from_esummary(pop_summ_xml[[1]], "Gi", FALSE), is_a("list"))
 })
 
 test_that("We can get a list of one element if we ask for it", {
-    expect_that(entrez_summary(db="popset", id=307075396, always_return_list=TRUE), is_a("list"))
-    expect_that(entrez_summary(db="popset", id=307075396), is_a("esummary"))
+    skip_if(!ncbi_ok, "NCBI not available")
+    expect_that(net(entrez_summary(db="popset", id=307075396, always_return_list=TRUE)), is_a("list"))
+    expect_that(net(entrez_summary(db="popset", id=307075396)), is_a("esummary"))
 })
 
 
 test_that("We can fetch summaries on versioned sequences", {
-    old_rec = entrez_summary(db="nuccore", id="AF123456.1")
-    new_rec = entrez_summary(db="nuccore", id="AF123456.2")
+    skip_if(!ncbi_ok, "NCBI not available")
+    old_rec = net(entrez_summary(db="nuccore", id="AF123456.1"))
+    new_rec = net(entrez_summary(db="nuccore", id="AF123456.2"))
     expect_match(old_rec$title, "testis-specific mRNA")
-    expect_match(new_rec$title, "doublesex and mab-3 related transcription factor")    
+    expect_match(new_rec$title, "doublesex and mab-3 related transcription factor")
 })

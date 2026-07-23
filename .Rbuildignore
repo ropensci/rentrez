@@ -4,8 +4,6 @@
 ^rentrez_*\.tar\.gz$
 ^README\.md$
 ^README\.rmd$
-^\.travis\.yml$
-^appveyor\.yml$
 ^CONTRIBUTING\.md$
 ^README\.Rmd$
 ^README-*\.png$

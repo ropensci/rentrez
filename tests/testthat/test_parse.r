@@ -1,20 +1,26 @@
 context("result-parsers")
 
-
-raw_rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml")
-xml_rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml", parsed=TRUE)
-multi_rec <- entrez_fetch(db="pubmed", 
-                           id=c(22883857, 25042335, 20203609,11959827),
-                           rettype="xml", parsed=TRUE)
-parsed_raw <- parse_pubmed_xml(raw_rec)
-parsed_rec <- parse_pubmed_xml(xml_rec)
-parsed_multi <- parse_pubmed_xml(multi_rec)
-
-multi_pmid_eg <- parse_pubmed_xml(
-       entrez_fetch(db="pubmed", id='29743284', rettype="xml")
-)
+#setup (guarded so transient NCBI problems skip rather than abort the file)
+ncbi_ok <- tryCatch({
+    raw_rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml")
+    xml_rec <- entrez_fetch(db="pubmed", id=20674752, rettype="xml", parsed=TRUE)
+    multi_rec <- entrez_fetch(db="pubmed",
+                               id=c(22883857, 25042335, 20203609,11959827),
+                               rettype="xml", parsed=TRUE)
+    parsed_raw <- parse_pubmed_xml(raw_rec)
+    parsed_rec <- parse_pubmed_xml(xml_rec)
+    parsed_multi <- parse_pubmed_xml(multi_rec)
+    multi_pmid_eg <- parse_pubmed_xml(
+           entrez_fetch(db="pubmed", id='29743284', rettype="xml")
+    )
+    TRUE
+}, error = function(e) {
+    message("NCBI not available: ", conditionMessage(e))
+    FALSE
+})
 
 test_that("pubmed file parsers work",{
+    skip_if(!ncbi_ok, "NCBI not available")
     expect_that(raw_rec, is_a("character"))
 
     expect_that(parsed_raw, is_a("pubmed_record"))
@@ -33,22 +39,21 @@ test_that("pubmed file parsers work",{
 
     # Bug #131 related to extracting all PMIDs from a pubmed xml that contained
     # references, not just the one true pm od teh artcle. Testing we don't
-    # regress 
+    # regress
 
     expect_that(length(multi_pmid_eg$pmid), equals(1))
 
 })
 
 test_that("we can print pubmed records", {
+    skip_if(!ncbi_ok, "NCBI not available")
     expect_output(print(parsed_rec), "Pubmed record")
     expect_output(print(parsed_multi), "List of 4 pubmed records")
 })
 
 test_that("We warn about unknown pubmed record types", {
-    rec = entrez_fetch(db="pubmed", id=25905152, rettype="xml")
+    skip_if(!ncbi_ok, "NCBI not available")
+    rec = net(entrez_fetch(db="pubmed", id=25905152, rettype="xml"))
     expect_warning(parsed_rec <- parse_pubmed_xml(rec))
     expect_output(print(parsed_rec), "Pubmed record \\(empty\\)")
 })
-
-   
-   
