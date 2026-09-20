@@ -12,6 +12,12 @@
   an answer rather than a failure, so only a reply carrying an NCBI error
   stops now.
 
+* `entrez_search()` reports what NCBI said when a search comes back with no
+  result, rather than failing on a subscript. NCBI answers a bad database name
+  with an ordinary HTTP 200 whose body carries the reason, and the JSON path
+  did not check for it at all, so `retmode = "json"` returned a record built
+  from missing pieces that then failed when printed (#187).
+
 * Requests that send more than 200 IDs now use POST, as intended. The check
   that chooses POST over GET ran after the IDs had been collapsed into a
   single string, so it never matched and every request used GET

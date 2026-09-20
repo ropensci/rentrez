@@ -122,6 +122,13 @@ parse_esearch.XMLInternalDocument <- function(x, history){
 
 #'@exportS3Method   
 parse_esearch.list <- function(x, history){
+    #NCBI reports a bad request in the body of an HTTP 200 reply, so the json
+    #looks ordinary until these fields are read. Without this the record below
+    #is built from missing pieces and comes back with NA names and no count.
+    #parse_esummary.list already guards its own json the same way.
+    if(!is.null(x$esearchresult$ERROR) || is.null(x$esearchresult$count)){
+        stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
+    }
     #for consitancy between xml/json records we are going to change the
     #file names from lower -> CamelCase
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querytranslation") ]

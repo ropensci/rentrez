@@ -30,6 +30,17 @@ test_that("parse_esearch carries the NCBI message in the error, both formats", {
     }
 })
 
+# A search that simply found nothing is a result, not a failure, and json keeps
+# its count in that case. Guarding on the ERROR field alone would be enough, but
+# a reply missing count entirely cannot be parsed either.
+test_that("a search with no hits is not treated as a failure", {
+    none <- list(esearchresult = list(count = "0", retmax = "0", idlist = list(),
+                                      querytranslation = "nothing[All Fields]"))
+    res <- rentrez:::parse_esearch(none, history = FALSE)
+    expect_equal(res$count, 0L)
+    expect_true(inherits(res, "esearch"))
+})
+
 test_that("entrez_check reports the query URL on an HTTP failure", {
     fake_response <- list(status_code = 414L, url = "https://eutils.ncbi.nlm.nih.gov/bad")
     expect_error(rentrez:::entrez_check(fake_response),
@@ -54,4 +65,3 @@ test_that("redact_key leaves a URL without a key alone", {
     plain <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed"
     expect_equal(rentrez:::redact_key(plain), plain)
 })
-
