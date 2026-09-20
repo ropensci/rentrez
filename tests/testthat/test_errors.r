@@ -122,3 +122,14 @@ test_that("a count-only result can be printed, in either format", {
     expect_output(print(from_xml), "Entrez search result with 5648701 hits")
     expect_output(print(from_json), "Entrez search result with 5648701 hits")
 })
+
+# NCBI ignores usehistory for a count-only search, so there is no QueryKey or
+# WebEnv to attach. Saying so beats attaching a web_history made of gaps.
+test_that("a count-only search with use_history says there is no history", {
+    doc <- XML::xmlTreeParse("<eSearchResult><Count>5648701</Count></eSearchResult>",
+                             useInternalNodes = TRUE)
+    expect_warning(res <- rentrez:::parse_esearch(doc, history = TRUE),
+                   "no web history")
+    expect_equal(res$count, 5648701L)
+    expect_null(res$web_history)
+})

@@ -107,17 +107,23 @@ parse_esearch.XMLInternalDocument <- function(x, history){
     }
     #some responses (e.g. rettype="count") omit RetMax/QueryTranslation, so
     #pull the scalar fields safely rather than indexing a missing node
-    get1 <- function(xpath){ node <- x[xpath]; if(length(node)) xmlValue(node[[1]]) else NA }
+    get1 <- function(xpath){ node <- x[xpath]; if(length(node)) xmlValue(node[[1]]) else NA_character_ }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
                  count    = as.integer(get1("/eSearchResult/Count")),
                  retmax   = as.integer(get1("/eSearchResult/RetMax")),
                  QueryTranslation   = get1("/eSearchResult/QueryTranslation"),
                  file     = x)
     if(history){
-        res$web_history = web_history(
-          QueryKey = xmlValue(x[["/eSearchResult/QueryKey"]]),
-          WebEnv   = xmlValue(x[["/eSearchResult/WebEnv"]])
-        )
+        #NCBI ignores usehistory for a count-only search and sends back a Count
+        #and nothing else, so say that rather than build a history out of gaps
+        query_key <- get1("/eSearchResult/QueryKey")
+        web_env   <- get1("/eSearchResult/WebEnv")
+        if(is.na(query_key) || is.na(web_env)){
+            warning("NCBI returned no web history for this search, so none is ",
+                    "attached. A count-only search carries none.", call.=FALSE)
+        } else {
+            res$web_history = web_history(QueryKey = query_key, WebEnv = web_env)
+        }
     }
     class(res) <- c("esearch", "list")
     return(res)

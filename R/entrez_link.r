@@ -129,13 +129,15 @@ parse_elink <- function(x, cmd, by_id, id){
     check_xml_errors(x)
     f <- make_elink_fxn(cmd)
     res <-  xpathApply(x, "//LinkSet",f)
+    #a reply with no LinkSet at all is a failure whatever by_id says, so this
+    #has to be tested before the by_id branch returns an empty list instead
+    if(length(res) == 0){
+        stop(elink_failure("ELink returned no LinkSet", x), call.=FALSE)
+    }
     #in by_id mode always return a list, one elink per id, even for a single id
     if(by_id || length(res) > 1){
         class(res) <- c("elink_list", "list")
         return(res)
-    }
-    if(length(res) == 0){
-        stop(elink_failure("ELink returned no LinkSet", x), call.=FALSE)
     }
     res[[1]]
 }
