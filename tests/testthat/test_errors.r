@@ -23,3 +23,22 @@ test_that("entrez_check reports the query URL on an HTTP failure", {
     expect_error(rentrez:::entrez_check(fake_response),
                  "https://eutils.ncbi.nlm.nih.gov/bad")
 })
+
+# The query URL carries the caller's API key, and these errors get pasted into
+# bug reports, so the key has to come out before the message is built.
+test_that("entrez_check keeps the API key out of the error message", {
+    keyed <- function(code) list(
+        status_code = code,
+        url = paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+                     "?db=pubmed&api_key=SECRET_abc123&tool=rentrez"))
+    for (code in c(414L, 502L)) {
+        msg <- tryCatch(rentrez:::entrez_check(keyed(code)), error = conditionMessage)
+        expect_false(grepl("SECRET_abc123", msg, fixed = TRUE))
+        expect_true(grepl("api_key=<redacted>", msg, fixed = TRUE))
+    }
+})
+
+test_that("redact_key leaves a URL without a key alone", {
+    plain <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed"
+    expect_equal(rentrez:::redact_key(plain), plain)
+})
