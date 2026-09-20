@@ -88,6 +88,29 @@ linkout_urls <- function(elink){
 }
 
 
+#The <ERROR> nodes NCBI put in this part of the document.
+#
+#The XML package resolves the two paths differently: a whole document answers to
+#"//ERROR" and a single node answers to "ERROR", and each returns nothing for
+#the other's path. parse_elink holds a document while the cmd parsers each get
+#one LinkSet node, so both are asked.
+elink_errors <- function(x){
+    c(x["//ERROR"], x["ERROR"])
+}
+
+#Build the message for an elink reply that carried no usable content, quoting
+#what NCBI said when it said anything. Without this the parsers run on into a
+#subscript or names error that names no cause.
+elink_failure <- function(what, x){
+    errs <- elink_errors(x)
+    if(length(errs) == 0){
+        return(what)
+    }
+    said <- gsub("[[:space:]]+", " ", sapply(errs, xmlValue))
+    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
+}
+
+
 #
 # Parising Elink is.... fun. The XML files returned by the different 'cmd'
 # args are very differnt, so we can't hope for a one-size-fits all solution. 
@@ -109,6 +132,9 @@ parse_elink <- function(x, cmd, by_id, id){
     if(length(res) > 1){
         class(res) <- c("elink_list", "list")
         return(res)
+    }
+    if(length(res) == 0){
+        stop(elink_failure("ELink returned no LinkSet", x), call.=FALSE)
     }
     res[[1]]
 }
@@ -179,8 +205,19 @@ parse_acheck <- function(x){
 
 parse_check <- function(x, attr){
     path <- paste0("IdCheckList/Id/@", attr)
-    is_it_y <- structure(names= xpathSApply(x, "IdCheckList/Id", xmlValue),
-                         xpathSApply(x, path, `==`, "Y"))
+    ids <- xpathSApply(x, "IdCheckList/Id", xmlValue)
+    if(length(ids) == 0){
+        stop(elink_failure("ELink returned no IdCheckList", x), call.=FALSE)
+    }
+    flags <- xpathSApply(x, path, `==`, "Y")
+    #an id carrying no such attribute leaves the two vectors uneven, and naming
+    #one with the other then raises the same opaque error this guard replaces
+    if(length(flags) != length(ids)){
+        stop(elink_failure(paste0("ELink returned ", length(ids), " ids but ",
+                                  length(flags), " ", attr, " flags"), x),
+             call.=FALSE)
+    }
+    is_it_y <- structure(names= ids, flags)
                    
     res <- list(check = is_it_y)
     attr(res, "content") <- " $check: TRUE/FALSE for wether each ID has links"
@@ -189,6 +226,16 @@ parse_check <- function(x, attr){
 
 parse_linkouts <- function(x){
     per_id <- xpathApply(x, "//IdUrlList/IdUrlSet")
+    if(length(per_id) == 0){
+        #NCBI saying why is a failure. NCBI saying nothing means this id has no
+        #linkouts to give, which is an answer, so hand back an empty set.
+        if(length(elink_errors(x)) > 0){
+            stop(elink_failure("ELink returned no linkouts", x), call.=FALSE)
+        }
+        res <- list(linkouts = list())
+        attr(res, "content") <- " $linkouts: links to external websites"
+        return(res)
+    }
     list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], xmlToList))
     names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) xmlValue(x[["Id"]])))
     list_o_lists <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
