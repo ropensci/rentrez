@@ -11,10 +11,7 @@ ncbi_ok <- tryCatch({
     omim_links <- entrez_db_links("omim")
     omim_df <- as.data.frame(omim_links)
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that(" can get xml recs from einfo", {
     skip_if(!ncbi_ok, "NCBI not available")

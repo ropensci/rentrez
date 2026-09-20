@@ -14,10 +14,7 @@ ncbi_ok <- tryCatch({
            entrez_fetch(db="pubmed", id='29743284', rettype="xml")
     )
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that("pubmed file parsers work",{
     skip_if(!ncbi_ok, "NCBI not available")

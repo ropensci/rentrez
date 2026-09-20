@@ -6,10 +6,7 @@ prot_ids = c(15718680,157427902)
 ncbi_ok <- tryCatch({
     ret <- entrez_post(id=prot_ids, db="protein")
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that("we can post ids", {
     skip_if(!ncbi_ok, "NCBI not available")

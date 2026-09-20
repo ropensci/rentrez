@@ -18,7 +18,8 @@ test_that("Query building functions work", {
                                                 config=list(),
                                                 rettype="fasta")
         )
-    }, error = function(e) skip(paste("NCBI not available:", conditionMessage(e))))
+    }, error = function(e) { if (!is_network_error(e)) stop(e)
+         skip(paste("NCBI not available:", conditionMessage(e))) })
 
     expect_equal(length(gregexpr(">", setup$q_int)[[1]]), 2)
     expect_equal(length(gregexpr(">", setup$q_chr)[[1]]), 2)
@@ -39,7 +40,8 @@ test_that("Query building functions work", {
 test_that("We give a useful error when an empty ID vector is passed", {
     ET <- tryCatch(
         entrez_search(db="taxonomy", term="Extraterrestrial[Organism]"),
-        error = function(e) skip(paste("NCBI not available:", conditionMessage(e)))
+        error = function(e) { if (!is_network_error(e)) stop(e)
+            skip(paste("NCBI not available:", conditionMessage(e))) }
     )
     expect_error(entrez_fetch(db="taxonomy", id= ET$ids, rettype="uilist"))
 })

@@ -9,10 +9,7 @@ ncbi_ok <- tryCatch({
                                  term =  "10.1016/j.ympev.2010.07.013[doi]",
                                  retmode='json')
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that("Global query works",{
     skip_if(!ncbi_ok, "NCBI not available")

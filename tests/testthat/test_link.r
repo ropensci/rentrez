@@ -13,10 +13,7 @@ ncbi_ok <- tryCatch({
         entrez_link(db="pubmed", dbfrom="pubmed", id=19880848, cmd=cmd_arg)
     )
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that("The record-linking funcitons work",{
     skip_if(!ncbi_ok, "NCBI not available")

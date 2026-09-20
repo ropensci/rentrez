@@ -12,10 +12,7 @@ ncbi_ok <- tryCatch({
     pop_summ_xml2 <- entrez_summary(db="popset",
                                    id=pop_ids, version="1.0", retmode="xml")
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that("Functions to fetch summaries work", {
           skip_if(!ncbi_ok, "NCBI not available")

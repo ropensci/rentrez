@@ -12,10 +12,7 @@ ncbi_ok <- tryCatch({
     xml_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", retmode="xml", parsed=TRUE)
     raw_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", retmode="xml")
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that("httr does no warn about inferred encoding", {
     skip_if(!ncbi_ok, "NCBI not available")

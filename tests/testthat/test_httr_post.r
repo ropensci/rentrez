@@ -5,10 +5,7 @@ ncbi_ok <- tryCatch({
     are_there_any_cancer_papers <- entrez_search(db="pubmed", term="Cancer", retmax=201)
     search_ids <- are_there_any_cancer_papers$ids
     TRUE
-}, error = function(e) {
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
-})
+}, error = ncbi_setup_failed)
 
 test_that("We can POST to NCBI epost", {
     skip_if(!ncbi_ok, "NCBI not available")
