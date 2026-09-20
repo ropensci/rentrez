@@ -82,11 +82,28 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", use_history=FALS
 
 parse_esearch <- function(x, history) UseMethod("parse_esearch")
 
+#Build the message for an esearch reply that carried no result, quoting what
+#NCBI said when it said anything. Mirrors elink_failure() in entrez_link.r.
+#NCBI reports the reason in the body of an otherwise ordinary HTTP 200 reply,
+#and it arrives as an <ERROR> node in xml or an ERROR field in json.
+esearch_failure <- function(what, x){
+    said <- if(inherits(x, "XMLInternalDocument")){
+        sapply(x["//ERROR"], xmlValue)
+    } else {
+        x$esearchresult$ERROR
+    }
+    if(length(said) == 0){
+        return(what)
+    }
+    said <- gsub("[[:space:]]+", " ", said)
+    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
+}
+
 #'@exportS3Method   
 parse_esearch.XMLInternalDocument <- function(x, history){
     check_xml_errors(x)
     if(length(x["/eSearchResult/Count"]) == 0){
-        stop("ESearch document contains no result (see warning for the NCBI message)", call.=FALSE)
+        stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
     }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
                  count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),

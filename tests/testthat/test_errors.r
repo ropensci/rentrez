@@ -8,14 +8,26 @@ err_doc <- function()
         "<eSearchResult><ERROR>Invalid db name specified: nonsense</ERROR></eSearchResult>",
         useInternalNodes = TRUE)
 
+# NCBI reports a bad request in the body of an ordinary HTTP 200 reply, as an
+# <ERROR> node in xml and an ERROR field in json.
+err_json <- function()
+    list(esearchresult = list(ERROR = "Invalid db name specified: nonsense"))
+
 test_that("parse_esearch warns with the NCBI message on an error response", {
-    expect_warning(try(rentrez:::parse_esearch(err_doc(), history = FALSE), silent = TRUE),
+    expect_warning(expect_error(rentrez:::parse_esearch(err_doc(), history = FALSE)),
                    "Invalid db name")
 })
 
-test_that("parse_esearch fails clearly (not 'subscript out of bounds')", {
-    expect_error(suppressWarnings(rentrez:::parse_esearch(err_doc(), history = FALSE)),
-                 "no result")
+# The reason has to reach the error itself. A caller looping over searches sees
+# only conditionMessage(), and an error pointing at a warning tells them nothing.
+test_that("parse_esearch carries the NCBI message in the error, both formats", {
+    for (doc in list(err_doc(), err_json())) {
+        msg <- tryCatch(suppressWarnings(rentrez:::parse_esearch(doc, history = FALSE)),
+                        error = conditionMessage)
+        expect_true(grepl("no result", msg, fixed = TRUE))
+        expect_true(grepl("Invalid db name specified: nonsense", msg, fixed = TRUE))
+        expect_false(grepl("subscript out of bounds", msg, fixed = TRUE))
+    }
 })
 
 test_that("entrez_check reports the query URL on an HTTP failure", {
@@ -42,3 +54,4 @@ test_that("redact_key leaves a URL without a key alone", {
     plain <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed"
     expect_equal(rentrez:::redact_key(plain), plain)
 })
+
