@@ -2,7 +2,6 @@ context("search")
 
 #setup (guarded so transient NCBI problems skip rather than abort the file)
 ncbi_ok <- tryCatch({
-    gsearch <- entrez_global_query("Heliconius")
     pubmed_search <- entrez_search(db = "pubmed",
                                    term = "10.1016/j.ympev.2010.07.013[doi]")
     json_search <- entrez_search(db="pubmed",
@@ -12,7 +11,10 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that("Global query works",{
-    skip_without_ncbi(ncbi_ok)
+    #entrez_global_query stays out of the shared setup above. NCBI redirects
+    #egquery to a host that does not resolve (#217), and from the setup that
+    #one broken call skipped every other test in this file.
+    gsearch <- net(entrez_global_query("Heliconius"))
     #global query
     expect_that(gsearch, is_a("numeric"))
     expect_that(names(gsearch), is_a("character"))
