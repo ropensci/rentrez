@@ -15,21 +15,33 @@
 # plain errors in entrez_check(), so those are matched on the message. Only 429
 # and the 5xx codes count as transient: any other 4xx means the request itself
 # was wrong, which is a bug and should fail.
+#
+# The status pattern is anchored. entrez_check() pastes NCBI's reply body into
+# the same message, and an unanchored match would let NCBI's own prose decide
+# whether a rentrez bug gets reported.
 is_network_error <- function(e) {
-    inherits(e, "curl_error") ||
-        grepl(paste("HTTP failure:? *(429|5[0-9]{2})",
-                    "Timeout was reached",
-                    "Operation timed out",
-                    "Could not resolve host",
-                    "Couldn't resolve host",
-                    "Failed to connect",
-                    "Connection refused",
-                    "Connection reset",
-                    "Recv failure",
-                    "Empty reply from server",
-                    "SSL connect error",
-                    sep = "|"),
-              conditionMessage(e))
+    if (inherits(e, "curl_error")) return(TRUE)
+    msg <- conditionMessage(e)
+    # An error rentrez raised from a status code. entrez_check() pastes NCBI's
+    # reply body into the same string, so only the status at the front decides.
+    # Matching anywhere would let NCBI's own prose classify a rentrez bug as a
+    # network problem.
+    if (grepl("^HTTP failure", msg)) {
+        return(grepl("^HTTP failure:? *(429|5[0-9]{2})", msg))
+    }
+    # Anything else: a transport failure whose curl class did not survive.
+    grepl(paste("Timeout was reached",
+                "Operation timed out",
+                "Could not resolve host",
+                "Couldn't resolve host",
+                "Failed to connect",
+                "Connection refused",
+                "Connection reset",
+                "Recv failure",
+                "Empty reply from server",
+                "SSL connect error",
+                sep = "|"),
+          msg)
 }
 
 # Wrap a single live call inside a test. Skips when NCBI is unavailable and
