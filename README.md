@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![R-CMD-check](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml) [![Codecov test coverage](https://codecov.io/gh/ropensci/rentrez/graph/badge.svg)](https://app.codecov.io/gh/ropensci/rentrez) [![CRAN](http://cranlogs.r-pkg.org/badges/rentrez)](http://cran.rstudio.com/web/packages/rentrez/index.html) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](http://dx.doi.org/10.5281/zenodo.32420)
+[![R-CMD-check](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml) [![CRAN](http://cranlogs.r-pkg.org/badges/rentrez)](http://cran.rstudio.com/web/packages/rentrez/index.html) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](http://dx.doi.org/10.5281/zenodo.32420)
 
 rentrez
 =======
