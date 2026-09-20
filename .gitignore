@@ -25,6 +25,11 @@ revdep/checks/
 revdep/library/
 revdep/checks.noindex
 revdep/library.noindex
+revdep/data.sqlite
+
+# A vignette knitted in place. build_vignettes() sends its output to doc/ and
+# Meta/ above, but knitting the .Rmd directly leaves the html next to it.
+vignettes/*.html
 
 # testthat writes these after a run that had failures
 tests/testthat/_problems/
@@ -38,3 +43,7 @@ docs/
 
 # macOS
 .DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
