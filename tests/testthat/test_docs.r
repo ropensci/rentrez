@@ -3,17 +3,16 @@
 # not included here
 context("documentation")
 
-test_that("Examples in documentation work", {
-    skip_if_db_missing("popset")
-    #setup (guarded so transient NCBI problems skip rather than fail)
-    setup <- tryCatch({
-        list(
-            hox_paper = entrez_search(db="pubmed", term="10.1038/nature08789[doi]"),
-            katipo_search = entrez_search(db="popset", term="Latrodectus katipo[Organism]")
-        )
-    }, error = function(e) { if (!is_network_error(e)) stop(e)
-         skip(paste("NCBI not available:", conditionMessage(e))) })
+test_that("The pubmed example in the docs works", {
+    hox_paper <- net(entrez_search(db="pubmed", term="10.1038/nature08789[doi]"))
+    expect_that(hox_paper$ids, equals("20203609"))
+})
 
-    expect_that(setup$hox_paper$ids, equals("20203609"))
-    expect_true(setup$katipo_search$count >= 6)
+#Kept separate from the pubmed example above. NCBI no longer serves popset to
+#esearch, so gating both on the same skip took the pubmed assertion with it.
+test_that("The popset example in the docs works", {
+    skip_if_db_missing("popset")
+    katipo_search <- net(entrez_search(db="popset",
+                                       term="Latrodectus katipo[Organism]"))
+    expect_true(katipo_search$count >= 6)
 })

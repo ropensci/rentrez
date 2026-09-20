@@ -5,6 +5,10 @@ pop_ids = c("307082412", "307075396", "307075338", "307075274")
 
 #setup (guarded so a missing database or a transient NCBI problem skips
 #rather than aborting the file)
+#
+#Only the tests that read the pop_summ_* fixtures below take this gate. NCBI no
+#longer serves popset to esummary (#214), and gating the whole file on that also
+#switched off the pubmed, pmc and nuccore tests, which have nothing to do with it.
 ncbi_ok <- requires_dbs("popset")
 if (isTRUE(ncbi_ok)) ncbi_ok <- tryCatch({
     pop_summ_xml <- entrez_summary(db="popset",
@@ -32,7 +36,6 @@ test_that("Functions to fetch summaries work", {
 
 
 test_that("List elements in XML are parsable", {
-         skip_without_ncbi(ncbi_ok)
          rec <- net(entrez_summary(db="pubmed", id=25696867, version="1.0"))
          expect_named(rec$History)
          expect_gt(length(rec$History), 0)
@@ -64,7 +67,6 @@ test_that("JSON and XML objects are similar", {
 
 
 test_that("Error whent tring to fetch 1.0 summaries as json", {
-      skip_without_ncbi(ncbi_ok)
       expect_error(
         entrez_summary("pubmed", id = fake_ids[1:10], version="1.0", retmode="json")
       )
@@ -79,7 +81,6 @@ test_that("We can print summary records", {
 })
 
 test_that("We can detect errors in esummary records", {
-    skip_without_ncbi(ncbi_ok)
     expect_warning(
        net(entrez_summary(db="pmc", id=c(4318541212,4318541), version="1.0"))
     )
@@ -89,7 +90,6 @@ test_that("We can detect errors in esummary records", {
 })
 
 test_that("We can detect errors in esummary returns", {
-    skip_without_ncbi(ncbi_ok)
     expect_error(
        entrez_summary(db="pmc", id=fake_ids, version="2.0")
     )
@@ -119,7 +119,6 @@ test_that("We can get a list of one element if we ask for it", {
 
 
 test_that("We can fetch summaries on versioned sequences", {
-    skip_without_ncbi(ncbi_ok)
     old_rec = net(entrez_summary(db="nuccore", id="AF123456.1"))
     new_rec = net(entrez_summary(db="nuccore", id="AF123456.2"))
     expect_match(old_rec$title, "testis-specific mRNA")

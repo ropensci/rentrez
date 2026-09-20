@@ -5,10 +5,13 @@ pop_ids = c("307082412", "307075396", "307075338", "307075274")
 acc_old = "AF123456.1"
 acc_new = "AF123456.2"
 
-#setup (guarded so a missing database or a transient NCBI problem skips
-#rather than aborting the file)
-ncbi_ok <- requires_dbs("popset")
-if (isTRUE(ncbi_ok)) ncbi_ok <- tryCatch({
+#setup (guarded so a transient NCBI problem skips rather than aborting the file)
+#
+#This file does not gate on requires_dbs("popset"). efetch still serves popset
+#records even though einfo no longer lists the database and esearch and esummary
+#reject it (#214), so the einfo list is the wrong thing to ask. If efetch stops
+#serving them these tests should fail and say so.
+ncbi_ok <- tryCatch({
     coi <- entrez_fetch(db = "popset", id = pop_ids[1],
                         rettype = "fasta")
     xml_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", retmode="xml", parsed=TRUE)
@@ -41,7 +44,8 @@ test_that("Entrez_fetch record parsing works", {
 
 
 test_that("Entrez fetch can download versioned sequences", {
-    skip_without_ncbi(ncbi_ok)
+    #nuccore only, and each call is guarded on its own, so this does not depend
+    #on the popset setup above
     #The two versions of this sequence have different annotations. We can check
     #that we are getting the correct version of the record by checking the name
     #of each sequence reflects the change in annotation.
