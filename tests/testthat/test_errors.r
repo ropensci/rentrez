@@ -99,3 +99,49 @@ test_that("redact_key removes every key in a URL, not just the first", {
     expect_false(grepl("TYPED_abc", out, fixed = TRUE))
     expect_false(grepl("FROMENV_xyz", out, fixed = TRUE))
 })
+
+# A count-only response (rettype="count") has a Count but no RetMax/IdList,
+# which used to crash the parser. No network needed.
+test_that("parse_esearch handles a count-only response", {
+    doc <- XML::xmlTreeParse("<eSearchResult><Count>5648701</Count></eSearchResult>",
+                             useInternalNodes = TRUE)
+    res <- rentrez:::parse_esearch(doc, history = FALSE)
+    expect_equal(res$count, 5648701L)
+    expect_true(is.na(res$retmax))
+})
+
+# A count-only result carries no QueryTranslation, which print.esearch read
+# without checking. Both formats reach that line, by different routes: the xml
+# path leaves the field NA and the json path leaves it zero-length.
+test_that("a count-only result can be printed, in either format", {
+    from_xml <- rentrez:::parse_esearch(
+        XML::xmlTreeParse("<eSearchResult><Count>5648701</Count></eSearchResult>",
+                          useInternalNodes = TRUE), history = FALSE)
+    from_json <- rentrez:::parse_esearch(
+        list(esearchresult = list(count = "5648701")), history = FALSE)
+    expect_output(print(from_xml), "Entrez search result with 5648701 hits")
+    expect_output(print(from_json), "Entrez search result with 5648701 hits")
+})
+
+# NCBI ignores usehistory for a count-only search, so there is no QueryKey or
+# WebEnv to attach. Saying so beats attaching a web_history made of gaps.
+test_that("a count-only search with use_history says there is no history", {
+    doc <- XML::xmlTreeParse("<eSearchResult><Count>5648701</Count></eSearchResult>",
+                             useInternalNodes = TRUE)
+    expect_warning(res <- rentrez:::parse_esearch(doc, history = TRUE),
+                   "no web history")
+    expect_equal(res$count, 5648701L)
+    expect_null(res$web_history)
+})
+
+# The history elements can also come back present and empty, which is a different
+# branch of the same guard: is.na() catches the absent case, nzchar() this one.
+test_that("empty history elements are treated as no history", {
+    doc <- XML::xmlTreeParse(paste0(
+        "<eSearchResult><Count>10</Count><RetMax>2</RetMax><IdList><Id>1</Id></IdList>",
+        "<QueryTranslation>x</QueryTranslation><QueryKey></QueryKey><WebEnv></WebEnv>",
+        "</eSearchResult>"), useInternalNodes = TRUE)
+    expect_warning(res <- rentrez:::parse_esearch(doc, history = TRUE),
+                   "no web history")
+    expect_null(res$web_history)
+})

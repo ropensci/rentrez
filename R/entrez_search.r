@@ -105,16 +105,26 @@ parse_esearch.XMLInternalDocument <- function(x, history){
     if(length(x["/eSearchResult/Count"]) == 0){
         stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
     }
+    #some responses (e.g. rettype="count") omit RetMax/QueryTranslation, so
+    #pull the scalar fields safely rather than indexing a missing node
+    get1 <- function(xpath){ node <- x[xpath]; if(length(node)) xmlValue(node[[1]]) else NA_character_ }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
-                 count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
-                 retmax   = as.integer(xmlValue(x[["/eSearchResult/RetMax"]])),
-                 QueryTranslation   = xmlValue(x[["/eSearchResult/QueryTranslation"]]),
+                 count    = as.integer(get1("/eSearchResult/Count")),
+                 retmax   = as.integer(get1("/eSearchResult/RetMax")),
+                 QueryTranslation   = get1("/eSearchResult/QueryTranslation"),
                  file     = x)
     if(history){
-        res$web_history = web_history(
-          QueryKey = xmlValue(x[["/eSearchResult/QueryKey"]]),
-          WebEnv   = xmlValue(x[["/eSearchResult/WebEnv"]])
-        )
+        #NCBI ignores usehistory for a count-only search and sends back a Count
+        #and nothing else, so say that rather than build a history out of gaps
+        query_key <- get1("/eSearchResult/QueryKey")
+        web_env   <- get1("/eSearchResult/WebEnv")
+        if(is.na(query_key) || is.na(web_env) || !nzchar(query_key) || !nzchar(web_env)){
+            warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
+                    "web history is attached. A count-only search carries none.",
+                    call.=FALSE)
+        } else {
+            res$web_history = web_history(QueryKey = query_key, WebEnv = web_env)
+        }
     }
     class(res) <- c("esearch", "list")
     return(res)
@@ -146,6 +156,13 @@ parse_esearch.list <- function(x, history){
 
 #'@export
 print.esearch <- function(x, ...){
+    #a count-only reply (rettype="count") carries no QueryTranslation. The xml
+    #path leaves it NA and the json path leaves it zero-length, so test the
+    #length first: is.na() on a zero-length value answers logical(0).
+    if(length(x$QueryTranslation) == 0 || is.na(x$QueryTranslation)){
+        cat(paste("Entrez search result with", x$count, "hits\n"))
+        return(invisible(x))
+    }
     display_term <- if(nchar(x$QueryTranslation) > 50){
         paste(substr(x$QueryTranslation, 1, 50), "...")
     } else x$QueryTranslation
