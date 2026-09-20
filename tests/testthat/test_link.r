@@ -6,14 +6,36 @@ commands <- c("neighbor_history", "neighbor_score",
               "acheck", "ncheck", "lcheck",
               "llinks", "llinkslib", "prlinks")
 
+#NCBI stops serving a cmd from time to time: llinkslib answers "command not
+#supported" as of 2026 (#215). A cmd nobody serves says nothing about rentrez,
+#so it is recorded here and the tests that need it skip. Results are held by
+#name, because indexing this list by position breaks the moment it changes.
+all_the_commands <- list()
+unserved <- character()
+
 ncbi_ok <- tryCatch({
     elinks_mixed <- entrez_link(dbfrom = "pubmed", id = c(19880848, 22883857), db = "all")
     elinks_by_id <- entrez_link(dbfrom = "pubmed", id = c(19880848, 22883857), db = "all", by_id=TRUE)
-    all_the_commands <- lapply(commands, function(cmd_arg)
-        entrez_link(db="pubmed", dbfrom="pubmed", id=19880848, cmd=cmd_arg)
-    )
+    for(cmd_arg in commands){
+        res <- tryCatch(
+            entrez_link(db="pubmed", dbfrom="pubmed", id=19880848, cmd=cmd_arg),
+            error = function(e){
+                if(!grepl("NCBI message", conditionMessage(e))) stop(e)
+                NULL
+            })
+        if(is.null(res)) unserved <- c(unserved, cmd_arg)
+        else all_the_commands[[cmd_arg]] <- res
+    }
     TRUE
 }, error = ncbi_setup_failed)
+
+#Skip when NCBI is not currently serving any of the named cmds.
+skip_without_cmds <- function(...){
+    absent <- intersect(c(...), unserved)
+    if(length(absent)){
+        skip(paste("NCBI is not serving the elink cmd:", paste(absent, collapse=", ")))
+    }
+}
 
 test_that("The record-linking funcitons work",{
     skip_without_ncbi(ncbi_ok)
@@ -48,17 +70,20 @@ test_that("We detect missing ids from elink results",{
 
 test_that("Elink sub-elements can be acessed and printed", {
     skip_without_ncbi(ncbi_ok)
-    expect_output(print(all_the_commands[[3]][[1]]),
+    skip_without_cmds("acheck", "prlinks")
+    expect_output(print(all_the_commands[["acheck"]][[1]]),
                   "elink result with information from \\d+ databases")
-    expect_output(print(all_the_commands[[8]]$linkouts[[1]]),
+    expect_output(print(all_the_commands[["prlinks"]]$linkouts[[1]]),
                   "Linkout from [ A-Za-z]+\\s+\\$Url")
 })
 
 
 test_that("URls can be extracted from elink objs", {
    skip_without_ncbi(ncbi_ok)
-   for(idx in 6:8){
-       urls <- linkout_urls(all_the_commands[[idx]])
+   linkout_cmds <- setdiff(c("llinks", "llinkslib", "prlinks"), unserved)
+   if(!length(linkout_cmds)) skip("NCBI is serving no linkout cmds")
+   for(nm in linkout_cmds){
+       urls <- linkout_urls(all_the_commands[[nm]])
        expect_that(urls, is_a("list"))
        expect_that(urls[[1]], is_a("character"))
    }
