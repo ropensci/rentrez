@@ -47,6 +47,11 @@
   and quoted back by NCBI when it rejects one, and these messages get pasted
   into bug reports (#159).
 
+* `?entrez_search` names xml as the default for `retmode`, which is what the
+  function has always used. The page said json, and added that the choice makes
+  no difference in most cases, which the Value section already covers in more
+  detail (#224).
+
 * Removed stray characters from two error messages (#211).
 
 # rentrez 1.2.4
