@@ -227,7 +227,14 @@ parse_check <- function(x, attr){
 parse_linkouts <- function(x){
     per_id <- xpathApply(x, "//IdUrlList/IdUrlSet")
     if(length(per_id) == 0){
-        stop(elink_failure("ELink returned no linkouts", x), call.=FALSE)
+        #NCBI saying why is a failure. NCBI saying nothing means this id has no
+        #linkouts to give, which is an answer, so hand back an empty set.
+        if(length(elink_errors(x)) > 0){
+            stop(elink_failure("ELink returned no linkouts", x), call.=FALSE)
+        }
+        res <- list(linkouts = list())
+        attr(res, "content") <- " $linkouts: links to external websites"
+        return(res)
     }
     list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], xmlToList))
     names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) xmlValue(x[["Id"]])))

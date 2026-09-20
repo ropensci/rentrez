@@ -50,6 +50,26 @@ test_that("check commands report an uneven id and flag count", {
     expect_equal(length(f(ok)$check), 2)
 })
 
+# An id with nothing to link is a result, not a failure. Only a reply where NCBI
+# said something went wrong should stop.
+test_that("an id with no linkouts returns an empty set rather than an error", {
+    linkset <- function(inner) {
+        doc <- XML::xmlTreeParse(paste0("<eLinkResult><LinkSet>", inner,
+                                        "</LinkSet></eLinkResult>"),
+                                 useInternalNodes = TRUE)
+        doc["//LinkSet"][[1]]
+    }
+    f <- rentrez:::make_elink_fxn("llinks")
+
+    quiet <- f(linkset("<IdUrlList></IdUrlList>"))
+    expect_true(inherits(quiet, "elink"))
+    expect_equal(length(quiet$linkouts), 0)
+
+    # the same shape, but NCBI explained itself, so this one stops
+    loud <- linkset("<IdUrlList></IdUrlList><ERROR>db is closed today</ERROR>")
+    expect_error(f(loud), "db is closed today")
+})
+
 test_that("parse_elink fails clearly when the reply holds no LinkSet", {
     doc <- XML::xmlTreeParse("<eLinkResult></eLinkResult>", useInternalNodes = TRUE)
     expect_error(rentrez:::parse_elink(doc, cmd = "llinks", by_id = FALSE, id = 1),

@@ -7,6 +7,11 @@
   `<ERROR>` inside the LinkSet, and five of the nine `cmd` parsers ran on into
   a subscript or a names error that named no cause (#215).
 
+* `entrez_link(cmd = "llinks")` and its siblings return an empty set for an ID
+  that has no linkouts, where they used to fail. An ID with nothing to link is
+  an answer rather than a failure, so only a reply carrying an NCBI error
+  stops now.
+
 * Requests that send more than 200 IDs now use POST, as intended. The check
   that chooses POST over GET ran after the IDs had been collapsed into a
   single string, so it never matched and every request used GET
