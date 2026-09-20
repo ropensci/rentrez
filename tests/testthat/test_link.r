@@ -20,6 +20,10 @@ ncbi_ok <- tryCatch({
         res <- tryCatch(
             entrez_link(db="pubmed", dbfrom="pubmed", id=19880848, cmd=cmd_arg),
             error = function(e){
+                #rentrez puts "NCBI message" in its 429 text too, so ask about
+                #the network first. Rate limiting is not a retired cmd, and
+                #recording it as one hides the rate limiting behind a green skip.
+                if(is_network_error(e)) stop(e)
                 if(!grepl("NCBI message", conditionMessage(e))) stop(e)
                 NULL
             })

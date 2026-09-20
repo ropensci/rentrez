@@ -8,8 +8,12 @@ test_that("by_id=TRUE returns a one-element list with no spurious warning", {
     seen <- NULL
     res <- withCallingHandlers(
         tryCatch(entrez_link(db="protein", dbfrom="gene", id="93100", by_id=TRUE),
-                 error = function(e) skip(paste("NCBI not available:",
-                                                conditionMessage(e)))),
+                 error = function(e){
+                     #only the network earns a skip here. A parser throwing is
+                     #the bug this file exists to catch.
+                     if(!is_network_error(e)) stop(e)
+                     skip(paste("NCBI not available:", conditionMessage(e)))
+                 }),
         warning = function(w){
             seen <<- c(seen, conditionMessage(w))
             invokeRestart("muffleWarning")
