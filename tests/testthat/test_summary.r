@@ -3,8 +3,10 @@ context("fetching and parsing summary recs")
 fake_ids <- sample(1e5, 501)
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
 
-#setup (guarded so transient NCBI problems skip rather than abort the file)
-ncbi_ok <- tryCatch({
+#setup (guarded so a missing database or a transient NCBI problem skips
+#rather than aborting the file)
+ncbi_ok <- requires_dbs("popset")
+if (isTRUE(ncbi_ok)) ncbi_ok <- tryCatch({
     pop_summ_xml <- entrez_summary(db="popset",
                                    id=pop_ids, version="1.0")
     pop_summ_json <- entrez_summary(db="popset",

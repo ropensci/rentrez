@@ -5,8 +5,10 @@ pop_ids = c("307082412", "307075396", "307075338", "307075274")
 acc_old = "AF123456.1"
 acc_new = "AF123456.2"
 
-#setup (guarded so transient NCBI problems skip rather than abort the file)
-ncbi_ok <- tryCatch({
+#setup (guarded so a missing database or a transient NCBI problem skips
+#rather than aborting the file)
+ncbi_ok <- requires_dbs("popset")
+if (isTRUE(ncbi_ok)) ncbi_ok <- tryCatch({
     coi <- entrez_fetch(db = "popset", id = pop_ids[1],
                         rettype = "fasta")
     xml_rec <- entrez_fetch(db = "popset", id=pop_ids[1], rettype="native", retmode="xml", parsed=TRUE)

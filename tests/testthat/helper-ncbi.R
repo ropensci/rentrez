@@ -61,3 +61,37 @@ skip_without_ncbi <- function(ok) {
     testthat::skip(if (is.null(reason)) "NCBI not available: setup failed" else reason)
 }
 
+# The databases NCBI is serving right now, asked once per run.
+#
+# Tests name databases directly, and NCBI does withdraw them: popset went
+# missing in 2026 (#214), and the genome database did the same and came back
+# (#196). A test aimed at a database nobody is serving says nothing about
+# rentrez, so it should skip rather than fail.
+ncbi_dbs <- local({
+    cached <- NULL
+    function() {
+        if (is.null(cached)) {
+            cached <<- tryCatch(entrez_dbs(), error = function(e) NA_character_)
+        }
+        cached
+    }
+})
+
+# For a file-level setup block. Returns TRUE when every named database is being
+# served, and otherwise the same FALSE-carrying-a-reason that a failed setup
+# returns, so the file's tests skip with something useful to read.
+requires_dbs <- function(...) {
+    dbs <- ncbi_dbs()
+    if (identical(dbs, NA_character_)) return(TRUE)
+    absent <- setdiff(c(...), dbs)
+    if (!length(absent)) return(TRUE)
+    structure(FALSE,
+              reason = paste("NCBI is not serving:", paste(absent, collapse = ", ")))
+}
+
+# The same check from inside a test.
+skip_if_db_missing <- function(...) {
+    ok <- requires_dbs(...)
+    if (!isTRUE(ok)) testthat::skip(attr(ok, "reason"))
+    invisible(TRUE)
+}

@@ -4,6 +4,7 @@
 context("documentation")
 
 test_that("Examples in documentation work", {
+    skip_if_db_missing("popset")
     #setup (guarded so transient NCBI problems skip rather than fail)
     setup <- tryCatch({
         list(
