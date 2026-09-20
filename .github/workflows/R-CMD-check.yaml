@@ -31,6 +31,10 @@ jobs:
       # rentrez tests contact the live NCBI EUtils API. An API key raises the
       # rate limit from 3 to 10 requests/second and reduces HTTP 429 failures
       # when matrix jobs run in parallel. Add ENTREZ_KEY as a repository secret.
+      #
+      # GitHub does not pass secrets to pull requests from forks, so those runs
+      # see an empty value and fall back to the unauthenticated limit. rentrez
+      # treats an empty ENTREZ_KEY as no key, so this degrades rather than breaks.
       ENTREZ_KEY: ${{ secrets.ENTREZ_KEY }}
       # The \donttest{} examples in man/ make live NCBI calls. Running them
       # during R CMD check couples CI to NCBI uptime, so skip them here (CRAN
