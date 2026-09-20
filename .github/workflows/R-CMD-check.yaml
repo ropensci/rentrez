@@ -42,7 +42,7 @@ jobs:
       _R_CHECK_DONTTEST_EXAMPLES_: false
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: r-lib/actions/setup-pandoc@v2
 
