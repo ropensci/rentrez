@@ -88,6 +88,29 @@ linkout_urls <- function(elink){
 }
 
 
+#The <ERROR> nodes NCBI put in this part of the document.
+#
+#The XML package resolves the two paths differently: a whole document answers to
+#"//ERROR" and a single node answers to "ERROR", and each returns nothing for
+#the other's path. parse_elink holds a document while the cmd parsers each get
+#one LinkSet node, so both are asked.
+elink_errors <- function(x){
+    c(x["//ERROR"], x["ERROR"])
+}
+
+#Build the message for an elink reply that carried no usable content, quoting
+#what NCBI said when it said anything. Without this the parsers run on into a
+#subscript or names error that names no cause.
+elink_failure <- function(what, x){
+    errs <- elink_errors(x)
+    if(length(errs) == 0){
+        return(what)
+    }
+    said <- gsub("[[:space:]]+", " ", sapply(errs, xmlValue))
+    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
+}
+
+
 #
 # Parising Elink is.... fun. The XML files returned by the different 'cmd'
 # args are very differnt, so we can't hope for a one-size-fits all solution. 
@@ -102,22 +125,6 @@ linkout_urls <- function(elink){
 # means we we sometimes reuturn a list of elink objects, have applied the
 # relevant function to each "<LinkSet>" in the XML.
 #
-#Build the message for an elink response that carried no usable content,
-#quoting NCBI's own <ERROR> text when there is one. Without this the parsers
-#below run on into a subscript or names error that says nothing about why.
-elink_failure <- function(what, x){
-    #the XML package resolves these differently: a whole document answers to
-    #"//ERROR" and a single node answers to "ERROR", and each returns nothing
-    #for the other's path. parse_elink passes a document, the cmd parsers below
-    #each get one LinkSet node, so both are asked.
-    errs <- c(x["//ERROR"], x["ERROR"])
-    if(length(errs) == 0){
-        return(what)
-    }
-    said <- gsub("[[:space:]]+", " ", sapply(errs, xmlValue))
-    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
-}
-
 parse_elink <- function(x, cmd, by_id, id){
     check_xml_errors(x)
     f <- make_elink_fxn(cmd)

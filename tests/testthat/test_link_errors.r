@@ -15,16 +15,16 @@ err_linkset <- function() {
 test_that("linkout commands report the NCBI message", {
     for (cmd in c("llinks", "llinkslib", "prlinks")) {
         f <- rentrez:::make_elink_fxn(cmd)
-        expect_error(f(err_linkset()), "no linkouts")
-        expect_error(f(err_linkset()), "llinkslib command not supported")
+        expect_error(f(err_linkset()), "no linkouts", info = cmd)
+        expect_error(f(err_linkset()), "llinkslib command not supported", info = cmd)
     }
 })
 
 test_that("check commands report the NCBI message", {
     for (cmd in c("ncheck", "lcheck")) {
         f <- rentrez:::make_elink_fxn(cmd)
-        expect_error(f(err_linkset()), "no IdCheckList")
-        expect_error(f(err_linkset()), "llinkslib command not supported")
+        expect_error(f(err_linkset()), "no IdCheckList", info = cmd)
+        expect_error(f(err_linkset()), "llinkslib command not supported", info = cmd)
     }
 })
 
