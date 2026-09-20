@@ -149,6 +149,13 @@ parse_esearch.list <- function(x, history){
 
 #'@export
 print.esearch <- function(x, ...){
+    #a count-only reply (rettype="count") carries no QueryTranslation. The xml
+    #path leaves it NA and the json path leaves it zero-length, so test the
+    #length first: is.na() on a zero-length value answers logical(0).
+    if(length(x$QueryTranslation) == 0 || is.na(x$QueryTranslation)){
+        cat(paste("Entrez search result with", x$count, "hits\n"))
+        return(invisible(x))
+    }
     display_term <- if(nchar(x$QueryTranslation) > 50){
         paste(substr(x$QueryTranslation, 1, 50), "...")
     } else x$QueryTranslation

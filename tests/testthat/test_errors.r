@@ -109,3 +109,16 @@ test_that("parse_esearch handles a count-only response", {
     expect_equal(res$count, 5648701L)
     expect_true(is.na(res$retmax))
 })
+
+# A count-only result carries no QueryTranslation, which print.esearch read
+# without checking. Both formats reach that line, by different routes: the xml
+# path leaves the field NA and the json path leaves it zero-length.
+test_that("a count-only result can be printed, in either format", {
+    from_xml <- rentrez:::parse_esearch(
+        XML::xmlTreeParse("<eSearchResult><Count>5648701</Count></eSearchResult>",
+                          useInternalNodes = TRUE), history = FALSE)
+    from_json <- rentrez:::parse_esearch(
+        list(esearchresult = list(count = "5648701")), history = FALSE)
+    expect_output(print(from_xml), "Entrez search result with 5648701 hits")
+    expect_output(print(from_json), "Entrez search result with 5648701 hits")
+})
