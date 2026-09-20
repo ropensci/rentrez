@@ -82,18 +82,49 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", use_history=FALS
 
 parse_esearch <- function(x, history) UseMethod("parse_esearch")
 
+#Build the message for an esearch reply that carried no result, quoting what
+#NCBI said when it said anything. Mirrors elink_failure() in entrez_link.r.
+#NCBI reports the reason in the body of an otherwise ordinary HTTP 200 reply,
+#and it arrives as an <ERROR> node in xml or an ERROR field in json.
+esearch_failure <- function(what, x){
+    said <- if(inherits(x, "XMLInternalDocument")){
+        sapply(x["//ERROR"], xmlValue)
+    } else {
+        x$esearchresult$ERROR
+    }
+    if(length(said) == 0){
+        return(what)
+    }
+    said <- gsub("[[:space:]]+", " ", said)
+    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
+}
+
 #'@exportS3Method   
 parse_esearch.XMLInternalDocument <- function(x, history){
+    check_xml_errors(x)
+    if(length(x["/eSearchResult/Count"]) == 0){
+        stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
+    }
+    #some responses (e.g. rettype="count") omit RetMax/QueryTranslation, so
+    #pull the scalar fields safely rather than indexing a missing node
+    get1 <- function(xpath){ node <- x[xpath]; if(length(node)) xmlValue(node[[1]]) else NA_character_ }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
-                 count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
-                 retmax   = as.integer(xmlValue(x[["/eSearchResult/RetMax"]])),
-                 QueryTranslation   = xmlValue(x[["/eSearchResult/QueryTranslation"]]),
+                 count    = as.integer(get1("/eSearchResult/Count")),
+                 retmax   = as.integer(get1("/eSearchResult/RetMax")),
+                 QueryTranslation   = get1("/eSearchResult/QueryTranslation"),
                  file     = x)
     if(history){
-        res$web_history = web_history(
-          QueryKey = xmlValue(x[["/eSearchResult/QueryKey"]]),
-          WebEnv   = xmlValue(x[["/eSearchResult/WebEnv"]])
-        )
+        #NCBI ignores usehistory for a count-only search and sends back a Count
+        #and nothing else, so say that rather than build a history out of gaps
+        query_key <- get1("/eSearchResult/QueryKey")
+        web_env   <- get1("/eSearchResult/WebEnv")
+        if(is.na(query_key) || is.na(web_env) || !nzchar(query_key) || !nzchar(web_env)){
+            warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
+                    "web history is attached. A count-only search carries none.",
+                    call.=FALSE)
+        } else {
+            res$web_history = web_history(QueryKey = query_key, WebEnv = web_env)
+        }
     }
     class(res) <- c("esearch", "list")
     return(res)
@@ -101,6 +132,13 @@ parse_esearch.XMLInternalDocument <- function(x, history){
 
 #'@exportS3Method   
 parse_esearch.list <- function(x, history){
+    #NCBI reports a bad request in the body of an HTTP 200 reply, so the json
+    #looks ordinary until these fields are read. Without this the record below
+    #is built from missing pieces and comes back with NA names and no count.
+    #parse_esummary.list already guards its own json the same way.
+    if(!is.null(x$esearchresult$ERROR) || is.null(x$esearchresult$count)){
+        stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
+    }
     #for consitancy between xml/json records we are going to change the
     #file names from lower -> CamelCase
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querytranslation") ]
@@ -118,6 +156,13 @@ parse_esearch.list <- function(x, history){
 
 #'@export
 print.esearch <- function(x, ...){
+    #a count-only reply (rettype="count") carries no QueryTranslation. The xml
+    #path leaves it NA and the json path leaves it zero-length, so test the
+    #length first: is.na() on a zero-length value answers logical(0).
+    if(length(x$QueryTranslation) == 0 || is.na(x$QueryTranslation)){
+        cat(paste("Entrez search result with", x$count, "hits\n"))
+        return(invisible(x))
+    }
     display_term <- if(nchar(x$QueryTranslation) > 50){
         paste(substr(x$QueryTranslation, 1, 50), "...")
     } else x$QueryTranslation

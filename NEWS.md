@@ -2,12 +2,44 @@
 
 ## BUG FIXES
 
+* `entrez_link()` now reports what NCBI said when a reply carries no usable
+  content. A command NCBI will not serve comes back as HTTP 200 with an
+  `<ERROR>` inside the LinkSet, and five of the nine `cmd` parsers ran on into
+  a subscript or a names error that named no cause (#215).
+
+* `entrez_link(cmd = "llinks")` and its siblings return an empty set for an ID
+  that has no linkouts, where they used to fail. An ID with nothing to link is
+  an answer rather than a failure, so only a reply carrying an NCBI error
+  stops now.
+
+* `entrez_search(rettype = "count")` returns the count, and the result prints.
+  A count-only reply carries a `Count` and nothing else, which the parser read
+  as missing nodes and `print()` read as a missing query translation (#153).
+  Asking for `use_history` alongside it now warns and attaches no web history,
+  where before it failed on the same subscript. NCBI sends no QueryKey or
+  WebEnv for a count-only search, so there is none to attach.
+
+* `entrez_link(by_id = TRUE)` returns a list for a single ID, as it already did
+  for several, and no longer warns that the ID was invalid when it was not
+  (#175).
+
+* `entrez_search()` reports what NCBI said when a search comes back with no
+  result, rather than failing on a subscript. NCBI answers a bad database name
+  with an ordinary HTTP 200 whose body carries the reason, and the JSON path
+  did not check for it at all, so `retmode = "json"` returned a record built
+  from missing pieces that then failed when printed (#187).
+
 * Requests that send more than 200 IDs now use POST, as intended. The check
   that chooses POST over GET ran after the IDs had been collapsed into a
   single string, so it never matched and every request used GET
   (#174, thanks @allenbaron).
 
 ## MINOR IMPROVEMENTS
+
+* HTTP failures name the query that caused them, with the API key removed. The
+  key reaches these messages two ways, in the query string whenever one is set
+  and quoted back by NCBI when it rejects one, and these messages get pasted
+  into bug reports (#159).
 
 * Removed stray characters from two error messages (#211).
 

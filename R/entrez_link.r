@@ -88,6 +88,29 @@ linkout_urls <- function(elink){
 }
 
 
+#The <ERROR> nodes NCBI put in this part of the document.
+#
+#The XML package resolves the two paths differently: a whole document answers to
+#"//ERROR" and a single node answers to "ERROR", and each returns nothing for
+#the other's path. parse_elink holds a document while the cmd parsers each get
+#one LinkSet node, so both are asked.
+elink_errors <- function(x){
+    c(x["//ERROR"], x["ERROR"])
+}
+
+#Build the message for an elink reply that carried no usable content, quoting
+#what NCBI said when it said anything. Without this the parsers run on into a
+#subscript or names error that names no cause.
+elink_failure <- function(what, x){
+    errs <- elink_errors(x)
+    if(length(errs) == 0){
+        return(what)
+    }
+    said <- gsub("[[:space:]]+", " ", sapply(errs, xmlValue))
+    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
+}
+
+
 #
 # Parising Elink is.... fun. The XML files returned by the different 'cmd'
 # args are very differnt, so we can't hope for a one-size-fits all solution. 
@@ -102,32 +125,19 @@ linkout_urls <- function(elink){
 # means we we sometimes reuturn a list of elink objects, have applied the
 # relevant function to each "<LinkSet>" in the XML.
 #
-#Build the message for an elink response that carried no usable content,
-#quoting NCBI's own <ERROR> text when there is one. Without this the parsers
-#below run on into a subscript or names error that says nothing about why.
-elink_failure <- function(what, x){
-    #the XML package resolves these differently: a whole document answers to
-    #"//ERROR" and a single node answers to "ERROR", and each returns nothing
-    #for the other's path. parse_elink passes a document, the cmd parsers below
-    #each get one LinkSet node, so both are asked.
-    errs <- c(x["//ERROR"], x["ERROR"])
-    if(length(errs) == 0){
-        return(what)
-    }
-    said <- gsub("[[:space:]]+", " ", sapply(errs, xmlValue))
-    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
-}
-
 parse_elink <- function(x, cmd, by_id, id){
     check_xml_errors(x)
     f <- make_elink_fxn(cmd)
     res <-  xpathApply(x, "//LinkSet",f)
-    if(length(res) > 1){
-        class(res) <- c("elink_list", "list")
-        return(res)
-    }
+    #a reply with no LinkSet at all is a failure whatever by_id says, so this
+    #has to be tested before the by_id branch returns an empty list instead
     if(length(res) == 0){
         stop(elink_failure("ELink returned no LinkSet", x), call.=FALSE)
+    }
+    #in by_id mode always return a list, one elink per id, even for a single id
+    if(by_id || length(res) > 1){
+        class(res) <- c("elink_list", "list")
+        return(res)
     }
     res[[1]]
 }
@@ -202,8 +212,15 @@ parse_check <- function(x, attr){
     if(length(ids) == 0){
         stop(elink_failure("ELink returned no IdCheckList", x), call.=FALSE)
     }
-    is_it_y <- structure(names= ids,
-                         xpathSApply(x, path, `==`, "Y"))
+    flags <- xpathSApply(x, path, `==`, "Y")
+    #an id carrying no such attribute leaves the two vectors uneven, and naming
+    #one with the other then raises the same opaque error this guard replaces
+    if(length(flags) != length(ids)){
+        stop(elink_failure(paste0("ELink returned ", length(ids), " ids but ",
+                                  length(flags), " ", attr, " flags"), x),
+             call.=FALSE)
+    }
+    is_it_y <- structure(names= ids, flags)
                    
     res <- list(check = is_it_y)
     attr(res, "content") <- " $check: TRUE/FALSE for wether each ID has links"
@@ -213,7 +230,14 @@ parse_check <- function(x, attr){
 parse_linkouts <- function(x){
     per_id <- xpathApply(x, "//IdUrlList/IdUrlSet")
     if(length(per_id) == 0){
-        stop(elink_failure("ELink returned no linkouts", x), call.=FALSE)
+        #NCBI saying why is a failure. NCBI saying nothing means this id has no
+        #linkouts to give, which is an answer, so hand back an empty set.
+        if(length(elink_errors(x)) > 0){
+            stop(elink_failure("ELink returned no linkouts", x), call.=FALSE)
+        }
+        res <- list(linkouts = list())
+        attr(res, "content") <- " $linkouts: links to external websites"
+        return(res)
     }
     list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], xmlToList))
     names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) xmlValue(x[["Id"]])))
