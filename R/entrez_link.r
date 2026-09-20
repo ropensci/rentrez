@@ -102,6 +102,22 @@ linkout_urls <- function(elink){
 # means we we sometimes reuturn a list of elink objects, have applied the
 # relevant function to each "<LinkSet>" in the XML.
 #
+#Build the message for an elink response that carried no usable content,
+#quoting NCBI's own <ERROR> text when there is one. Without this the parsers
+#below run on into a subscript or names error that says nothing about why.
+elink_failure <- function(what, x){
+    #the XML package resolves these differently: a whole document answers to
+    #"//ERROR" and a single node answers to "ERROR", and each returns nothing
+    #for the other's path. parse_elink passes a document, the cmd parsers below
+    #each get one LinkSet node, so both are asked.
+    errs <- c(x["//ERROR"], x["ERROR"])
+    if(length(errs) == 0){
+        return(what)
+    }
+    said <- gsub("[[:space:]]+", " ", sapply(errs, xmlValue))
+    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
+}
+
 parse_elink <- function(x, cmd, by_id, id){
     check_xml_errors(x)
     f <- make_elink_fxn(cmd)
@@ -109,6 +125,9 @@ parse_elink <- function(x, cmd, by_id, id){
     if(length(res) > 1){
         class(res) <- c("elink_list", "list")
         return(res)
+    }
+    if(length(res) == 0){
+        stop(elink_failure("ELink returned no LinkSet", x), call.=FALSE)
     }
     res[[1]]
 }
@@ -179,7 +198,11 @@ parse_acheck <- function(x){
 
 parse_check <- function(x, attr){
     path <- paste0("IdCheckList/Id/@", attr)
-    is_it_y <- structure(names= xpathSApply(x, "IdCheckList/Id", xmlValue),
+    ids <- xpathSApply(x, "IdCheckList/Id", xmlValue)
+    if(length(ids) == 0){
+        stop(elink_failure("ELink returned no IdCheckList", x), call.=FALSE)
+    }
+    is_it_y <- structure(names= ids,
                          xpathSApply(x, path, `==`, "Y"))
                    
     res <- list(check = is_it_y)
@@ -189,6 +212,9 @@ parse_check <- function(x, attr){
 
 parse_linkouts <- function(x){
     per_id <- xpathApply(x, "//IdUrlList/IdUrlSet")
+    if(length(per_id) == 0){
+        stop(elink_failure("ELink returned no linkouts", x), call.=FALSE)
+    }
     list_per_id <- lapply(per_id, function(x) lapply(x["ObjUrl"], xmlToList))
     names(list_per_id) <-paste0("ID_", sapply(per_id,function(x) xmlValue(x[["Id"]])))
     list_o_lists <- lapply(list_per_id, unname)#otherwise first element of earch list has same name!
