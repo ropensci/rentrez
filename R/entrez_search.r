@@ -28,8 +28,7 @@
 #'vignette and reference given below.
 #'@param use_history logical. If TRUE return a web_history object for use in 
 #' later calls to the NCBI
-#'@param retmode character, one of json (default) or xml. This will make no
-#' difference in most cases.
+#'@param retmode character, one of xml (default) or json.
 #'@param \dots character, additional terms to add to the request, see NCBI
 #'documentation linked to in references for a complete list
 #'@param config vector configuration options passed to httr::GET  
