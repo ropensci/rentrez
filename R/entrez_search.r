@@ -82,8 +82,29 @@ entrez_search <- function(db, term, config=NULL, retmode="xml", use_history=FALS
 
 parse_esearch <- function(x, history) UseMethod("parse_esearch")
 
+#Build the message for an esearch reply that carried no result, quoting what
+#NCBI said when it said anything. Mirrors elink_failure() in entrez_link.r.
+#NCBI reports the reason in the body of an otherwise ordinary HTTP 200 reply,
+#and it arrives as an <ERROR> node in xml or an ERROR field in json.
+esearch_failure <- function(what, x){
+    said <- if(inherits(x, "XMLInternalDocument")){
+        sapply(x["//ERROR"], xmlValue)
+    } else {
+        x$esearchresult$ERROR
+    }
+    if(length(said) == 0){
+        return(what)
+    }
+    said <- gsub("[[:space:]]+", " ", said)
+    paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
+}
+
 #'@exportS3Method   
 parse_esearch.XMLInternalDocument <- function(x, history){
+    check_xml_errors(x)
+    if(length(x["/eSearchResult/Count"]) == 0){
+        stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
+    }
     res <- list( ids      = xpathSApply(x, "//IdList/Id", xmlValue),
                  count    = as.integer(xmlValue(x[["/eSearchResult/Count"]])),
                  retmax   = as.integer(xmlValue(x[["/eSearchResult/RetMax"]])),
@@ -101,6 +122,13 @@ parse_esearch.XMLInternalDocument <- function(x, history){
 
 #'@exportS3Method   
 parse_esearch.list <- function(x, history){
+    #NCBI reports a bad request in the body of an HTTP 200 reply, so the json
+    #looks ordinary until these fields are read. Without this the record below
+    #is built from missing pieces and comes back with NA names and no count.
+    #parse_esummary.list already guards its own json the same way.
+    if(!is.null(x$esearchresult$ERROR) || is.null(x$esearchresult$count)){
+        stop(esearch_failure("ESearch returned no result", x), call.=FALSE)
+    }
     #for consitancy between xml/json records we are going to change the
     #file names from lower -> CamelCase
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querytranslation") ]

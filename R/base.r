@@ -111,23 +111,36 @@ id_or_webenv <- function(){
 }
 
 
+#Strip the API key out of anything bound for an error message. People paste
+#these errors into bug reports, and the key belongs to the reporter's NCBI
+#account, so it must not go with them. It arrives two ways: as a query
+#parameter in the url, and echoed back by NCBI in the body of a 400 reply.
+#A url can carry two spellings at once, so replace every match, not the first.
+redact_key <- function(x){
+    x <- gsub("(api_key=)[^&]*", "\\1<redacted>", x, ignore.case=TRUE)
+    gsub('("api[-_]?key"[[:space:]]*:[[:space:]]*")[^"]*', "\\1<redacted>", x,
+         ignore.case=TRUE)
+}
+
+
 entrez_check  <- function(req){
   if (req$status_code < 400) {
       return(invisible())
   }
   if (req$status_code == 414){
-      stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the rentrez tutorial")
+      stop("HTTP failure 414, the request is too large. For large requests, try using web history as described in the rentrez tutorial\nQuery: ", redact_key(req$url))
   }
   if (req$status_code == 502){
-      stop("HTTP failure: 502, bad gateway. This error code is often returned when trying to download many records in a single request.  Try using web history as described in the rentrez tutorial")
+      stop("HTTP failure: 502, bad gateway. This error code is often returned when trying to download many records in a single request.  Try using web history as described in the rentrez tutorial\nQuery: ", redact_key(req$url))
   }
-  message <- httr::content(req, as="text", encoding="UTF-8")
+  #NCBI echoes a rejected key back in the body, so redact that too
+  message <- redact_key(httr::content(req, as="text", encoding="UTF-8"))
   if (req$status_code == 429){
      #too many requests. First sleep to precent us racking up more
      Sys.sleep(0.3)
-     stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rate-limiting section of rentrez tutorial. NCBI message:\n", message)) 
+     stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rate-limiting section of rentrez tutorial. NCBI message:\n", message, "\nQuery:", redact_key(req$url)))
   }
-  stop("HTTP failure: ", req$status_code, "\n", message, call. = FALSE)
+  stop("HTTP failure: ", req$status_code, "\n", message, "\nQuery: ", redact_key(req$url), call. = FALSE)
 }
 
 
