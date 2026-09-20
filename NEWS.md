@@ -2,6 +2,11 @@
 
 ## BUG FIXES
 
+* `entrez_link()` now reports what NCBI said when a reply carries no usable
+  content. A command NCBI will not serve comes back as HTTP 200 with an
+  `<ERROR>` inside the LinkSet, and five of the nine `cmd` parsers ran on into
+  a subscript or a names error that named no cause (#215).
+
 * Requests that send more than 200 IDs now use POST, as intended. The check
   that chooses POST over GET ran after the IDs had been collapsed into a
   single string, so it never matched and every request used GET
