@@ -28,6 +28,28 @@ test_that("check commands report the NCBI message", {
     }
 })
 
+# An id can come back without the attribute the check command asked for, which
+# leaves the ids and the flags uneven. Naming one vector with the other then
+# raises the same opaque error the guard above exists to remove.
+test_that("check commands report an uneven id and flag count", {
+    linkset <- function(inner) {
+        doc <- XML::xmlTreeParse(paste0("<eLinkResult><LinkSet>", inner,
+                                        "</LinkSet></eLinkResult>"),
+                                 useInternalNodes = TRUE)
+        doc["//LinkSet"][[1]]
+    }
+    no_attr <- linkset("<IdCheckList><Id>123</Id></IdCheckList>")
+    partial <- linkset(paste0("<IdCheckList><Id HasNeighbor=\"Y\">1</Id>",
+                              "<Id>2</Id></IdCheckList>"))
+    f <- rentrez:::make_elink_fxn("ncheck")
+    expect_error(f(no_attr), "1 ids but 0 HasNeighbor flags")
+    expect_error(f(partial), "2 ids but 1 HasNeighbor flags")
+
+    ok <- linkset(paste0("<IdCheckList><Id HasNeighbor=\"Y\">1</Id>",
+                         "<Id HasNeighbor=\"N\">2</Id></IdCheckList>"))
+    expect_equal(length(f(ok)$check), 2)
+})
+
 test_that("parse_elink fails clearly when the reply holds no LinkSet", {
     doc <- XML::xmlTreeParse("<eLinkResult></eLinkResult>", useInternalNodes = TRUE)
     expect_error(rentrez:::parse_elink(doc, cmd = "llinks", by_id = FALSE, id = 1),

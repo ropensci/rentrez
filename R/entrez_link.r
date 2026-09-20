@@ -202,8 +202,15 @@ parse_check <- function(x, attr){
     if(length(ids) == 0){
         stop(elink_failure("ELink returned no IdCheckList", x), call.=FALSE)
     }
-    is_it_y <- structure(names= ids,
-                         xpathSApply(x, path, `==`, "Y"))
+    flags <- xpathSApply(x, path, `==`, "Y")
+    #an id carrying no such attribute leaves the two vectors uneven, and naming
+    #one with the other then raises the same opaque error this guard replaces
+    if(length(flags) != length(ids)){
+        stop(elink_failure(paste0("ELink returned ", length(ids), " ids but ",
+                                  length(flags), " ", attr, " flags"), x),
+             call.=FALSE)
+    }
+    is_it_y <- structure(names= ids, flags)
                    
     res <- list(check = is_it_y)
     attr(res, "content") <- " $check: TRUE/FALSE for wether each ID has links"
