@@ -73,3 +73,29 @@ test_that("redact_key does not care how the parameter is spelled", {
         expect_true(grepl(paste0(name, "=<redacted>"), out, fixed = TRUE))
     }
 })
+
+# 414 and 502 stop before the reply body is ever read, so the checks above never
+# see a message built from one. NCBI answers a rejected key with a 400 whose
+# body quotes that key back, which is the reply a mistyped key really produces.
+test_that("entrez_check keeps the API key out of a message built from the body", {
+    body <- '{"error":"API key invalid","api-key":"SECRET_abc123","type":"invalid"}'
+    fake <- structure(list(
+        status_code = 400L,
+        url = "https://e.n.g/f?db=pubmed&api_key=SECRET_abc123",
+        headers = structure(list(`content-type` = "application/json"),
+                            class = c("insensitive", "list")),
+        content = charToRaw(body)), class = "response")
+    msg <- tryCatch(rentrez:::entrez_check(fake), error = conditionMessage)
+    expect_false(grepl("SECRET_abc123", msg, fixed = TRUE))
+    expect_true(grepl('"api-key":"<redacted>"', msg, fixed = TRUE))
+})
+
+# Spelling the argument API_KEY does not stop make_entrez_query adding the one
+# from ENTREZ_KEY, because that check is case sensitive, so a URL can carry both.
+# Redacting only the first would leave the key from the environment in the clear.
+test_that("redact_key removes every key in a URL, not just the first", {
+    two <- "https://e.n.g/f?API_KEY=TYPED_abc&tool=rentrez&api_key=FROMENV_xyz"
+    out <- rentrez:::redact_key(two)
+    expect_false(grepl("TYPED_abc", out, fixed = TRUE))
+    expect_false(grepl("FROMENV_xyz", out, fixed = TRUE))
+})

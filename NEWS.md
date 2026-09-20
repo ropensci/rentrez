@@ -26,8 +26,9 @@
 ## MINOR IMPROVEMENTS
 
 * HTTP failures name the query that caused them, with the API key removed. The
-  URL carries the key whenever one is set, and these messages get pasted into
-  bug reports (#159).
+  key reaches these messages two ways, in the query string whenever one is set
+  and quoted back by NCBI when it rejects one, and these messages get pasted
+  into bug reports (#159).
 
 * Removed stray characters from two error messages (#211).
 
