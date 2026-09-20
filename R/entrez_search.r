@@ -118,9 +118,10 @@ parse_esearch.XMLInternalDocument <- function(x, history){
         #and nothing else, so say that rather than build a history out of gaps
         query_key <- get1("/eSearchResult/QueryKey")
         web_env   <- get1("/eSearchResult/WebEnv")
-        if(is.na(query_key) || is.na(web_env)){
-            warning("NCBI returned no web history for this search, so none is ",
-                    "attached. A count-only search carries none.", call.=FALSE)
+        if(is.na(query_key) || is.na(web_env) || !nzchar(query_key) || !nzchar(web_env)){
+            warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
+                    "web history is attached. A count-only search carries none.",
+                    call.=FALSE)
         } else {
             res$web_history = web_history(QueryKey = query_key, WebEnv = web_env)
         }

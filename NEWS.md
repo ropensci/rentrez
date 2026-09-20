@@ -15,6 +15,9 @@
 * `entrez_search(rettype = "count")` returns the count, and the result prints.
   A count-only reply carries a `Count` and nothing else, which the parser read
   as missing nodes and `print()` read as a missing query translation (#153).
+  Asking for `use_history` alongside it now warns and attaches no web history,
+  where before it failed on the same subscript. NCBI sends no QueryKey or
+  WebEnv for a count-only search, so there is none to attach.
 
 * `entrez_link(by_id = TRUE)` returns a list for a single ID, as it already did
   for several, and no longer warns that the ID was invalid when it was not

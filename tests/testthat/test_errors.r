@@ -133,3 +133,15 @@ test_that("a count-only search with use_history says there is no history", {
     expect_equal(res$count, 5648701L)
     expect_null(res$web_history)
 })
+
+# The history elements can also come back present and empty, which is a different
+# branch of the same guard: is.na() catches the absent case, nzchar() this one.
+test_that("empty history elements are treated as no history", {
+    doc <- XML::xmlTreeParse(paste0(
+        "<eSearchResult><Count>10</Count><RetMax>2</RetMax><IdList><Id>1</Id></IdList>",
+        "<QueryTranslation>x</QueryTranslation><QueryKey></QueryKey><WebEnv></WebEnv>",
+        "</eSearchResult>"), useInternalNodes = TRUE)
+    expect_warning(res <- rentrez:::parse_esearch(doc, history = TRUE),
+                   "no web history")
+    expect_null(res$web_history)
+})
