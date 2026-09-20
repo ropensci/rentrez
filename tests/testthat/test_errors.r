@@ -65,3 +65,11 @@ test_that("redact_key leaves a URL without a key alone", {
     plain <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed"
     expect_equal(rentrez:::redact_key(plain), plain)
 })
+
+test_that("redact_key does not care how the parameter is spelled", {
+    for (name in c("api_key", "API_KEY", "Api_Key")) {
+        out <- rentrez:::redact_key(paste0("https://e.n.g/f?db=pubmed&", name, "=SECRET_abc123"))
+        expect_false(grepl("SECRET_abc123", out, fixed = TRUE))
+        expect_true(grepl(paste0(name, "=<redacted>"), out, fixed = TRUE))
+    }
+})

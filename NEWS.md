@@ -25,6 +25,10 @@
 
 ## MINOR IMPROVEMENTS
 
+* HTTP failures name the query that caused them, with the API key removed. The
+  URL carries the key whenever one is set, and these messages get pasted into
+  bug reports (#159).
+
 * Removed stray characters from two error messages (#211).
 
 # rentrez 1.2.4

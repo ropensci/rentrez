@@ -115,7 +115,7 @@ id_or_webenv <- function(){
 #paste these errors into bug reports, and the key belongs to the reporter's
 #NCBI account, so it must not go with them.
 redact_key <- function(url){
-    sub("(api_key=)[^&]*", "\\1<redacted>", url)
+    sub("(api_key=)[^&]*", "\\1<redacted>", url, ignore.case=TRUE)
 }
 
 
