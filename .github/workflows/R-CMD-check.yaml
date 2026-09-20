@@ -17,6 +17,12 @@ jobs:
 
     strategy:
       fail-fast: false
+      # One job at a time. Every job works through a suite that calls NCBI for
+      # nearly every assertion, and rentrez paces itself at 0.13s per request
+      # with a key, so five jobs at once reach roughly 38 requests a second
+      # against a limit of 10. Running them in parallel spends the whole budget
+      # on HTTP 429s and turns the results into noise (#216).
+      max-parallel: 1
       matrix:
         config:
           - {os: macos-latest,   r: 'release'}
