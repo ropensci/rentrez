@@ -16,7 +16,7 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that("The record-linking funcitons work",{
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(elinks_mixed, is_a("elink"))
     expect_that(names(elinks_mixed$links), is_a("character"))
     expect_true(length(elinks_mixed$links$pubmed_mesh_major) > 0)
@@ -24,14 +24,14 @@ test_that("The record-linking funcitons work",{
 
 
 test_that("by_id mode works for elinks", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(elinks_by_id, is_a("elink_list"))
     expect_that(length(elinks_by_id), equals(2))
     expect_that(elinks_by_id[[1]], is_a("elink"))
 })
 
 test_that("elink printing behaves", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_output(print(elinks_by_id), "List of 2 elink objects,each containing")
     for(ret in all_the_commands){
         expect_output(print(ret), "elink object with contents:\\s+\\$[A-Za-z]+")
@@ -40,14 +40,14 @@ test_that("elink printing behaves", {
 
 
 test_that("We detect missing ids from elink results",{
-   skip_if(!ncbi_ok, "NCBI not available")
+   skip_without_ncbi(ncbi_ok)
    expect_warning(
     net(entrez_link(dbfrom="pubmed", db="all", id=c(20203609,2020360999999,20203610), by_id=TRUE))
    )
 })
 
 test_that("Elink sub-elements can be acessed and printed", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_output(print(all_the_commands[[3]][[1]]),
                   "elink result with information from \\d+ databases")
     expect_output(print(all_the_commands[[8]]$linkouts[[1]]),
@@ -56,7 +56,7 @@ test_that("Elink sub-elements can be acessed and printed", {
 
 
 test_that("URls can be extracted from elink objs", {
-   skip_if(!ncbi_ok, "NCBI not available")
+   skip_without_ncbi(ncbi_ok)
    for(idx in 6:8){
        urls <- linkout_urls(all_the_commands[[idx]])
        expect_that(urls, is_a("list"))
@@ -65,7 +65,7 @@ test_that("URls can be extracted from elink objs", {
 })
 
 test_that("Elink errors on mis-spelled/unknown cmds",{
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_error(rcheck <- entrez_link(dbfrom = "pubmed",
                                          id = 19880848, db = "all",
                                          cmd='rcheck'))

@@ -15,20 +15,20 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that("httr does no warn about inferred encoding", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_message( net(entrez_fetch(db = "popset", id=pop_ids[1], rettype="uilist")), NA)
 })
 
 
 
 test_that("Fetching sequences works", {
-     skip_if(!ncbi_ok, "NCBI not available")
+     skip_without_ncbi(ncbi_ok)
      expect_that(length(strsplit(coi, ">")[[1]]), equals(30))
 
 })
 
 test_that("Entrez_fetch record parsing works", {
-     skip_if(!ncbi_ok, "NCBI not available")
+     skip_without_ncbi(ncbi_ok)
      expect_that(raw_rec, is_a("character"))
      expect_that(xml_rec, is_a("XMLInternalDocument"))
      expect_error(
@@ -39,7 +39,7 @@ test_that("Entrez_fetch record parsing works", {
 
 
 test_that("Entrez fetch can download versioned sequences", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     #The two versions of this sequence have different annotations. We can check
     #that we are getting the correct version of the record by checking the name
     #of each sequence reflects the change in annotation.

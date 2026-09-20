@@ -8,7 +8,7 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that("We can POST to NCBI epost", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     wh <- net(entrez_post(db="pubmed", id=search_ids))
     expect_that(wh, is_a("web_history"))
     expect_that(as.integer(wh$QueryKey), is_a("integer"))
@@ -16,7 +16,7 @@ test_that("We can POST to NCBI epost", {
 })
 
 test_that("We can fecth using POST", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     fetched_ids <- net(entrez_fetch(db="pubmed", id=search_ids, rettype="uilist"))
     expect(
         all( strsplit(fetched_ids, "\n")[[1]] %in% search_ids),

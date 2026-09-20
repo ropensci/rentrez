@@ -14,13 +14,13 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that(" can get xml recs from einfo", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(einfo_rec, is_a("XMLInternalDocument"))
     expect_that(pm_rec, is_a("XMLInternalDocument"))
 })
 
 test_that(" We can get summary information on DBs", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(dbs, is_a("character"))
     expect_true("pubmed" %in% dbs)
 
@@ -29,14 +29,14 @@ test_that(" We can get summary information on DBs", {
 })
 
 test_that("We can retrieve serach fields", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(search_fields, is_a("eInfoSearch"))
     expect_named(search_fields$GRNT)
     expect_that(sf_df, is_a("data.frame"))
 })
 
 test_that("We can retreive linked dbs", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(omim_links, is_a("eInfoLink"))
     expect_named(omim_links[[1]])
     expect_that(omim_df, is_a("data.frame"))
@@ -44,13 +44,13 @@ test_that("We can retreive linked dbs", {
 })
 
 test_that("We can prink elink objects", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_output(print(omim_links), "Databases with linked records for database 'omim'")
     expect_output(print(search_fields), "Searchable fields for database 'pmc'")
 })
 
 test_that("We can print elements from einfo object", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_output(print(omim_links$gene), "Name: omim_gene\n")
     expect_output(print(search_fields$GRNT), "Name: GRNT\n")
     expect_output(print(cdd), "DbName: cdd")

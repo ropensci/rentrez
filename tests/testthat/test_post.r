@@ -9,7 +9,7 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that("we can post ids", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     qk <- ret$QueryKey
     expect_that(as.integer(qk), is_a("integer"))
     expect_false(is.na(as.integer(qk)))
@@ -17,7 +17,7 @@ test_that("we can post ids", {
 })
 
 test_that("we can add to WebEnv", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     ret2 <- net(entrez_post(id=119703751, db="protein", web_history=ret))
     first <- net(entrez_summary(db="protein", web_history=ret))
     second <- net(entrez_summary(db="protein", web_history=ret2))
@@ -28,7 +28,7 @@ test_that("we can add to WebEnv", {
 })
 
 test_that("Example works", {
-     skip_if(!ncbi_ok, "NCBI not available")
+     skip_without_ncbi(ncbi_ok)
      so_many_snails <- net(entrez_search(db="nuccore",
                            "Gastropoda[Organism] AND COI[Gene]", retmax=200))
      upload <- net(entrez_post(db="nuccore", id=so_many_snails$ids))
@@ -38,7 +38,7 @@ test_that("Example works", {
 })
 
 test_that("We can print a post result", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_output(print(ret),
      "\\(QueryKey = \\d+, WebEnv = [A-Z0-9_a-z]+\\.\\.\\.\\)")
 })

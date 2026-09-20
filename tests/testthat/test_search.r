@@ -12,7 +12,7 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that("Global query works",{
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     #global query
     expect_that(gsearch, is_a("numeric"))
     expect_that(names(gsearch), is_a("character"))
@@ -22,14 +22,14 @@ test_that("Global query works",{
 })
 
 test_that("Entrez query works",{
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     #entrez query
     expect_that(pubmed_search, is_a("esearch"))
     expect_that(pubmed_search$ids, is_identical_to("20674752"))
 })
 
 test_that("Entrez query works just as well with xml/json",{
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(json_search, is_a("esearch"))
     expect_that(json_search$ids, is_identical_to("20674752"))
     expect_equal(names(pubmed_search),names(json_search))
@@ -37,7 +37,7 @@ test_that("Entrez query works just as well with xml/json",{
 
 
 test_that("we can print search results", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_output(print(pubmed_search), "Entrez search result with \\d+ hits")
     expect_output(print(json_search),   "Entrez search result with \\d+ hits")
 })

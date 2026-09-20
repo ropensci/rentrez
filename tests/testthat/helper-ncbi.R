@@ -43,8 +43,21 @@ net <- function(expr) {
 
 # Error handler for the file-level setup blocks. Returns FALSE so that file's
 # tests skip, but only when the cause was the network.
+#
+# The reason rides along on the value rather than going to message(), because
+# testthat swallows a message raised at file level. A skip that reports only
+# "NCBI not available" hides which call failed and why, which is the same fault
+# as an error telling the reader to go and find a warning.
 ncbi_setup_failed <- function(e) {
     if (!is_network_error(e)) stop(e)
-    message("NCBI not available: ", conditionMessage(e))
-    FALSE
+    structure(FALSE, reason = paste("NCBI not available:", conditionMessage(e)))
 }
+
+# Skip the calling test when the file's setup did not run, reporting whatever
+# the setup recorded. The reason arrives complete, so nothing is prefixed here.
+skip_without_ncbi <- function(ok) {
+    if (isTRUE(ok)) return(invisible(TRUE))
+    reason <- attr(ok, "reason")
+    testthat::skip(if (is.null(reason)) "NCBI not available: setup failed" else reason)
+}
+

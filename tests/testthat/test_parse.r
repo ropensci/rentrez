@@ -17,7 +17,7 @@ ncbi_ok <- tryCatch({
 }, error = ncbi_setup_failed)
 
 test_that("pubmed file parsers work",{
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_that(raw_rec, is_a("character"))
 
     expect_that(parsed_raw, is_a("pubmed_record"))
@@ -43,13 +43,13 @@ test_that("pubmed file parsers work",{
 })
 
 test_that("we can print pubmed records", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     expect_output(print(parsed_rec), "Pubmed record")
     expect_output(print(parsed_multi), "List of 4 pubmed records")
 })
 
 test_that("We warn about unknown pubmed record types", {
-    skip_if(!ncbi_ok, "NCBI not available")
+    skip_without_ncbi(ncbi_ok)
     rec = net(entrez_fetch(db="pubmed", id=25905152, rettype="xml"))
     expect_warning(parsed_rec <- parse_pubmed_xml(rec))
     expect_output(print(parsed_rec), "Pubmed record \\(empty\\)")
