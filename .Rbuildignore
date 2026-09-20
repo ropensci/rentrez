@@ -9,6 +9,6 @@
 ^README-*\.png$
 ^CONDUCT\.md$
 ^.github$
-^revdep$/
+^revdep/
 ^doc$
 ^Meta$

@@ -165,7 +165,7 @@ parse_esummary.XMLInternalDocument  <- function(x, version, always_return_list){
         recs <- x["//DocSum"] 
 
         if(length(recs)==0){
-           stop("Esummary document contains no DocSums, try 'version=2.0'?)")
+           stop("Esummary document contains no DocSums, try 'version=2.0'?")
         }
         per_rec <- function(r){
             res <- xpathApply(r, "Item", parse_node)
