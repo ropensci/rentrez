@@ -1,0 +1,40 @@
+# What a working copy of rentrez accumulates: R session state, build and check
+# output, and test artefacts. staticdocs/ is deliberately absent because it is
+# tracked content, not generated.
+
+# R session and project files
+.Rproj.user/
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+*.Rproj
+
+# Keys and local environment. rentrez reads an NCBI API key from ENTREZ_KEY, so
+# a .Renviron in a working copy holds somebody's key.
+.Renviron
+.env
+.env.*
+
+# R CMD build and check output
+*.Rcheck/
+rentrez_*.tar.gz
+doc/
+Meta/
+revdep/checks/
+revdep/library/
+revdep/checks.noindex
+revdep/library.noindex
+
+# testthat writes these after a run that had failures
+tests/testthat/_problems/
+tests/testthat/testthat-problems.rds
+tests/testthat/Rplots.pdf
+
+# Rendered README, and a pkgdown site built locally. The published site at
+# docs.ropensci.org is built by rOpenSci from source, not from this directory.
+README.html
+docs/
+
+# macOS
+.DS_Store
