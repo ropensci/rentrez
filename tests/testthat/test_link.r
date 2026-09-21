@@ -45,7 +45,11 @@ test_that("The record-linking funcitons work",{
     skip_without_ncbi(ncbi_ok)
     expect_that(elinks_mixed, is_a("elink"))
     expect_that(names(elinks_mixed$links), is_a("character"))
-    expect_true(length(elinks_mixed$links$pubmed_mesh_major) > 0)
+    #naming one category pins a detail NCBI can withdraw, which is how this
+    #test broke: it asked for pubmed_mesh_major, and NCBI stopped serving it
+    #(#219). What the test is named for is that links come back at all.
+    expect_true(length(elinks_mixed$links) > 0)
+    expect_true(sum(lengths(elinks_mixed$links)) > 0)
 })
 
 
@@ -67,6 +71,11 @@ test_that("elink printing behaves", {
 
 test_that("We detect missing ids from elink results",{
    skip_without_ncbi(ncbi_ok)
+   #NCBI answers for ids that do not exist, returning a LinkSet whose every
+   #link is the query id pointing at itself, so nothing is left to detect and
+   #no warning can fire (#220). Kept as a skip rather than deleted, because
+   #the capability was real and the test is the record of it.
+   skip("NCBI returns links for ids that do not exist, so none are missing (#220)")
    expect_warning(
     net(entrez_link(dbfrom="pubmed", db="all", id=c(20203609,2020360999999,20203610), by_id=TRUE))
    )
