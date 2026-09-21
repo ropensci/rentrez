@@ -82,3 +82,46 @@ test_that("the old cryptic errors are gone", {
     expect_false(grepl("subscript out of bounds", msg, fixed = TRUE))
     expect_false(grepl("'names' attribute", msg, fixed = TRUE))
 })
+
+# With by_id, NCBI answers each id with its own LinkSet, so the reply is checked
+# by count. Matching ids does not work: an accession comes back as a GI number,
+# and the check and linkout commands carry no IdList (#238). The LinkSets below
+# are trimmed from real replies.
+elink_reply <- function(linksets) {
+    XML::xmlTreeParse(paste0("<eLinkResult>", paste0(linksets, collapse = ""),
+                             "</eLinkResult>"), useInternalNodes = TRUE)
+}
+neighbor_linkset <- function(gi) paste0(
+    "<LinkSet><DbFrom>nuccore</DbFrom><IdList><Id>", gi, "</Id></IdList>",
+    "<LinkSetDb><DbTo>protein</DbTo><LinkName>nuccore_protein</LinkName>",
+    "<Link><Id>120407068</Id></Link></LinkSetDb></LinkSet>")
+ncheck_linkset <- function(id) paste0(
+    "<LinkSet><DbFrom>pubmed</DbFrom><IdCheckList>",
+    "<Id HasNeighbor=\"Y\">", id, "</Id></IdCheckList></LinkSet>")
+llinks_linkset <- function(id) paste0(
+    "<LinkSet><DbFrom>pubmed</DbFrom><IdUrlList><IdUrlSet><Id>", id, "</Id>",
+    "<ObjUrl><Url>https://doi.org/10.1038/nature08789</Url>",
+    "<Category>Full Text Sources</Category><Provider><Name>Nature Publishing",
+    " Group</Name><NameAbbr>NPG</NameAbbr><Id>3094</Id></Provider></ObjUrl>",
+    "</IdUrlSet></IdUrlList></LinkSet>")
+
+test_that("a full by_id reply raises no warning, whatever its shape", {
+    pmids <- c("20203609", "20203610")
+    cases <- list(
+        list(cmd = "neighbor", sent = c("NM_000546.6", "NM_001126112.3"),
+             reply = elink_reply(neighbor_linkset(c("1808862652", "1894803099")))),
+        list(cmd = "ncheck", sent = pmids, reply = elink_reply(ncheck_linkset(pmids))),
+        list(cmd = "llinks", sent = pmids, reply = elink_reply(llinks_linkset(pmids))))
+    for (case in cases) {
+        res <- rentrez:::parse_elink(case$reply, cmd = case$cmd, by_id = TRUE)
+        expect_no_warning(rentrez:::warn_unanswered_ids(res, case$sent))
+    }
+})
+
+test_that("a by_id reply short of LinkSets warns with counts, not ids", {
+    res <- rentrez:::parse_elink(elink_reply(ncheck_linkset("20203609")),
+                                 cmd = "ncheck", by_id = TRUE)
+    msg <- tryCatch(rentrez:::warn_unanswered_ids(res, c("20203609", "20203610")),
+                    warning = conditionMessage)
+    expect_equal(msg, "NCBI returned results for 1 of the 2 IDs requested")
+})

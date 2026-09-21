@@ -65,13 +65,21 @@ entrez_link <- function(dbfrom, web_history=NULL, id=NULL, db=NULL, cmd='neighbo
     response <- do.call(make_entrez_query,args)
     record <- parse_response(response, 'xml')
     res <- parse_elink(record, cmd=cmd, by_id=by_id)
-    if(!is.null(id) & by_id){
-        if(length(res) != length(id)){
-            msg <- paste( id[!(id %in% res)], ", ")
-            warning("Some IDs appear to be invalid. Result containg no information for the following IDs: ", msg)
-        }
+    if(by_id){
+        warn_unanswered_ids(res, id)
     }
     res
+}
+
+#With by_id, NCBI answers every id with its own LinkSet, even an id that does
+#not exist (#220), so a reply with fewer is rare. The reply cannot show which
+#ids went unanswered: an accession comes back as a GI number, and only the
+#neighbor commands repeat the id in an IdList. So the warning gives counts.
+warn_unanswered_ids <- function(res, id){
+    if(length(res) < length(id)){
+        warning("NCBI returned results for ", length(res), " of the ",
+                length(id), " IDs requested", call.=FALSE)
+    }
 }
 
 #' Extract URLs from an elink object
