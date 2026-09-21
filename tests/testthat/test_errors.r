@@ -145,3 +145,23 @@ test_that("empty history elements are treated as no history", {
                    "no web history")
     expect_null(res$web_history)
 })
+
+# entrez_fetch(parsed=TRUE) decides with is_xml_record and then parses with
+# parse_response, so the two have to agree on the same set of rettypes. A
+# rettype the gate calls XML but parse_response has no branch for comes back as
+# text despite parsed=TRUE, and one the gate turns away cannot be parsed at all.
+# "gbc" and "gpc" are both INSDSeq XML, for nucleotide and protein records, and
+# each function listed one half of the pair (#228). No network needed.
+test_that("every rettype the parse gate accepts is one parse_response parses", {
+    xml <- "<INSDSet><INSDSeq><INSDSeq_locus>AY225027</INSDSeq_locus></INSDSeq></INSDSet>"
+    for (rt in c("xml", "native", "gbc", "gpc", "ipg")) {
+        expect_true(rentrez:::is_xml_record(rt, ""))
+        expect_true(inherits(rentrez:::parse_response(xml, rt), "XMLInternalDocument"))
+    }
+})
+
+test_that("the parse gate turns away rettypes that are not XML", {
+    for (rt in c("fasta", "uilist", "gb")) {
+        expect_false(rentrez:::is_xml_record(rt, ""))
+    }
+})
