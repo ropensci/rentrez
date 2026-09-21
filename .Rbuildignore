@@ -1,11 +1,12 @@
 ^\.gitignore$
+^\.gitleaks\.toml$
+^\.pre-commit-config\.yaml$
+^docs$
 ^staticdocs$
 ^\.git/$
 ^rentrez_*\.tar\.gz$
 ^README\.md$
 ^README\.rmd$
-^\.travis\.yml$
-^appveyor\.yml$
 ^CONTRIBUTING\.md$
 ^README\.Rmd$
 ^README-*\.png$
