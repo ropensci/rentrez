@@ -1,4 +1,7 @@
 ^\.gitignore$
+^\.gitleaks\.toml$
+^\.pre-commit-config\.yaml$
+^docs$
 ^staticdocs$
 ^\.git/$
 ^rentrez_*\.tar\.gz$
