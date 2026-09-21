@@ -40,6 +40,13 @@
   so a `"gbc"` request stopped with a message calling it unparseable while a
   `"gpc"` request got past the check and came back as text (#228).
 
+* `entrez_link(by_id = TRUE)` no longer names valid IDs as invalid. When NCBI
+  returned fewer results than IDs sent, the warning listed every ID, with a
+  stray separator after each. It now gives counts, as in "NCBI returned results
+  for 2 of the 3 IDs requested", because the reply cannot show which IDs went
+  unanswered: an accession comes back as a GI number, and only the neighbor
+  commands repeat the ID (#238).
+
 ## MINOR IMPROVEMENTS
 
 * HTTP failures name the query that caused them, with the API key removed. The
