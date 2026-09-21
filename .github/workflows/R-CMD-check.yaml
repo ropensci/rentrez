@@ -13,30 +13,36 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})${{ matrix.config.tests && ' + tests' || '' }}
 
     strategy:
       fail-fast: false
-      # One job at a time. Every job works through a suite that calls NCBI for
-      # nearly every assertion, and rentrez paces itself at 0.13s per request
-      # with a key, so five jobs at once reach roughly 38 requests a second
-      # against a limit of 10. Running them in parallel spends the whole budget
-      # on HTTP 429s and turns the results into noise (#216).
-      max-parallel: 1
+      # Only one job runs the test suite, so the jobs can run together.
+      #
+      # NCBI issues one API key per user, so every job draws on the same budget
+      # of 10 requests a second. One job measured at about 3 a second keyed:
+      # rentrez sleeps 0.13s between requests and a request took around 0.2s.
+      # Five of those is roughly 15, and a runner closer to NCBI goes higher,
+      # with rentrez's own pacing the only floor at 7.7 a second per job (#216).
+      #
+      # Platforms differ in whether the package builds, installs and checks,
+      # and none of that needs the network. Leaving tests to one job holds NCBI
+      # load where it already is whatever the runners turn out to do, and the
+      # matrix finishes in the time of its slowest job instead of the sum.
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
+          - {os: ubuntu-latest,  r: 'release',  tests: true}
+          - {os: macos-latest,   r: 'release',  tests: false}
+          - {os: windows-latest, r: 'release',  tests: false}
+          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release', tests: false}
+          - {os: ubuntu-latest,  r: 'oldrel-1', tests: false}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
       # rentrez tests contact the live NCBI EUtils API. An API key raises the
-      # rate limit from 3 to 10 requests/second and reduces HTTP 429 failures
-      # when matrix jobs run in parallel. Add ENTREZ_KEY as a repository secret.
+      # rate limit from 3 to 10 requests/second. Add ENTREZ_KEY as a repository
+      # secret.
       #
       # GitHub does not pass secrets to pull requests from forks, so those runs
       # see an empty value and fall back to the unauthenticated limit. rentrez
@@ -66,3 +72,4 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          args: ${{ matrix.config.tests && 'c("--no-manual", "--as-cran")' || 'c("--no-manual", "--as-cran", "--no-tests")' }}
