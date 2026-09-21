@@ -163,6 +163,7 @@ parse_response <- function(x, type=NULL){
             "xml"  = xmlTreeParse(x, useInternalNodes=TRUE),
             "native"  = xmlTreeParse(x, useInternalNodes=TRUE),
             "gbc"  = xmlTreeParse(x, useInternalNodes=TRUE),
+            "gpc"  = xmlTreeParse(x, useInternalNodes=TRUE),
             "ipg"  = xmlTreeParse(x, useInternalNodes=TRUE),
             "text" = x, #citmatch uses plain old plain text
              x #fall-through, if in doubt, return un-parsed response

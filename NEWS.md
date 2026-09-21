@@ -34,12 +34,23 @@
   single string, so it never matched and every request used GET
   (#174, thanks @allenbaron).
 
+* `entrez_fetch(parsed = TRUE)` parses both `rettype = "gbc"` and
+  `rettype = "gpc"`, the INSDSeq XML formats for nucleotide and protein
+  records. The check listed only `"gpc"` and the parser handled only `"gbc"`,
+  so a `"gbc"` request stopped with a message calling it unparseable while a
+  `"gpc"` request got past the check and came back as text (#228).
+
 ## MINOR IMPROVEMENTS
 
 * HTTP failures name the query that caused them, with the API key removed. The
   key reaches these messages two ways, in the query string whenever one is set
   and quoted back by NCBI when it rejects one, and these messages get pasted
   into bug reports (#159).
+
+* `?entrez_search` names xml as the default for `retmode`, which is what the
+  function has always used. The page said json, and added that the choice makes
+  no difference in most cases, which the Value section already covers in more
+  detail (#224).
 
 * Removed stray characters from two error messages (#211).
 

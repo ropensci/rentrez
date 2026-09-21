@@ -1,0 +1,18 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+name: lint
+
+permissions: read-all
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - run: uvx prek run --all-files --show-diff-on-failure --color=always
+        env:
+          SKIP: no-commit-to-branch
