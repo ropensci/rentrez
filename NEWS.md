@@ -34,6 +34,12 @@
   single string, so it never matched and every request used GET
   (#174, thanks @allenbaron).
 
+* `entrez_fetch(parsed = TRUE)` parses both `rettype = "gbc"` and
+  `rettype = "gpc"`, the INSDSeq XML formats for nucleotide and protein
+  records. The check listed only `"gpc"` and the parser handled only `"gbc"`,
+  so a `"gbc"` request stopped with a message calling it unparseable while a
+  `"gpc"` request got past the check and came back as text (#228).
+
 ## MINOR IMPROVEMENTS
 
 * HTTP failures name the query that caused them, with the API key removed. The
