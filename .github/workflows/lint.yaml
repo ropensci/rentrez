@@ -1,6 +1,9 @@
+# Pull requests only. The ruleset on master requires this check, so every
+# change passes it before it merges. Two pull requests can still each pass on
+# their own and then fail once both are merged, because a branch does not have
+# to be up to date with master. prek checks every file, so the next pull
+# request catches that.
 on:
-  push:
-    branches: [master]
   pull_request:
 
 name: lint
