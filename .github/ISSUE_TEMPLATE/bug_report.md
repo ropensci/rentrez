@@ -1,16 +1,43 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report something rentrez does wrong
 title: ''
-labels: ''
+labels: bug
 assignees: ''
 
 ---
 
-Sometimes `rentrez` will throw obscure error messages because the NCBI's webservers are down or otherwise not behaving as they are meant to. Before reporting issues about errors thrown while contacting an NCBI database (search, fetch, summary,	 link...) you can test the NCBI is responding to requests by pasting the following URLS into a web browser.	
+<!-- When NCBI's servers are down or misbehaving, rentrez can throw confusing
+     errors. That is not a rentrez bug. Before filing, paste these two links
+     into a browser:
 
-https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=snp&id=6060535&retmote=rsr	
-https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=rentrez	
+     https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=AY225027.1&rettype=fasta&retmode=text
+     https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=rentrez
 
-They should give you a plain text file and a small XML file respectively. If you receive errors when trying to aces the URLs it is likely they the NCBI is	having an intermittent problem, try your request again in a few minutes. If those pages load as expected then please file your issue. We appreciate user	
-feedback and will do our best to help.
+     The first shows plain text starting with ">AY225027.1". The second shows a
+     small XML file. If either one fails, NCBI is probably having a short
+     outage, so try again in a few minutes. If both load as described, please
+     file the issue. -->
+
+## Description
+
+<!-- What you expected, and what you got instead. Paste the error in full. -->
+
+## Reproducible example
+
+<!-- The smallest piece of code that shows the problem.
+
+     Leave your API key out. rentrez reads it from the ENTREZ_KEY environment
+     variable, so the example does not need it. -->
+
+```r
+
+```
+
+## Session info
+
+<!-- The output of sessionInfo(). -->
+
+```r
+
+```
