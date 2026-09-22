@@ -1,4 +1,5 @@
 context("entrez_post")
+skip_on_cran()
 
 prot_ids = c(15718680,157427902)
 

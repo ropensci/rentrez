@@ -1,4 +1,5 @@
 context("elink")
+skip_on_cran()
 
 #setup (guarded so transient NCBI problems skip rather than abort the file)
 message("(this may take some time, have to download many records)")
