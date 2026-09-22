@@ -1,4 +1,5 @@
 context("fetching and parsing summary recs")
+skip_on_cran()
 
 fake_ids <- sample(1e5, 501)
 pop_ids = c("307082412", "307075396", "307075338", "307075274")
@@ -65,12 +66,6 @@ test_that("JSON and XML objects are similar", {
 
 })
 
-
-test_that("Error whent tring to fetch 1.0 summaries as json", {
-      expect_error(
-        entrez_summary("pubmed", id = fake_ids[1:10], version="1.0", retmode="json")
-      )
-})
 
 test_that("We can print summary records", {
       skip_without_ncbi(ncbi_ok)

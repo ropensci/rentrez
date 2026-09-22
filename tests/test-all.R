@@ -1,10 +1,7 @@
 library("testthat")
 
-#All of the tests rely on the API existing and behaving as documented. However,
-#the API occasionally falls over or stops working which lets to errors on CRAN.
-#Because we use travis CI we will hear about any test failures as soon as they
-#happen. So, let's skill all tests on CRAN:
-
-if(identical(Sys.getenv("NOT_CRAN"), "true")){
-    test_check("rentrez")
-}
+#Most test files call the live NCBI API and start with skip_on_cran(), so CRAN
+#and r-universe, which leave NOT_CRAN unset, run only the tests that need no
+#network. devtools::check() and the r-lib GitHub Actions set NOT_CRAN=true and
+#run the whole suite (#221).
+test_check("rentrez")

@@ -1,4 +1,5 @@
 context("query")
+skip_on_cran()
 test_that("Query building functions work", {
 
     setup <- tryCatch({

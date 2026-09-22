@@ -3,6 +3,7 @@ context("elink by_id")
 # In by_id mode the result should always be a list (one elink per id), even for
 # a single id, and the call should not emit a spurious "invalid id" warning.
 test_that("by_id=TRUE returns a one-element list with no spurious warning", {
+    skip_on_cran()
     #only the call is wrapped. A testthat failure is an error condition too, so
     #an expectation inside this tryCatch would be reported as a skip instead.
     seen <- NULL
