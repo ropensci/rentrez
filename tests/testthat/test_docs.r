@@ -2,6 +2,7 @@
 # suite. Note, the final example of the README makes a lot calls to NCBI, so is
 # not included here
 context("documentation")
+skip_on_cran()
 
 test_that("The pubmed example in the docs works", {
     hox_paper <- net(entrez_search(db="pubmed", term="10.1038/nature08789[doi]"))

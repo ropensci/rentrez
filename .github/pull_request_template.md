@@ -31,4 +31,6 @@
 
      Anything that calls NCBI goes through net() or skip_without_ncbi(), so a
      bad day at NCBI skips instead of failing the build, while a real bug still
-     fails. See tests/testthat/helper-ncbi.R. -->
+     fails. See tests/testthat/helper-ncbi.R. A test file that calls NCBI also
+     starts with skip_on_cran(), so CRAN and r-universe run only the tests
+     that need no network. -->
