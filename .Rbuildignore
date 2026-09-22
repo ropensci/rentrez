@@ -1,6 +1,7 @@
 ^\.gitignore$
 ^\.gitleaks\.toml$
 ^\.pre-commit-config\.yaml$
+^_pkgdown\.yml$
 ^docs$
 ^staticdocs$
 ^\.git/$
