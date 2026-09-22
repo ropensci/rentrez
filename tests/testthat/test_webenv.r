@@ -1,4 +1,5 @@
 context("WebEnv")
+skip_on_cran()
 test_that("Searches using WebEnv features work", {
     #setup
     web_env_search <- net(entrez_search(db="nuccore",

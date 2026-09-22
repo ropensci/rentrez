@@ -1,4 +1,5 @@
 context("fetching records")
+skip_on_cran()
 
 
 pop_ids = c("307082412", "307075396", "307075338", "307075274")

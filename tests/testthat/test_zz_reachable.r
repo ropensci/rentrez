@@ -1,4 +1,5 @@
 context("live API reachable")
+skip_on_cran()
 
 # The rest of the suite skips its tests when NCBI is unavailable. That keeps a
 # bad day at NCBI from failing the build, but it also means a run in which every
