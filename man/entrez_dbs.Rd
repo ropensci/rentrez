@@ -21,10 +21,10 @@ entrez_dbs()
 }
 }
 \seealso{
-Other einfo: 
-\code{\link{entrez_db_links}()},
-\code{\link{entrez_db_searchable}()},
-\code{\link{entrez_db_summary}()},
-\code{\link{entrez_info}()}
+Other einfo:
+\code{\link[=entrez_db_links]{entrez_db_links()}},
+\code{\link[=entrez_db_searchable]{entrez_db_searchable()}},
+\code{\link[=entrez_db_summary]{entrez_db_summary()}},
+\code{\link[=entrez_info]{entrez_info()}}
 }
 \concept{einfo}

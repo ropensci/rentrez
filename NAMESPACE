@@ -36,13 +36,15 @@ export(extract_from_esummary)
 export(linkout_urls)
 export(parse_pubmed_xml)
 export(set_entrez_key)
-importFrom(XML,xmlChildren)
-importFrom(XML,xmlGetAttr)
-importFrom(XML,xmlName)
-importFrom(XML,xmlSApply)
-importFrom(XML,xmlToList)
-importFrom(XML,xmlTreeParse)
-importFrom(XML,xmlValue)
-importFrom(XML,xpathApply)
-importFrom(XML,xpathSApply)
+importFrom(XML,
+  xmlChildren,
+  xmlGetAttr,
+  xmlName,
+  xmlSApply,
+  xmlToList,
+  xmlTreeParse,
+  xmlValue,
+  xpathApply,
+  xpathSApply
+)
 importFrom(jsonlite,fromJSON)
