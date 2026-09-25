@@ -36,10 +36,10 @@ entrez_dbs()
 \seealso{
 \code{\link[httr]{config}} for available httr configurations
 
-Other einfo: 
-\code{\link{entrez_db_links}()},
-\code{\link{entrez_db_searchable}()},
-\code{\link{entrez_db_summary}()},
-\code{\link{entrez_dbs}()}
+Other einfo:
+\code{\link[=entrez_db_links]{entrez_db_links()}},
+\code{\link[=entrez_db_searchable]{entrez_db_searchable()}},
+\code{\link[=entrez_db_summary]{entrez_db_summary()}},
+\code{\link[=entrez_dbs]{entrez_dbs()}}
 }
 \concept{einfo}
