@@ -37,4 +37,4 @@ Description: Provides an R interface to the NCBI's 'EUtils' API,
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.1.0
