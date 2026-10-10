@@ -141,7 +141,9 @@ parse_esearch.list <- function(x, history){
     result_names <- names(x$esearchresult)
     count_only <- !any(c("idlist", "retmax", "querytranslation") %in% result_names)
     if(count_only){
-        res <- list(count = as.integer(x$esearchresult$count), file = x)
+        res <- list(ids = list(), count = as.integer(x$esearchresult$count),
+                    retmax = NA_integer_, QueryTranslation = NA_character_,
+                    file = x)
         if(history){
             warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
                     "web history is attached. A count-only search carries none.",

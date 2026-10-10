@@ -20,7 +20,22 @@ test_that("count-only search responses are parsed and printed", {
     expect_length(xml_search$ids, 0)
     expect_true(is.na(xml_search$retmax))
     expect_true(is.na(xml_search$QueryTranslation))
-    expect_named(json_search, c("count", "file"))
+    expect_equal(names(json_search), names(xml_search))
+    fields <- c("ids", "count", "retmax", "QueryTranslation")
+    expect_identical(json_search[fields], xml_search[fields])
     expect_output(print(xml_search), "Entrez search result with 42 hits")
     expect_output(print(json_search), "Entrez search result with 42 hits")
+})
+
+test_that("count-only json searches warn when history was requested", {
+    json <- list(
+        header = list(type = "esearch", version = "0.3"),
+        esearchresult = list(count = "42")
+    )
+
+    expect_warning(
+        res <- parse_esearch(json, history = TRUE),
+        "no web history"
+    )
+    expect_null(res$web_history)
 })
