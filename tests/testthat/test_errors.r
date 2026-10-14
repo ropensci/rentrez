@@ -165,3 +165,10 @@ test_that("the parse gate turns away rettypes that are not XML", {
         expect_false(rentrez:::is_xml_record(rt, ""))
     }
 })
+
+# NCBI serves version 1.0 summaries only as XML, so entrez_summary() refuses a
+# json request for one before it sends anything. No network.
+test_that("version 1.0 summaries cannot be requested as json", {
+    expect_error(entrez_summary("pubmed", id = 1:10, version = "1.0", retmode = "json"),
+                 "only available as xml")
+})

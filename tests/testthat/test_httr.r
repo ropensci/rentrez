@@ -1,4 +1,5 @@
 context("httr option passing")
+skip_on_cran()
     #most config options  don't produce capture-able output, so instead
     # we will test if we raise an error when we us a non-existant proxy to
     # connect to the internet

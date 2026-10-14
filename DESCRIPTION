@@ -24,7 +24,7 @@ Imports:
     httr (>= 0.5),
     jsonlite (>= 0.9)
 Suggests:
-    testthat,
+    testthat (>= 3.2.3),
     knitr,
     rmarkdown
 URL: https://docs.ropensci.org/rentrez/, https://github.com/ropensci/rentrez/
@@ -37,4 +37,4 @@ Description: Provides an R interface to the NCBI's 'EUtils' API,
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.1.0

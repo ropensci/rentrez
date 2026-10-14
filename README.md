@@ -1,15 +1,15 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![R-CMD-check](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml) [![CRAN](http://cranlogs.r-pkg.org/badges/rentrez)](http://cran.rstudio.com/web/packages/rentrez/index.html) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](http://dx.doi.org/10.5281/zenodo.32420)
+[![R-CMD-check](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/rentrez/actions/workflows/R-CMD-check.yaml) [![CRAN](https://cranlogs.r-pkg.org/badges/rentrez)](https://CRAN.R-project.org/package=rentrez) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32420.svg)](https://doi.org/10.5281/zenodo.32420)
 
 rentrez
 =======
 
-`rentrez` provides functions that work with the [NCBI Eutils](http://www.ncbi.nlm.nih.gov/books/NBK25500/) API to search, download data from, and otherwise interact with NCBI databases.
+`rentrez` provides functions that work with the [NCBI Eutils](https://www.ncbi.nlm.nih.gov/books/NBK25500/) API to search, download data from, and otherwise interact with NCBI databases.
 
 Install
 -------
 
-`rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can install the current github version using Hadley Wickham's [devtools](https://github.com/hadley/devtools).
+`rentrez` is on CRAN, so you can get the latest stable release with `install.packages("rentrez")`. This repository will sometimes be a little ahead of the CRAN version, if you want the latest (and possibly greatest) version you can install the current github version using Hadley Wickham's [devtools](https://github.com/r-lib/devtools).
 
     library(devtools)
     install_github("ropensci/rentrez")
@@ -17,9 +17,9 @@ Install
 The EUtils API
 --------------
 
-Each of the functions exported by `rentrez` is documented, and this README and the package vignette provide examples of how to use the functions together as part of a workflow. The API itself is [well-documented](http://www.ncbi.nlm.nih.gov/books/NBK25500/). Be sure to read the official documentation to get the most out of API. In particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times (`rentrez` takes care of limiting the number of requests per second, and setting the appropriate entrez tool name in each request).
+Each of the functions exported by `rentrez` is documented, and this README and the package vignette provide examples of how to use the functions together as part of a workflow. The API itself is [well-documented](https://www.ncbi.nlm.nih.gov/books/NBK25500/). Be sure to read the official documentation to get the most out of API. In particular, be aware of the NCBI's usage policies and try to limit very large requests to off peak (USA) times (`rentrez` takes care of limiting the number of requests per second, and setting the appropriate entrez tool name in each request).
 
-Hopefully this README, and the package's vignette and in-line documentation, provide you with enough information to get started with `rentrez`. If you need more help, or if you discover a bug in `rentrez` please let us know, either through one of the [contact methods described here](http://ropensci.org/contact.html), or [by filing an issue](https://github.com/ropensci/rentrez/issues)
+Hopefully this README, and the package's vignette and in-line documentation, provide you with enough information to get started with `rentrez`. If you need more help, or if you discover a bug in `rentrez` please let us know, either through one of the [contact methods described here](https://ropensci.org/contact/), or [by filing an issue](https://github.com/ropensci/rentrez/issues)
 
 Examples
 --------
@@ -162,7 +162,7 @@ tree$tip.label <- stringr::str_extract(tree$tip.label, "Steatoda [a-z]+|Latrodec
 plot( root(tree, outgroup="Steatoda grossa" ), cex=0.8)
 ```
 
-![](http://i.imgur.com/8n9UeIi.png)
+![](https://i.imgur.com/8n9UeIi.png)
 
 ### web\_history and big queries
 
@@ -306,12 +306,8 @@ p + geom_line(size=1) + scale_y_log10("number of papers")
 
 Giving us... well this:
 
-![](http://i.imgur.com/oSYuWqz.png)
+![](https://i.imgur.com/oSYuWqz.png)
 
 ------------------------------------------------------------------------
 
-This package is part of a richer suite called [fulltext](https://github.com/ropensci/fulltext), along with several other packages, that provides the ability to search for and retrieve full text of open access scholarly articles.
-
-------------------------------------------------------------------------
-
-[![](http://ropensci.org/public_images/github_footer.png)](http://ropensci.org)
+[![](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org/)

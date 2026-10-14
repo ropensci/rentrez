@@ -1,4 +1,5 @@
 context("result-parsers")
+skip_on_cran()
 
 #setup (guarded so transient NCBI problems skip rather than abort the file)
 ncbi_ok <- tryCatch({
