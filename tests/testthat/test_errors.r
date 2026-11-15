@@ -146,6 +146,53 @@ test_that("empty history elements are treated as no history", {
     expect_null(res$web_history)
 })
 
+# NCBI sends querykey and webenv inside esearchresult. The json parser looked
+# for them under a misspelt name, found nothing, and built a web_history from
+# two NULLs with no warning, so the failure showed up later, in entrez_summary()
+# or entrez_fetch() (#223). No network needed.
+json_search_reply <- function(...)
+    list(esearchresult = list(count = "2", retmax = "2", idlist = c("11", "12"),
+                              querytranslation = "x", ...))
+
+test_that("a json search with use_history keeps the history NCBI sent", {
+    res <- rentrez:::parse_esearch(json_search_reply(querykey = "1", webenv = "MCID_abc"),
+                                   history = TRUE)
+    expect_s3_class(res$web_history, "web_history")
+    expect_equal(res$web_history$QueryKey, "1")
+    expect_equal(res$web_history$WebEnv, "MCID_abc")
+})
+
+# The two formats describe the same search, so they parse to the same fields in
+# the same order, history included.
+test_that("json and xml searches with history parse to the same result", {
+    xml <- XML::xmlTreeParse(paste0(
+        "<eSearchResult><Count>2</Count><RetMax>2</RetMax><QueryKey>1</QueryKey>",
+        "<WebEnv>MCID_abc</WebEnv><IdList><Id>11</Id><Id>12</Id></IdList>",
+        "<QueryTranslation>x</QueryTranslation></eSearchResult>"), useInternalNodes = TRUE)
+    from_xml <- rentrez:::parse_esearch(xml, history = TRUE)
+    from_json <- rentrez:::parse_esearch(json_search_reply(querykey = "1", webenv = "MCID_abc"),
+                                         history = TRUE)
+    expect_equal(names(from_json), names(from_xml))
+    fields <- c("ids", "count", "retmax", "QueryTranslation", "web_history")
+    expect_identical(from_json[fields], from_xml[fields])
+})
+
+# A history needs both values. The json path guards the same cases as the xml
+# one, the fields missing and the fields empty, and also a reply that carries
+# only one of the two or an empty json array in place of a string.
+test_that("a json search without a QueryKey and a WebEnv warns and attaches no history", {
+    replies <- list(json_search_reply(),
+                    json_search_reply(querykey = "", webenv = ""),
+                    json_search_reply(querykey = "1"),
+                    json_search_reply(webenv = "MCID_abc"),
+                    json_search_reply(querykey = "1", webenv = list()))
+    for (reply in replies) {
+        expect_warning(res <- rentrez:::parse_esearch(reply, history = TRUE),
+                       "no web history")
+        expect_null(res$web_history)
+    }
+})
+
 # entrez_fetch(parsed=TRUE) decides with is_xml_record and then parses with
 # parse_response, so the two have to agree on the same set of rettypes. A
 # rettype the gate calls XML but parse_response has no branch for comes back as
