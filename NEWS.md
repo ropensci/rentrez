@@ -19,6 +19,13 @@
   where before it failed on the same subscript. NCBI sends no QueryKey or
   WebEnv for a count-only search, so there is none to attach.
 
+* `entrez_search(retmode = "json", use_history = TRUE)` returns the web
+  history NCBI sent. The json parser read the QueryKey and WebEnv from a
+  misspelt field, so both came back empty with no warning. Given that history,
+  `entrez_summary()` failed with "No esummary records found in file" and
+  `entrez_fetch()` with HTTP 400. A json result also lists its fields in the
+  same order as an xml one now (#223).
+
 * `entrez_link(by_id = TRUE)` returns a list for a single ID, as it already did
   for several, and no longer warns that the ID was invalid when it was not
   (#175).

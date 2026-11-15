@@ -98,6 +98,15 @@ esearch_failure <- function(what, x){
     paste0(what, ". NCBI message: ", paste(unique(said), collapse="; "))
 }
 
+#The warning for a search that asked for a web history and got none. A
+#history needs both a QueryKey and a WebEnv, and NCBI sends neither for a
+#count-only search.
+warn_no_history <- function(){
+    warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
+            "web history is attached. A count-only search carries none.",
+            call.=FALSE)
+}
+
 #'@exportS3Method   
 parse_esearch.XMLInternalDocument <- function(x, history){
     check_xml_errors(x)
@@ -118,9 +127,7 @@ parse_esearch.XMLInternalDocument <- function(x, history){
         query_key <- get1("/eSearchResult/QueryKey")
         web_env   <- get1("/eSearchResult/WebEnv")
         if(is.na(query_key) || is.na(web_env) || !nzchar(query_key) || !nzchar(web_env)){
-            warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
-                    "web history is attached. A count-only search carries none.",
-                    call.=FALSE)
+            warn_no_history()
         } else {
             res$web_history = web_history(QueryKey = query_key, WebEnv = web_env)
         }
@@ -145,9 +152,7 @@ parse_esearch.list <- function(x, history){
                     retmax = NA_integer_, QueryTranslation = NA_character_,
                     file = x)
         if(history){
-            warning("NCBI returned no QueryKey or WebEnv for this search, so no ",
-                    "web history is attached. A count-only search carries none.",
-                    call.=FALSE)
+            warn_no_history()
         }
         class(res) <- c("esearch", "list")
         return(res)
@@ -156,13 +161,23 @@ parse_esearch.list <- function(x, history){
     #file names from lower -> CamelCase
     res <- x$esearchresult[ c("idlist", "count", "retmax", "querytranslation") ]
     names(res)[c(1,4)] <- c("ids", "QueryTranslation")
-    if(history){
-        res$web_history = web_history(QueryKey = x$esearch_result[["querykey"]], 
-                                      WebEnv   = x$esearch_result[["webenv"]])
-    }
     res$count <- as.integer(res$count)
     res$retmax <- as.integer(res$retmax)
     res$file <- x
+    if(history){
+        #querykey and webenv sit inside esearchresult, beside the fields read
+        #above. A history needs one non-empty value for each, and a reply
+        #without them gets the same warning as on the xml path.
+        query_key <- x$esearchresult[["querykey"]]
+        web_env   <- x$esearchresult[["webenv"]]
+        sent <- function(v) is.atomic(v) && length(v) == 1 && !is.na(v) && nzchar(v)
+        if(!sent(query_key) || !sent(web_env)){
+            warn_no_history()
+        } else {
+            res$web_history <- web_history(QueryKey = as.character(query_key),
+                                           WebEnv = as.character(web_env))
+        }
+    }
     class(res) <- c("esearch", "list")
     return(res)
 }
