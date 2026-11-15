@@ -34,6 +34,14 @@
   single string, so it never matched and every request used GET
   (#174, thanks @allenbaron).
 
+* `entrez_search()` accepts long search terms. A term of around 3,000
+  characters made a URL that NCBI refused with HTTP 414, and the error
+  suggested web history, which does not shorten a term. Requests whose URL
+  would be too long now use POST, as requests with more than 200 IDs do.
+  `entrez_citmatch()` takes a long list of citations for the same reason. A
+  `by_id = TRUE` request is unchanged, because its IDs stay in the URL
+  (#163, thanks @billdenney).
+
 * `entrez_fetch(parsed = TRUE)` parses both `rettype = "gbc"` and
   `rettype = "gpc"`, the INSDSeq XML formats for nucleotide and protein
   records. The check listed only `"gpc"` and the parser handled only `"gbc"`,
@@ -76,7 +84,7 @@ package is tested in CRAN.
 
 * The sleep commands for rate-limiting are slightly increased
 
-* As of this release, the vignette is NOT build by default (to avoid issues with
+* As of this release, the vignette is NOT built by default (to avoid issues with
   automated tests on CRAN). This will not affect most users, but a developers
   may want to read a wiki page describing how to build the vignette:
 

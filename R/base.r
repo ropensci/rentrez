@@ -20,13 +20,13 @@ entrez_tool <- function() 'rentrez'
 #
 # This function is used by all the API-querying functions in rentrez to build
 # the appropriate url. Required arguments for each endpoint are handled by
-# specific funcitons. All of these functions can use the id_or_webenv() function
+# specific functions. All of these functions can use the id_or_webenv() function
 # (below) to ensure that at least on of these arguments are provided and the
-# sleep_time() function to set the approrate time to wait between requests.
+# sleep_time() function to set the appropriate time to wait between requests.
 #
-# if debug_mode is set to TRUE the function returns a list with the URL and 
-# arguments that would have been passed to GET or POST (useful for debugging 
-# and used in the test suite).
+# if debug_mode is set to TRUE the function returns a list with the URL, the
+# arguments and the HTTP method that would have been used (useful for
+# debugging and used in the test suite).
 
 make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, debug_mode=FALSE, ...){
     uri <- paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", util, interface)
@@ -46,17 +46,18 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
             args$id <- paste(args$id, collapse=",")
         }
     }
+    method <- request_method(uri, args, id_length, by_id)
     if(debug_mode){
-        return( list(uri = uri, args=args ) )
+        return( list(uri = uri, args=args, method=method ) )
     }
     
     #Seemingly, NCBI moved to https but not https v2.0?
-    # (thatnks Jeff Hammerbacher for report/solution)
+    # (thanks Jeff Hammerbacher for report/solution)
     #
     # if no httr::config was passed we will add one
     if(is.null(config)){
          config = httr::config(http_version = 2)
-    # otherwise add https version, checkign we aren't overwriting something
+    # otherwise add https version, checking we aren't overwriting something
     # passed in (seems unlikely, but worth checking?)
     # 
     } else {
@@ -66,15 +67,38 @@ make_entrez_query <- function(util, config, interface=".fcgi?", by_id=FALSE, deb
         config$options$http_version <- 2        
     }
 
-    
-    if(id_length > 200){
+    if(method == "POST"){
         response <- httr::POST(uri, body=args, config= config)
     } else {
-        response <- httr::GET(uri, query=args, config= config) 
+        response <- httr::GET(uri, query=args, config= config)
     }
     entrez_check(response)
     Sys.sleep(sleep_time(args))
     httr::content(response, as="text", encoding="UTF-8")
+}
+
+
+#The longest url sent by GET. NCBI answers a longer one with HTTP 414: on
+#2026-11-15 a pubmed search with a url of 4098 characters went through and one
+#of 4308 characters did not. The cut-off sits about a thousand characters
+#under that. A request for 200 numeric ids still fits below it and stays on
+#GET.
+max_url_length <- function() 3000
+
+#Choose GET or POST for a request. GET is the default, because its url holds
+#the whole query and entrez_check() quotes that url in error messages. Two
+#kinds of request go by POST, which carries the same fields in the body: one
+#with more than 200 ids, and one whose url would be too long (#163). A by_id
+#request is left out of the second test. Its ids are written into the url
+#itself, so sending it by POST as it stands would not shorten that url.
+request_method <- function(uri, args, id_length, by_id){
+    if(id_length > 200){
+        return("POST")
+    }
+    if(!by_id && nchar(httr::modify_url(uri, query=args)) > max_url_length()){
+        return("POST")
+    }
+    "GET"
 }
 
 
@@ -136,7 +160,7 @@ entrez_check  <- function(req){
   #NCBI echoes a rejected key back in the body, so redact that too
   message <- redact_key(httr::content(req, as="text", encoding="UTF-8"))
   if (req$status_code == 429){
-     #too many requests. First sleep to precent us racking up more
+     #too many requests. First sleep to prevent us racking up more
      Sys.sleep(0.3)
      stop(paste("HTTP failure: 429, too many requests. Functions that contact the NCBI should not be called in parallel. If you are using a shared IP, consider registerring for an API key as described in the rate-limiting section of rentrez tutorial. NCBI message:\n", message, "\nQuery:", redact_key(req$url)))
   }

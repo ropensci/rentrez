@@ -24,3 +24,12 @@ test_that("We can fecth using POST", {
         "fetched IDs do not match sent IDs when using httr::POST"
     )
 })
+
+test_that("A search term too long for a url goes through", {
+    #301 publication years make a url that NCBI refuses with HTTP 414 when it
+    #arrives by GET (#163)
+    every_year <- paste0(1800:2100, "[dp]", collapse=" OR ")
+    long_search <- net(entrez_search(db="pubmed", term=every_year, retmax=0))
+    expect_that(long_search, is_a("esearch"))
+    expect_true(long_search$count > 0)
+})
