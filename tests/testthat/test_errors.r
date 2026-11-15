@@ -219,3 +219,64 @@ test_that("version 1.0 summaries cannot be requested as json", {
     expect_error(entrez_summary("pubmed", id = 1:10, version = "1.0", retmode = "json"),
                  "only available as xml")
 })
+
+# NCBI reports a problem with an epost request in the body of an HTTP 200
+# reply. entrez_post() read that reply by position, so the error text became
+# the QueryKey and WebEnv of a web_history, and a reply with a single <ERROR>
+# failed on a names error (#227). The pieces below are what NCBI sent for an id
+# it could not read, alone and beside one it could. No network needed.
+epost_reply <- function(...)
+    XML::xmlTreeParse(paste0("<ePostResult>", ..., "</ePostResult>"),
+                      useInternalNodes = TRUE)
+nothing_stored <- "<ERROR>Empty ID list; Nothing to store</ERROR>"
+ids_left_out <- paste0("<ERROR>Some IDs have invalid value and were omitted. ",
+                       "Maximum ID value 18446744073709551615</ERROR>")
+history <- "<QueryKey>1</QueryKey><WebEnv>MCID_abc</WebEnv>"
+
+# The error carries everything NCBI said, so no warning repeats it.
+test_that("an epost reply with no history is an error with NCBI's message", {
+    expect_warning(
+        msg <- tryCatch(rentrez:::parse_epost(epost_reply(nothing_stored, ids_left_out)),
+                        error = conditionMessage),
+        NA)
+    expect_true(grepl("EPost returned no web history", msg, fixed = TRUE))
+    expect_true(grepl("Empty ID list; Nothing to store", msg, fixed = TRUE))
+    expect_true(grepl("Some IDs have invalid value", msg, fixed = TRUE))
+})
+
+test_that("an epost reply for a database NCBI does not have names the database", {
+    reply <- epost_reply("<ERROR>Invalid db name specified: notadb</ERROR>")
+    msg <- tryCatch(rentrez:::parse_epost(reply), error = conditionMessage)
+    expect_true(grepl("Invalid db name specified: notadb", msg, fixed = TRUE))
+    expect_false(grepl("names", msg, fixed = TRUE))
+})
+
+# A history needs both fields with something in them. Either one alone, or
+# both empty, is no history, whatever else the reply holds.
+test_that("an epost reply without both fields is an error", {
+    replies <- list(epost_reply("<QueryKey></QueryKey><WebEnv></WebEnv>"),
+                    epost_reply("<WebEnv>MCID_abc</WebEnv>", ids_left_out),
+                    epost_reply("<QueryKey>1</QueryKey>"))
+    for (reply in replies) {
+        expect_error(rentrez:::parse_epost(reply), "EPost returned no web history")
+    }
+})
+
+# NCBI sends a history and an <ERROR> together in two cases: it stored the ids
+# it could read and left the rest out, or the ids went to an existing history
+# and it could read none of them. The reply is the same, so the history comes
+# back and the caller hears what NCBI said.
+test_that("an epost reply with a history and a message returns the history and warns", {
+    expect_warning(res <- rentrez:::parse_epost(epost_reply(history, ids_left_out)),
+                   "were omitted")
+    expect_s3_class(res, "web_history")
+    expect_equal(names(res), c("QueryKey", "WebEnv"))
+    expect_equal(res$QueryKey, "1")
+    expect_equal(res$WebEnv, "MCID_abc")
+})
+
+test_that("an epost reply with no errors returns the history quietly", {
+    expect_warning(res <- rentrez:::parse_epost(epost_reply(history)), NA)
+    expect_equal(res$QueryKey, "1")
+    expect_equal(res$WebEnv, "MCID_abc")
+})

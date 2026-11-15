@@ -31,11 +31,33 @@ entrez_post <- function(db, id=NULL, web_history=NULL, config=NULL, ...){
         args$web_history <- NULL
     }
     response  <- do.call(make_entrez_query, args)
-    record <- xmlTreeParse(response, useInternalNodes=TRUE)
-    result <- xpathApply(record, "/ePostResult/*", XML::xmlValue)
-    names(result) <- c("QueryKey", "WebEnv")
+    parse_epost(xmlTreeParse(response, useInternalNodes=TRUE))
+}
+
+#Read the web history out of an epost reply. NCBI reports a problem with the
+#ids or the database in the body of an ordinary HTTP 200 reply, as <ERROR>
+#nodes. They take the place of the QueryKey and WebEnv when NCBI has no
+#history to return, and sit beside them when it has one and something to say
+#about the ids, such as ids it left out. The two fields are read by name:
+#read by position, the error text became the history (#227).
+#
+#When ids are posted to an existing history and NCBI can read none of them, it
+#returns the history it was given, with an <ERROR>. It returns the same
+#history, without one, for a list it has stored before. The reply does not
+#say whether anything new went in, so the message goes out as a warning.
+parse_epost <- function(x){
+    query_key <- xpathSApply(x, "/ePostResult/QueryKey", xmlValue)
+    web_env   <- xpathSApply(x, "/ePostResult/WebEnv", xmlValue)
+    has_history <- length(query_key) == 1 && length(web_env) == 1 &&
+                   nzchar(query_key) && nzchar(web_env)
+    if(!has_history){
+        #esearch_failure() quotes the <ERROR> nodes, which epost uses the same way
+        stop(esearch_failure("EPost returned no web history", x), call.=FALSE)
+    }
+    check_xml_errors(x)
+    result <- list(QueryKey = query_key, WebEnv = web_env)
     class(result) <- c("web_history", "list")
-    return(result)
+    result
 }
 
 

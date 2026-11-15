@@ -38,6 +38,14 @@ test_that("Example works", {
      expect_equal(nrecs, 4)
 })
 
+test_that("An id NCBI cannot read is an error, not a web history", {
+    skip_without_ncbi(ncbi_ok)
+    #the reply holds two <ERROR> nodes where the QueryKey and WebEnv would be,
+    #and their text used to come back as the history (#227)
+    expect_error(net(entrez_post(db="nuccore", id="not_an_id")),
+                 "EPost returned no web history. NCBI message: ", fixed=TRUE)
+})
+
 test_that("We can print a post result", {
     skip_without_ncbi(ncbi_ok)
     expect_output(print(ret),
