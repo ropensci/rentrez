@@ -36,6 +36,15 @@
   did not check for it at all, so `retmode = "json"` returned a record built
   from missing pieces that then failed when printed (#187).
 
+* `entrez_post()` stops with NCBI's message when NCBI returns no web history.
+  NCBI answers an ID it cannot read, or a database it does not have, with an
+  ordinary HTTP 200 whose body holds `<ERROR>` nodes where the QueryKey and
+  WebEnv would be. The reply was read by position, so the error text came back
+  as a `web_history` object, and a bad database name failed on a names error.
+  When NCBI returns a history together with a message, as it does when it
+  leaves some IDs out, the history comes back with that message as a warning
+  (#227).
+
 * Requests that send more than 200 IDs now use POST, as intended. The check
   that chooses POST over GET ran after the IDs had been collapsed into a
   single string, so it never matched and every request used GET
