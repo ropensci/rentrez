@@ -1,0 +1,29 @@
+# The hooks that rewrite files are deliberately absent for now. rentrez has 53
+# tracked files with CRLF endings, 61 with trailing whitespace, 19 with no final
+# newline, and 12 R files written before air existed. Turning those on rewrites
+# most of the repository in one commit, which would conflict with every open PR
+# and flatten git blame. That sweep belongs in its own PR, and it adds
+# mixed-line-ending, trailing-whitespace, end-of-file-fixer, and air-format from
+# posit-dev/air-pre-commit.
+
+default_install_hook_types: [pre-commit, commit-msg]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: detect-private-key
+      - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+      - id: no-commit-to-branch
+        args: [--branch, master]
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]

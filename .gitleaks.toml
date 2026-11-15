@@ -1,0 +1,15 @@
+# The redaction tests carry fake API keys on purpose. They prove entrez_check
+# strips a key out of an error message before somebody pastes that message into
+# a bug report, so the fixtures have to look like keys. gitleaks reads them as
+# generic-api-key and reports four findings.
+#
+# Allowlisting the path is broader than allowlisting each fixture, and it means
+# a genuine key committed to this one test file would be missed. That is the
+# trade made here, because the fixtures change whenever the tests do.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Fake API keys in the tests that prove redaction works"
+paths = ['''tests/testthat/test_errors\.r''']

@@ -58,7 +58,7 @@ An elink object containing the data defined by the \code{cmd} argument
 (if by_id=FALSE) or a list of such object (if by_id=TRUE).
 
 file XMLInternalDocument xml file resulting from search, parsed with
-\code{\link{xmlTreeParse}}
+\code{\link[XML]{xmlTreeParse}}
 }
 \description{
 Discover records related to a set of unique identifiers from

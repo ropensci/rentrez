@@ -37,10 +37,10 @@ as.data.frame(sra_links)
 \seealso{
 \code{\link{entrez_link}}
 
-Other einfo: 
-\code{\link{entrez_db_searchable}()},
-\code{\link{entrez_db_summary}()},
-\code{\link{entrez_dbs}()},
-\code{\link{entrez_info}()}
+Other einfo:
+\code{\link[=entrez_db_searchable]{entrez_db_searchable()}},
+\code{\link[=entrez_db_summary]{entrez_db_summary()}},
+\code{\link[=entrez_dbs]{entrez_dbs()}},
+\code{\link[=entrez_info]{entrez_info()}}
 }
 \concept{einfo}

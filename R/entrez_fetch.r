@@ -74,7 +74,12 @@ entrez_fetch <- function(db, id=NULL, web_history=NULL, rettype, retmode="", par
 }
 
 is_xml_record <- function(rettype, retmode){
-    if(rettype %in% c("xml", "native", "gpc","ipg")){
+    #"gbc" and "gpc" are both INSDSeq XML, for nucleotide and protein records.
+    #This listed only "gpc" while parse_response handled only "gbc", so each
+    #half of the pair failed its own way: "gbc" was refused as unparseable,
+    #and "gpc" got past this check and then fell through parse_response,
+    #coming back as text despite parsed=TRUE.
+    if(rettype %in% c("xml", "native", "gbc", "gpc", "ipg")){
         return(TRUE)
     }
     retmode == "xml"
