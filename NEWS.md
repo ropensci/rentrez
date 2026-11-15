@@ -34,6 +34,14 @@
   single string, so it never matched and every request used GET
   (#174, thanks @allenbaron).
 
+* `entrez_search()` accepts long search terms. A term of around 3,000
+  characters made a URL that NCBI refused with HTTP 414, and the error
+  suggested web history, which does not shorten a term. Requests whose URL
+  would be too long now use POST, as requests with more than 200 IDs do.
+  `entrez_citmatch()` takes a long list of citations for the same reason. A
+  `by_id = TRUE` request is unchanged, because its IDs stay in the URL
+  (#163, thanks @billdenney).
+
 * `entrez_fetch(parsed = TRUE)` parses both `rettype = "gbc"` and
   `rettype = "gpc"`, the INSDSeq XML formats for nucleotide and protein
   records. The check listed only `"gpc"` and the parser handled only `"gbc"`,
@@ -46,9 +54,6 @@
   for 2 of the 3 IDs requested", because the reply cannot show which IDs went
   unanswered: an accession comes back as a GI number, and only the neighbor
   commands repeat the ID (#238).
-
-* A fix to #163 forces the use of POST for `entrez_search()` so that long query
-  strings do not get the HTTP 414 error (thanks to @billdenney for the fix).
 
 ## MINOR IMPROVEMENTS
 
