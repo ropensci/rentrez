@@ -32,6 +32,18 @@ parse_pubmed_xml<- function(record){
     return(res)
 }
 
+parse_author <- function(author){
+    last <- xpathSApply(author, "./LastName", xmlValue)
+    if(length(last) == 0){
+        return(NULL)
+    }
+    fore <- xpathSApply(author, "./ForeName", xmlValue)
+    if(length(fore) == 0){
+        return(last[1])
+    }
+    paste(last[1], fore[1], sep=", ")
+}
+
 #The work-horse function - get information from a single xml rec
 parse_one_pubmed <- function(paper){
     atype <- xmlName(paper) 
@@ -49,8 +61,8 @@ parse_one_pubmed <- function(paper){
     }
     res  <- list()
     res$title <- get_value(".//ArticleTitle")
-    res$authors <- paste(get_value(".//Author/LastName"),
-                         get_value(".//Author/ForeName"), sep=", ")
+    authors <- unlist(xpathApply(paper, ".//Author", parse_author))
+    res$authors <- if(is.null(authors)) character(0) else authors
     res$year <- get_value(".//PubDate/Year")
     res$journal <- get_value(".//Journal/Title")
     res$volume <- get_value(".//JournalIssue/Volume")
